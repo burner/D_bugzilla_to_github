@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/d_bugzilla_to_github
+d_bugzilla_to_github.so
+d_bugzilla_to_github.dylib
+d_bugzilla_to_github.dll
+d_bugzilla_to_github.a
+d_bugzilla_to_github.lib
+d_bugzilla_to_github-test-*
+*.exe
+*.o
+*.obj
+*.lst

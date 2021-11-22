@@ -8,10 +8,13 @@ import std.algorithm.searching : canFind;
 import std.algorithm.comparison : cmp, equal;
 import std.algorithm.iteration : map, uniq, joiner, filter;
 import std.algorithm.sorting : sort;
+import std.typecons : Nullable, nullable;
 import std.net.isemail;
 import std.uni : toLower;
 import std.json;
+
 import json;
+import rest;
 
 private struct GitPerson {
 	string authorName;
@@ -44,9 +47,20 @@ private GitPerson[] parseAll() {
 class UnifiedGitPerson {
 	string[] names;
 	string[] emails;
+	Nullable!string githubUsername;
+	Person bugzillaPerson;
 
 	override string toString() const {
 		return format("GitPerson(names: %(%s, %); email: %(%s, %))", this.names, this.emails);
+	}
+
+	JSONValue toJSON() const {
+		JSONValue ret = JSONValue(["names": this.names, "emails": this.emails]);
+		ret["bugzillaPerson"] = this.bugzillaPerson.toJSON();
+		ret["githubUsername"] = this.githubUsername.isNull()
+			? JSONValue(null)
+			: JSONValue(this.githubUsername.get());
+		return ret;
 	}
 }
 
@@ -97,6 +111,24 @@ struct Unifier {
 			this.update(up);
 		}
 	}
+
+	bool insert(Person p) {
+		if(p.email in this.byEmail) {
+			this.byEmail[p.email].bugzillaPerson = p;
+			return true;
+		}
+		if(p.name in this.byName) {
+			this.byName[p.name].bugzillaPerson = p;
+			return true;
+		}
+
+		if(p.real_name in this.byName) {
+			this.byName[p.real_name].bugzillaPerson = p;
+			return true;
+		}
+		return false;
+	}
+	
 }
 
 private Unifier getUnifier(GitPerson[] persons) {

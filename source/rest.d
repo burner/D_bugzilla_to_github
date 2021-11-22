@@ -24,6 +24,15 @@ struct Person {
 	string email;
 	string name;
 	string real_name;
+
+	JSONValue toJSON() const {
+		JSONValue ret = JSONValue(
+				[ "id" : JSONValue(this.id)
+				, "email" : JSONValue(this.email)
+				, "name" : JSONValue(this.name)
+				, "real_name" : JSONValue(this.real_name)]);
+		return ret;
+	}
 }
 
 struct Bug {

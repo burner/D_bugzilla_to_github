@@ -10,7 +10,11 @@ import std.format;
 import std.uni : toLower;
 import std.range : iota;
 
+import core.thread;
+import core.time;
+
 import rest;
+import cliargs;
 import gitauthors;
 import github;
 
@@ -141,13 +145,15 @@ Afterwards send fixup PR's to fix issue numbers in the
 dmd, druntime, phobos. Thank you WebFreak for the idea
 */
 
-void main() {
-	/*
+void main(string[] args) {
+	if(parseOptions(args)) {
+		return;
+	}
 	auto b = allBugs();
 	
 	//auto c = allComment();
 
-	auto allPersons = b
+	Person[] allPersons = b
 		.map!(b => b.cc_detail ~ b.assigned_to_detail ~ b.creator_detail)
 		.joiner
 		.filter!(it => it.email.length > 2 
@@ -162,6 +168,7 @@ void main() {
 
 	//writefln("%(%s\n%)", allPersons);
 
+	/*
 	auto notFound = allPersons
 		.filter!(p => p.email !in uf.byEmail 
 				&& p.name !in uf.byName 
@@ -175,16 +182,23 @@ void main() {
 	//writeln(f);
 
 	Unifier uf = getAllGitPersonsUnifier();
-	foreach(idx, it; uf.getUniq()) {
+	foreach(it; allPersons) {
+		uf.insert(it);
+	}
+
+	UnifiedGitPerson[] afterGithub;
+	foreach(idx, UnifiedGitPerson it; uf.getUniq()) {
 		GithubPerson gh = buildGithubPerson(it);
+		Thread.sleep( dur!("seconds")(3) );
 		if(!gh.githubUserName.isNull()) {
-			writefln("%(%s, %) ;; %s", gh.gitAuthors.emails,
-					gh.githubUserName.get());
+			it.githubUsername = gh.githubUserName.get();
 		} else {
 			writefln("%(%s, %) ;; NOT FOUND", gh.gitAuthors.emails);
 		}
-		if(idx > 10) {
-			break;
-		}
+		afterGithub ~= it;
 	}
+	JSONValue d = JSONValue(["people" : afterGithub.map!(i =>
+				i.toJSON()).array]);
+	auto f = File("all_people.json", "w");
+	f.writeln(d.toPrettyString());
 }

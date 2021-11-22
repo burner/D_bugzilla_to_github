@@ -4,6 +4,7 @@
 	],
 	"copyright": "Copyright © 2021, Robert burner Schadek",
 	"dependencies": {
+		"argsd": "~>1.1.0",
 		"dxml": "~>0.4.3",
 		"requests": "~>2.0.2"
 	},

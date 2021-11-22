@@ -2,6 +2,7 @@ module github;
 
 import std.array;
 import std.algorithm.searching : all;
+import std.algorithm.iteration : filter;
 import std.ascii : isASCII;
 import std.typecons : Nullable, nullable;
 import std.range : chain;
@@ -14,6 +15,7 @@ import requests;
 
 import gitauthors;
 import json;
+import cliargs;
 
 struct GithubRestResult {
 	Nullable!long total_count;
@@ -29,9 +31,12 @@ GithubRestResult getByEmail(string email) {
 	string url = "https://api.github.com/search/users?q=%s";
 	email = email.replace(" ", "+");
 	string withId = format(url, email);
-	auto content = getContent(withId).to!string();
-	writefln("%s\n%s", email, content);
-	auto parsed = content.parseJSON();
+	auto r = Request();
+	r.authenticator = new BasicAuthentication(theArgs().githubUsername
+			, theArgs().githubToken);
+	auto content = r.get(withId);
+	writefln("%s\n%s", email, content.responseBody.to!string());
+	auto parsed = content.responseBody.to!string().parseJSON();
 	return tFromJson!GithubRestResult(parsed);
 }
 
