@@ -1,7 +1,7 @@
 module github;
 
 import std.array;
-import std.algorithm.searching : all;
+import std.algorithm.searching : all, startsWith;
 import std.algorithm.iteration : filter;
 import std.ascii : isASCII;
 import std.typecons : Nullable, nullable;
@@ -12,6 +12,9 @@ import std.stdio;
 import std.conv : to;
 
 import requests;
+
+import core.thread;
+import core.time;
 
 import gitauthors;
 import json;
@@ -31,13 +34,26 @@ GithubRestResult getByEmail(string email) {
 	string url = "https://api.github.com/search/users?q=%s";
 	email = email.replace(" ", "+");
 	string withId = format(url, email);
-	auto r = Request();
-	r.authenticator = new BasicAuthentication(theArgs().githubUsername
-			, theArgs().githubToken);
-	auto content = r.get(withId);
-	writefln("%s\n%s", email, content.responseBody.to!string());
-	auto parsed = content.responseBody.to!string().parseJSON();
-	return tFromJson!GithubRestResult(parsed);
+	try {
+		auto r = Request();
+		r.authenticator = new BasicAuthentication(theArgs().githubUsername
+				, theArgs().githubToken);
+		auto content = r.get(withId);
+
+		writefln("%s\n%s", email, content.responseBody.to!string());
+		JSONValue parsed = content.responseBody.to!string().parseJSON();
+		if("message" in parsed && parsed["message"].type() == JSONType.string
+				&& parsed["message"].get!string()
+				.startsWith("API rate limit exceeded for user"))
+		{
+			writeln("API limit execeeded need to sleep");
+			Thread.sleep( dur!("minutes")(2));
+			writeln("Sleeping done");
+		}
+		return tFromJson!GithubRestResult(parsed);
+	} catch(Exception e) {
+		return GithubRestResult.init;
+	}
 }
 
 struct GithubPerson {

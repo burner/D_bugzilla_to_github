@@ -36,7 +36,7 @@ struct Person {
 }
 
 struct Bug {
-	int id;
+	long id;
 	Nullable!SysTime actual_time;
 	Nullable!(long[]) alias_;
 	string assigned_to;
@@ -78,6 +78,9 @@ struct Bug {
 	string url;
 	string version_;
 	string whiteboard;
+
+	// joined in later
+	Nullable!(Comment[]) comments;
 }
 
 struct Comment {

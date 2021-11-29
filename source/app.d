@@ -140,6 +140,24 @@ string[] allCC(Bug[] b) {
 	return all!("cc",string[])(b);
 }
 
+Bug[long] joinBugsAndComments(Bug[] bugs, Comment[] comments) {
+	Bug[long] ret = assocArray(bugs.map!(it => it.id), bugs);
+	foreach(c; comments) {
+		Bug* b = c.bug_id in ret;
+		if(b !is null) {
+			if(b.comments.isNull()) {
+				b.comments = [ c ];
+			} else {
+				b.comments.get() ~= c;
+			}
+		} else {
+			writefln("Bug with id is not found %s", c.bug_id);
+		}
+	}
+
+	return ret;
+}
+
 /**
 Afterwards send fixup PR's to fix issue numbers in the
 dmd, druntime, phobos. Thank you WebFreak for the idea
@@ -151,8 +169,11 @@ void main(string[] args) {
 	}
 	auto b = allBugs();
 	
-	//auto c = allComment();
+	auto c = allComment();
 
+	Bug[long] bugsAA = joinBugsAndComments(b, c);
+
+	/*
 	Person[] allPersons = b
 		.map!(b => b.cc_detail ~ b.assigned_to_detail ~ b.creator_detail)
 		.joiner
@@ -165,6 +186,7 @@ void main(string[] args) {
 		.array
 		.uniq!((a,b) => a.id == b.id)
 		.array;
+	*/
 
 	//writefln("%(%s\n%)", allPersons);
 
@@ -180,7 +202,9 @@ void main(string[] args) {
 
 	//auto f = getByEmail("rburners@gmail.com");
 	//writeln(f);
+}
 
+Unifier getUnifier(Person[] allPersons) {
 	Unifier uf = getAllGitPersonsUnifier();
 	foreach(it; allPersons) {
 		uf.insert(it);
@@ -189,7 +213,7 @@ void main(string[] args) {
 	UnifiedGitPerson[] afterGithub;
 	foreach(idx, UnifiedGitPerson it; uf.getUniq()) {
 		GithubPerson gh = buildGithubPerson(it);
-		Thread.sleep( dur!("seconds")(3) );
+		Thread.sleep( dur!("seconds")(8) );
 		if(!gh.githubUserName.isNull()) {
 			it.githubUsername = gh.githubUserName.get();
 		} else {
@@ -201,4 +225,6 @@ void main(string[] args) {
 				i.toJSON()).array]);
 	auto f = File("all_people.json", "w");
 	f.writeln(d.toPrettyString());
+
+	return uf;
 }
