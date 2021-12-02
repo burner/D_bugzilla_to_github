@@ -7,6 +7,7 @@ import std.traits;
 import std.json;
 import std.file;
 import std.format;
+import std.typecons;
 import std.uni : toLower;
 import std.range : iota;
 
@@ -17,6 +18,7 @@ import rest;
 import cliargs;
 import gitauthors;
 import github;
+import json;
 
 Comment[] allComment() {
 	return dirEntries("issues/", "bug*.json", SpanMode.depth)
@@ -158,22 +160,7 @@ Bug[long] joinBugsAndComments(Bug[] bugs, Comment[] comments) {
 	return ret;
 }
 
-/**
-Afterwards send fixup PR's to fix issue numbers in the
-dmd, druntime, phobos. Thank you WebFreak for the idea
-*/
-
-void main(string[] args) {
-	if(parseOptions(args)) {
-		return;
-	}
-	auto b = allBugs();
-	
-	auto c = allComment();
-
-	Bug[long] bugsAA = joinBugsAndComments(b, c);
-
-	/*
+Person[] buildAllPersons(Bug[] b) {
 	Person[] allPersons = b
 		.map!(b => b.cc_detail ~ b.assigned_to_detail ~ b.creator_detail)
 		.joiner
@@ -186,22 +173,7 @@ void main(string[] args) {
 		.array
 		.uniq!((a,b) => a.id == b.id)
 		.array;
-	*/
-
-	//writefln("%(%s\n%)", allPersons);
-
-	/*
-	auto notFound = allPersons
-		.filter!(p => p.email !in uf.byEmail 
-				&& p.name !in uf.byName 
-				&& p.real_name !in uf.byName)
-		.array;
-	writefln("%(%s\n%)", notFound);
-	writeln(notFound.length);
-	*/
-
-	//auto f = getByEmail("rburners@gmail.com");
-	//writeln(f);
+	return allPersons;
 }
 
 Unifier getUnifier(Person[] allPersons) {
@@ -227,4 +199,62 @@ Unifier getUnifier(Person[] allPersons) {
 	f.writeln(d.toPrettyString());
 
 	return uf;
+}
+
+struct UnifiedGitPersonLoaded {
+	string[] names;
+	string[] emails;
+	Nullable!string githubUsername;
+	Person bugzillaPerson;
+}
+
+UnifiedGitPersonLoaded[] loadAllGithubPersonWithGithubUsername() {
+	JSONValue sv = readText("all_people.json").parseJSON();
+	return tFromJson!(UnifiedGitPersonLoaded[])(sv["people"])
+		.filter!(p => p.githubUsername.isNull())
+		.map!(p => UnifiedGitPersonLoaded(p.names.filter!(n => !n.empty).array
+					, p.emails.filter!(e => !e.empty).array, p.githubUsername
+					, p.bugzillaPerson))
+		.filter!(p => !p.names.empty 
+				|| !p.emails.empty
+				|| p.bugzillaPerson.id != 0
+				|| !p.bugzillaPerson.email.empty
+				|| !p.bugzillaPerson.name.empty
+				|| !p.bugzillaPerson.real_name.empty)
+		.array;
+}
+
+/**
+Afterwards send fixup PR's to fix issue numbers in the
+dmd, druntime, phobos. Thank you WebFreak for the idea
+*/
+
+void main(string[] args) {
+	if(parseOptions(args)) {
+		return;
+	}
+	/*Bug[] b = allBugs();
+	
+	Comment[] c = allComment();
+
+	Bug[long] bugsAA = joinBugsAndComments(b, c);
+	*/
+
+	writefln("%(%s\n%)", loadAllGithubPersonWithGithubUsername());
+
+	/*
+	Person[] allPersons = buildAllPersons(b);
+
+	writefln("%(%s\n%)", allPersons);
+	*/
+
+	/*
+	auto notFound = allPersons
+		.filter!(p => p.email !in uf.byEmail 
+				&& p.name !in uf.byName 
+				&& p.real_name !in uf.byName)
+		.array;
+	writefln("%(%s\n%)", notFound);
+	writeln(notFound.length);
+	*/
 }

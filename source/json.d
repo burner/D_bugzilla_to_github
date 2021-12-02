@@ -43,6 +43,8 @@ T tFromJson(T)(JSONValue js) {
 					}} else {{
 						__traits(getMember, ret, memPre) = obj[mem].get!F();
 					}}
+				} else {
+					__traits(getMember, ret, memPre) = MT.init;
 				}
 			}} else static if(is(MT == SysTime)) {{
 				//writefln("%s %s", mem, obj.keys().sort);
