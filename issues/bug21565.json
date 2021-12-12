@@ -1,0 +1,82 @@
+{
+  "bugs": [
+    {
+      "priority": "P1",
+      "assigned_to_detail": {
+        "email": "nobody",
+        "real_name": "No Owner",
+        "name": "nobody",
+        "id": 606
+      },
+      "blocks": [
+        19916
+      ],
+      "creator": "schveiguy",
+      "last_change_time": "2021-02-28T02:45:07Z",
+      "is_cc_accessible": true,
+      "keywords": [
+        "safe",
+        "spec"
+      ],
+      "creator_detail": {
+        "email": "schveiguy",
+        "real_name": "Steven Schveighoffer",
+        "name": "schveiguy",
+        "id": 358
+      },
+      "cc": [
+        "ag0aep6g",
+        "razvan.nitu1305",
+        "snarwin+bugzilla"
+      ],
+      "url": "",
+      "assigned_to": "nobody",
+      "groups": [],
+      "see_also": [],
+      "id": 21565,
+      "whiteboard": "",
+      "creation_time": "2021-01-20T19:30:39Z",
+      "qa_contact": "",
+      "depends_on": [],
+      "dupe_of": null,
+      "resolution": "",
+      "classification": "Unclassified",
+      "alias": [],
+      "op_sys": "All",
+      "status": "NEW",
+      "cc_detail": [
+        {
+          "email": "ag0aep6g",
+          "real_name": "ag0aep6g",
+          "name": "ag0aep6g",
+          "id": 1668
+        },
+        {
+          "email": "razvan.nitu1305",
+          "real_name": "RazvanN",
+          "name": "razvan.nitu1305",
+          "id": 2048
+        },
+        {
+          "email": "snarwin+bugzilla",
+          "real_name": "Paul Backus",
+          "name": "snarwin+bugzilla",
+          "id": 1987
+        }
+      ],
+      "summary": "@safe code allows modification of a scalar that overlaps with a pointer",
+      "is_open": true,
+      "platform": "All",
+      "severity": "major",
+      "flags": [],
+      "version": "D2",
+      "deadline": null,
+      "component": "dmd",
+      "is_creator_accessible": true,
+      "product": "D",
+      "is_confirmed": true,
+      "target_milestone": "---"
+    }
+  ],
+  "faults": []
+}

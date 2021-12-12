@@ -1,0 +1,213 @@
+{
+  "bugs": {
+    "21565": {
+      "comments": [
+        {
+          "is_private": false,
+          "count": 0,
+          "attachment_id": null,
+          "creator": "schveiguy",
+          "time": "2021-01-20T19:30:39Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "According to https://dlang.org/spec/function.html#safe-aliasing\n\nIt states:\n\nWhen one memory location is accessible with two different types, that aliasing is considered safe if:\n\n1. both types are const or immutable; or\n2. one of the types is mutable while the other is a const-qualified basic data type; or\n3. both types are mutable basic data types; or\n4. one of the types is a static array type with length zero; or\n5. one of the types is a static array type with non-zero length, and aliasing of the array's element type and the other type is safe; or\n6. both types are pointer types, and aliasing of the target types is safe, and the target types have the same size.\n\nAll other cases of aliasing are considered unsafe.\n\nHowever, if you access a scalar overlapping a pointer, the access and even mutation of the scalar is considered @safe by the compiler:\n\nunion T {int x; int *y;}\n\nvoid main() @safe\n{\n    T t;\n    t.x = 5;\n    // *t.y = 5; // error in @safe, but not in @trusted\n}\n\nSuch access should be considered illegal as it does not fit into any of the categories. 1, 2, 4, 5, and 6 trivially do not apply. Whether int * is considered a \"basic type\" is possibly open to interpretation, but I would say it is not, considering that if it were, then rule 2 would allow arbitrary pointer usage. This disqualifies 3, or at least suggests an edit is in order.\n\nOne might suggest that there is no harm in allowing mutating a scalar that overlaps with a pointer if the pointer cannot be accessed. But this is a naive view of code. Not all code is @safe, and if @trusted code cannot be reasoned about without also having to manually verify all @safe code, then there is no point to @trusted code.\n\nThe access should be disallowed.",
+          "id": 95718,
+          "creation_time": "2021-01-20T19:30:39Z"
+        },
+        {
+          "is_private": false,
+          "count": 1,
+          "attachment_id": null,
+          "creator": "ag0aep6g",
+          "time": "2021-01-20T19:43:43Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Steven Schveighoffer from comment #0)\n> Such access should be considered illegal as it does not fit into any of the\n> categories. 1, 2, 4, 5, and 6 trivially do not apply. Whether int * is\n> considered a \"basic type\" is possibly open to interpretation, but I would\n> say it is not, considering that if it were, then rule 2 would allow\n> arbitrary pointer usage. This disqualifies 3, or at least suggests an edit\n> is in order.\n\nJust clarifying one little thing:\n\n`int*` is definitely not a \"basic data type\". As a pointer, it's a \"derived data type\". Definitions are here: <https://dlang.org/spec/type.html>.",
+          "id": 95719,
+          "creation_time": "2021-01-20T19:43:43Z"
+        },
+        {
+          "is_private": false,
+          "count": 2,
+          "attachment_id": null,
+          "creator": "snarwin+bugzilla",
+          "time": "2021-01-20T22:47:53Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "> One might suggest that there is no harm in allowing mutating a scalar that\n> overlaps with a pointer if the pointer cannot be accessed. But this is a\n> naive view of code. Not all code is @safe, and if @trusted code cannot be\n> reasoned about without also having to manually verify all @safe code, then \n> there is no point to @trusted code.\n\nI think there are two possible interpretations here.\n\nBackground: @trusted code is permitted by the language spec to assume its arguments are free from unsafe aliasing and unsafe values [1], so anything that allows unsafe values or unsafe aliasing to be created in @safe code is a bug in @safe, not in any particular piece of @trusted code.\n\nThe question is: should the value of `t` after `t.x = 5`, in comment 1's example, be considered an unsafe value?\n\nIf we go by the definition in the spec, the answer is clearly \"yes\":\n\n> A struct/union instance is safe when:\n> \n> * the values of its accessible fields are safe, and\n> * it does not introduce unsafe aliasing with unions.\n\nThe union type `T` overlaps an integer and a pointer, so *any* value of type `T` is automatically unsafe.\n\nIt follows from this interpretation that we should not be allowed to use `T` in @safe code *at all*, and that *any* @trusted function that receives an argument of type `T` is allowed to cause undefined behavior, regardless of that argument's value.\n\nThis is probably not the conclusion we wanted to end up at, so let's try again.\n\nIf we amend the spec as follows:\n\n> A struct/union instance is safe when:\n> \n> * the values of its accessible fields are safe, and\n> * it does not introduce unsafe aliasing with unions **that is accessible\n>   from @safe code**.\n\n...then `t`'s value becomes safe, and we are allowed to use it in @safe and @trusted code as long as we are careful not to let @safe code access `t.x` and `t.y` at the same time.\n\nI think this interpretation is much more useful, and almost certainly the intended one, so I suggest that this is really a bug in the spec, not the implementation.\n\n[1] https://dlang.org/spec/function.html#safe-interfaces",
+          "id": 95722,
+          "creation_time": "2021-01-20T22:47:53Z"
+        },
+        {
+          "is_private": false,
+          "count": 3,
+          "attachment_id": null,
+          "creator": "schveiguy",
+          "time": "2021-01-20T23:48:32Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "A union between a pointer and integer is most definitely unsafe in all instances. If you never intend to access the int*, in any circumstance, then why have a union?\n\nIf you do intend to access the int *, then having any safe code anywhere just change the integer ruins the any safety assumptions that the @trusted or @system code can make. Essentially, it means @trusted code can never access such a union reliably except to access just the integer.\n\nThis means that T is OK to use ONLY in @system code, or ONLY in @safe code, but NEVER in @trusted code (unless you just follow the @safe rules).\n\nI don't feel like we should bend the spec over backwards to fit with the implementation, when there isn't really a benefit (other than being able to close a bug report).",
+          "id": 95726,
+          "creation_time": "2021-01-20T23:48:32Z"
+        },
+        {
+          "is_private": false,
+          "count": 4,
+          "attachment_id": null,
+          "creator": "snarwin+bugzilla",
+          "time": "2021-01-21T04:15:41Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "Consider the following example:\n\n---\nunion T { int x; int* y; }\n\n@trusted void example(T t)\n{\n    import std.stdio;\n\n    t.x = 123;\n    writeln(t.x);\n    t.y = new int;\n    writeln(t.y);\n}\n---\n\nThis code is memory-safe. It contains no undefined behavior. Any @safe function can call this code with any possible value of `t`, and it will not corrupt memory. It also accesses both members of `t` and would not compile if annotated with @safe (i.e., it does not \"follow the @safe rules\").\n\nThe *intent* of the spec is clearly to allow code like this to be marked as @trusted. If the current wording of the spec does not allow that, then the spec's wording does not match its intent, and the wording should be changed.",
+          "id": 95730,
+          "creation_time": "2021-01-21T04:15:41Z"
+        },
+        {
+          "is_private": false,
+          "count": 5,
+          "attachment_id": null,
+          "creator": "razvan.nitu1305",
+          "time": "2021-01-21T10:26:30Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Steven Schveighoffer from comment #3)\n> A union between a pointer and integer is most definitely unsafe in all\n> instances. If you never intend to access the int*, in any circumstance, then\n> why have a union?\n \nIt may be safe if the user sets the integer part with valid memory addresses.\nHowever, the compiler cannot know that.\n\n> If you do intend to access the int *, then having any safe code anywhere\n> just change the integer ruins the any safety assumptions that the @trusted\n> or @system code can make. Essentially, it means @trusted code can never\n> access such a union reliably except to access just the integer.\n\nTrusted does not offer any guarantees. You can do whatever you want there.\nIf you want to access a pointer that is overlapped with an integer that is\nthe users' problem not the typesystems'. You cannot assume anything with\nregards to that pointer, that is the reason why it is not allowed in @safe\ncode. In case you do use and you have a segfault, then the developer will have\nto audit the trusted blocks, not the @safe ones.\n\n> This means that T is OK to use ONLY in @system code, or ONLY in @safe code,\n> but NEVER in @trusted code (unless you just follow the @safe rules).\n> \n> I don't feel like we should bend the spec over backwards to fit with the\n> implementation, when there isn't really a benefit (other than being able to\n> close a bug report).\n\nI think that this is an issue were reasonable people may disagree, but the fact is that @safe is checked with regards to operations not data structures. There is no concept of @safe union or @system union in D. It is the way you use it that makes it @safe/@system. From this point of view, setting an integer that is overlapped with a pointer is not unsafe, however accessing a pointer that is overlapped with an integer is.",
+          "id": 95734,
+          "creation_time": "2021-01-21T10:26:30Z"
+        },
+        {
+          "is_private": false,
+          "count": 6,
+          "attachment_id": null,
+          "creator": "ag0aep6g",
+          "time": "2021-01-21T15:51:17Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Paul Backus from comment #2)\n> The question is: should the value of `t` after `t.x = 5`, in comment 1's\n> example, be considered an unsafe value?\n[...]\n> If we amend the spec as follows:\n> \n> > A struct/union instance is safe when:\n> > \n> > * the values of its accessible fields are safe, and\n> > * it does not introduce unsafe aliasing with unions **that is accessible\n> >   from @safe code**.\n> \n> ...then `t`'s value becomes safe, and we are allowed to use it in @safe and\n> @trusted code as long as we are careful not to let @safe code access `t.x`\n> and `t.y` at the same time.\n> \n> I think this interpretation is much more useful, and almost certainly the\n> intended one, so I suggest that this is really a bug in the spec, not the\n> implementation.\n> \n> [1] https://dlang.org/spec/function.html#safe-interfaces\n\nI can say that I did not intend that interpretation when I added \"safe aliasing\" to the spec. But I might have been overly conservative.\n\nCurrently, the spec explicitly says that @safe code \"Cannot access unions that have pointers or references overlapping with other types.\"[1] If that's so, then I guess it doesn't matter whether the union's aliasing is safe or not, because @safe code can't access it at all.\n\nAnd I guess it's still okay even if we change that to allow access to the non-pointy bits of the union, because the @safe code just sees another harmless int (or whatever).\n\nAs far as I can tell, that means all possible union values can be considered safe (just like all ints are safe), and we can remove the parts about \"[introducing] unsafe aliasing with unions\" from the \"save values\" section. One must still be careful not to expose the unsafe aliasing to @safe code in other ways, but that's already covered by the spec.\n\nI wouldn't have designed it this way, but it seems to be what DMD is going for.\n\n\n[1] https://dlang.org/spec/function.html#safe-functions",
+          "id": 95745,
+          "creation_time": "2021-01-21T15:51:17Z"
+        },
+        {
+          "is_private": false,
+          "count": 7,
+          "attachment_id": null,
+          "creator": "schveiguy",
+          "time": "2021-01-21T16:39:00Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Paul Backus from comment #4)\n> The *intent* of the spec is clearly to allow code like this to be marked as\n> @trusted. If the current wording of the spec does not allow that, then the\n> spec's wording does not match its intent, and the wording should be changed.\n\nI'm not disagreeing with the requirement that system/trusted code should be needed to access aliased values. I'm disagreeing with the ability of safe code to access any part of this. And the spec currently says that.\n\nConsider this function:\n\nvoid example(ref T t) @trusted;\n\nThis function has to assume that t only is valid as an integer, never as a pointer. Because safe code can *only* access and/or mutate the integer. In that case, what's the point of the union? Even in your example, you simply ignore the parameter (it might as well not be there).\n\nNot only that, but even if it sets the pointer in t, it must be automatically assumed once the function ends that the pointer value is no longer valid (it went back into safe-land where the code can happily mutate anything it wants in t). The union becomes an unnecessarily complicated integer.\n\nthe current rules are sound, just nonsensical. It makes such unions pointless when writing safe code.",
+          "id": 95748,
+          "creation_time": "2021-01-21T16:39:00Z"
+        },
+        {
+          "is_private": false,
+          "count": 8,
+          "attachment_id": null,
+          "creator": "schveiguy",
+          "time": "2021-01-21T17:12:51Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to RazvanN from comment #5)\n> (In reply to Steven Schveighoffer from comment #3)\n> > If you do intend to access the int *, then having any safe code anywhere\n> > just change the integer ruins the any safety assumptions that the @trusted\n> > or @system code can make. Essentially, it means @trusted code can never\n> > access such a union reliably except to access just the integer.\n> \n> Trusted does not offer any guarantees.\n\nThis is why I said \"assumptions\" and not \"guarantees\". It's in fact impossible for a trusted function to guarantee the union state between calls, because safe code can do anything it wants with the union so long as there is a mutable basic type involved.\n\n> You can do whatever you want there.\n> If you want to access a pointer that is overlapped with an integer that is\n> the users' problem not the typesystems'. You cannot assume anything with\n> regards to that pointer, that is the reason why it is not allowed in @safe\n> code. In case you do use and you have a segfault, then the developer will\n> have\n> to audit the trusted blocks, not the @safe ones.\n\nAuditing is not possible. The trusted code cannot make any assumptions about the union, it must ALWAYS treat it as an integer (at least when it comes in). Inside the function, sure, it can assign things. But as soon as it leaves the function, it must be treated as an integer again. This means, such unions serve no purpose as parameters to trusted code. Ever.\n\nIn which case, using such a union in safe code is pointless. It's more productive to follow the rules already set in the spec.\n\n> I think that this is an issue were reasonable people may disagree, but the\n> fact is that @safe is checked with regards to operations not data\n> structures. There is no concept of @safe union or @system union in D. It is\n> the way you use it that makes it @safe/@system. From this point of view,\n> setting an integer that is overlapped with a pointer is not unsafe, however\n> accessing a pointer that is overlapped with an integer is.\n\nThis is a misunderstanding. @safe has everything to do with data structures, and the semantics surrounding those data structures. If we don't have data rules for @safe code, then @trusted code cannot make any reasonable assumptions about the incoming parameters. Remember that @trusted code MUST ASSUME it is being called from @safe code.\n\nFor example, @safe ascribes a semantic meaning to the length field of an array. It means \"all the items that are pointed to by the pointer that are up to that length are accessible.\" Without that, arrays of data could not be passed to a @trusted function.\n\nWe also have rules for an incoming pointer, which means, it only can point at a single valid value, or null. Using these rules, one can write useful @trusted code. Without such rules, either trusted code would have to assume any incoming parameters are suspect, or we have to review all code including @safe code.\n\nWith a rule of \"Incoming union values can only ever have scalar values set\" is unnecessarily limiting. If you can only set the scalar values, why have a union that is usable in safe code that has pointer and scalar values mixed?\n\nIt's what makes the DIP1035 proposal so promising -- you can ascribe your own semantic rules to types that the compiler doesn't have built in.",
+          "id": 95751,
+          "creation_time": "2021-01-21T17:12:51Z"
+        },
+        {
+          "is_private": false,
+          "count": 9,
+          "attachment_id": null,
+          "creator": "snarwin+bugzilla",
+          "time": "2021-01-21T17:19:16Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "> I'm disagreeing with the ability of safe code to access any part of this.\n\nOn what grounds? The point of @safe is to prevent undefined behavior, and allowing access to the integer cannot possibly lead to undefined behavior, because all integer values are safe values.\n\n> the current rules are sound, just nonsensical. It makes such unions pointless when writing safe code.\n\nI agree--which is why I would like to replace them with rules that are both sound *and* sensical. Can we agree that that's a desirable goal?",
+          "id": 95752,
+          "creation_time": "2021-01-21T17:19:16Z"
+        },
+        {
+          "is_private": false,
+          "count": 10,
+          "attachment_id": null,
+          "creator": "schveiguy",
+          "time": "2021-01-21T17:23:01Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Paul Backus from comment #9)\n> > I'm disagreeing with the ability of safe code to access any part of this.\n> \n> On what grounds? The point of @safe is to prevent undefined behavior, and\n> allowing access to the integer cannot possibly lead to undefined behavior,\n> because all integer values are safe values.\n\nRead-only access is fine. Write access is not.\n\n> \n> > the current rules are sound, just nonsensical. It makes such unions pointless when writing safe code.\n> \n> I agree--which is why I would like to replace them with rules that are both\n> sound *and* sensical. Can we agree that that's a desirable goal?\n\nI can't say no to the agreement ;) I just don't know what the definition of \"sensical\" means, based on your prior messages. What rules do you have in mind?",
+          "id": 95753,
+          "creation_time": "2021-01-21T17:23:01Z"
+        },
+        {
+          "is_private": false,
+          "count": 11,
+          "attachment_id": null,
+          "creator": "snarwin+bugzilla",
+          "time": "2021-01-21T17:45:58Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "> Read-only access is fine. Write access is not.\n\nAgain, on what grounds do you make this claim? Can writing to the integer member cause undefined behavior in @safe-only code? If so, please provide an example.\n\n> I just don't know what the definition of \"sensical\" means, based on your\n> prior messages. What rules do you have in mind?\n\nWhat I have in mind is to change the definition of \"unsafe value\" for unions to the following:\n\n> A struct/union instance is safe when:\n> \n> * the values of its accessible fields are safe, and\n> * it does not introduce unsafe aliasing with unions that is accessible\n>   from @safe code.\n\nThis change does not, as far as I can tell, introduce unsoundness into the language. It does not allow undefined behavior to occur in @safe code. If you believe I am mistaken about this, please correct me.\n\nThe reason I call this \"sensical\" is that *unnecessarily* excluding values from the definition of \"safe value\" makes the language more difficult to use without any benefit to soundness or memory-safety. Ideally, we would like @safe to impose on the programmer only those restrictions that are truly necessary in order to avoid undefined behavior.",
+          "id": 95754,
+          "creation_time": "2021-01-21T17:45:58Z"
+        },
+        {
+          "is_private": false,
+          "count": 12,
+          "attachment_id": null,
+          "creator": "schveiguy",
+          "time": "2021-01-21T18:29:35Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Paul Backus from comment #11)\n> > Read-only access is fine. Write access is not.\n> \n> Again, on what grounds do you make this claim? Can writing to the integer\n> member cause undefined behavior in @safe-only code? If so, please provide an\n> example.\n\nOn the grounds that it's not desirable. It does not cause undefined behavior, just useless behavior. We are better off disallowing it.\n\n> What I have in mind is to change the definition of \"unsafe value\" for unions\n> to the following:\n> \n> > A struct/union instance is safe when:\n> > \n> > * the values of its accessible fields are safe, and\n\nWhat does this mean? All individual values are safe according to D.\n\n> > * it does not introduce unsafe aliasing with unions that is accessible\n> >   from @safe code.\n\nThis is not very specific.\n\n> This change does not, as far as I can tell, introduce unsoundness into the\n> language. It does not allow undefined behavior to occur in @safe code. If\n> you believe I am mistaken about this, please correct me.\n\nIt's not about being @safe or not. That's why I said the rules are sound. It's just that the rules leave us with the reality that using such unions usable in @safe or @trusted code has no utility.\n\n> The reason I call this \"sensical\" is that *unnecessarily* excluding values\n> from the definition of \"safe value\" makes the language more difficult to use\n> without any benefit to soundness or memory-safety.\n\nMore difficult than just using an integer instead of a union to represent an integer?\n\n> Ideally, we would like\n> @safe to impose on the programmer only those restrictions that are truly\n> necessary in order to avoid undefined behavior.\n\nThere has to be consideration of what semantic meanings the application needs to be able to enforce. Disallowing @safe access to the scalars actually INCREASES the amount of code that is allowed to be marked @safe. That really should be the goal for @safe.\n\nLeaving the rules as-is just means such unions, when passed into @trusted code, must treat it the same as @safe code, and therefore they become simply integers. While that's sound, and not allowing undefined behavior, it means writing e.g. a tagged union that has any @safe code is impossible. It must all be @trusted or inferred w/ review.",
+          "id": 95756,
+          "creation_time": "2021-01-21T18:29:35Z"
+        },
+        {
+          "is_private": false,
+          "count": 13,
+          "attachment_id": null,
+          "creator": "schveiguy",
+          "time": "2021-01-21T18:32:59Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Steven Schveighoffer from comment #12)\n\n> It's just that the rules leave us with the reality that using such unions\n> usable in @safe or @trusted code has no utility.\n\nI rewrote this several times, and it looks terrible. I mean:\n\nIt's just that the rules leave us with the reality that such unions in @safe or @trusted code have no utility.",
+          "id": 95758,
+          "creation_time": "2021-01-21T18:32:59Z"
+        },
+        {
+          "is_private": false,
+          "count": 14,
+          "attachment_id": null,
+          "creator": "snarwin+bugzilla",
+          "time": "2021-01-21T19:12:33Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Steven Schveighoffer from comment #12)\n> \n> On the grounds that it's not desirable. It does not cause undefined\n> behavior, just useless behavior. We are better off disallowing it.\n\n\"I don't like it\" is not a technical argument, and should have no place in a technical discussion.\n\n> What does this mean? All individual values are safe according to D.\n\nIf you really believe this, then you do not understand D's memory-safety system well enough to contribute usefully to this discussion, and I am wasting both my time and yours by continuing to respond.\n\n> It's not about being @safe or not. That's why I said the rules are sound.\n> It's just that the rules leave us with the reality that using such unions\n> usable in @safe or @trusted code has no utility.\n\nIf it's \"not about being @safe or not\", then what on Earth *is* it about?\n\nPersonally, I think @safe should allow all code that the compiler can prove is memory-safe, regardless of whether you, I, or anyone else thinks it \"has utility\" or not. I am rather surprised that this is a controversial point of view.",
+          "id": 95759,
+          "creation_time": "2021-01-21T19:12:33Z"
+        },
+        {
+          "is_private": false,
+          "count": 15,
+          "attachment_id": null,
+          "creator": "schveiguy",
+          "time": "2021-01-21T22:01:48Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Paul Backus from comment #14)\n> (In reply to Steven Schveighoffer from comment #12)\n> > \n> > On the grounds that it's not desirable. It does not cause undefined\n> > behavior, just useless behavior. We are better off disallowing it.\n> \n> \"I don't like it\" is not a technical argument, and should have no place in a\n> technical discussion.\n\nThat's not my argument.\n\n> > What does this mean? All individual values are safe according to D.\n> \n> If you really believe this, then you do not understand D's memory-safety\n> system well enough to contribute usefully to this discussion, and I am\n> wasting both my time and yours by continuing to respond.\n\nBasic types and pointers are all accessible using @safe. I can access int, int * perfectly fine in @safe code. It's the aliasing of the two that is a problem.\n\nFrankly I think you are misinterpreting what I'm saying, or I am doing the same for you. Wasting time might definitely be what you are doing.\n\n> \n> > It's not about being @safe or not. That's why I said the rules are sound.\n> > It's just that the rules leave us with the reality that using such unions\n> > usable in @safe or @trusted code has no utility.\n> \n> If it's \"not about being @safe or not\", then what on Earth *is* it about?\n\nThe whole point of @safe is to avoid code review. Otherwise it's a glamorized linter. If you have to review @safe code to make sure things outside the safe code are actually memory safe, then you have lost the battle.\n\nImagine that D does not have builtin slices (and get rid of the rules safe defines around them). Then you need a structure to pass slices into a @trusted function:\n\nstruct Array(T)\n{\n   T* ptr;\n   size_T length;\n}\n\nA @trusted function that accepts this type has 2 options:\n1. it can't do ANYTHING with the data beyond the one value pointed at by ptr, because @safe code is allowed to set length to anything it wants.\n2. It can use the data beyond the first element, but then you have to review all @safe functions that call it.\n\nIt's the fact that the compiler disallows mutable access to length that we can reason about what this semantically means as a parameter to a @trusted function. Therefore, I don't have to review any array-using safe code for memory safety because I know that the semantic invariant is held by the compiler.\n\nLikewise, a union of an int and an int * semantically MUST mean int today in safe code AND TRUSTED CODE. If you access the int * after any safe code has run with it, it must be considered memory unsafe.\n\nSo for instance:\n\nstruct S\n{\n  union X {\n   int x;\n   int *y;\n  }\n  X val;\n\n  @safe {\n     void a();\n     void b();\n     void c();\n     void d();\n  }\n  @trusted void e() { /* use val.y */ }\n}\n\nHow do you review that the usage of val.y is safe? the answer is: you review a, b, c, d, in addition to e. Now you are reviewing safe code to make sure it's safe in the context of val. This is useless. val might as well be an int, or a, b, c, d might as well be marked trusted. So the logical conclusion is, e cannot use val.y. And if it cannot use it, then what's the point of having it?\n\nIf we know that a, b, c, and d can never set the value of val.x or val.y, then we don't have to review them at all. Now we are only reviewing e, which is the intent of D's safety system.\n\nI'm not arguing that the current implementation is unsafe, just that the current semantic guarantees make using such unions pointless in the context of safe/trusted code. The point of a union is to use all the members in it. If there is one member that cannot be used, then it shouldn't be part of the union.\n\n> Personally, I think @safe should allow all code that the compiler can prove\n> is memory-safe, regardless of whether you, I, or anyone else thinks it \"has\n> utility\" or not.\n\nThe @safe rules provide a framework for proof of memory safety where we can avoid reviewing whole sections of code. The compiler isn't proving safety, it's just enforcing rules. We create the rules to make sure memory safety cannot be violated even without a careful review of certain functions AND that @safe/@trusted code is reasonable to write with those rules.\n\nFor example, let's say we changed the @safe rules to say only arrays and references are allowed to be dereferenced in @safe code, never pointers. Now, safe code can read and write pointers, even write arbitrary values. That's perfectly safe. And perfectly useless. Isn't that just asking to make trusted code even less safe? How does one use @trusted code with a pointer when you can never know if the safe code that passed it to you has just set arbitrary values? What do we gain as a language by allowing setting pointers up as garbage in @safe code?\n\nSuch a rule would mean, pointers are safe to use in @trusted functions as long as you don't use them as pointers, only as bits. This is the same rule we are talking about. I don't see why the rule is desirable, and I am surprised that this is a controversial position.",
+          "id": 95762,
+          "creation_time": "2021-01-21T22:01:48Z"
+        },
+        {
+          "is_private": false,
+          "count": 16,
+          "attachment_id": null,
+          "creator": "snarwin+bugzilla",
+          "time": "2021-02-28T02:45:07Z",
+          "bug_id": 21565,
+          "tags": [],
+          "text": "(In reply to Steven Schveighoffer from comment #15)\n> \n> The whole point of @safe is to avoid code review. Otherwise it's a\n> glamorized linter. If you have to review @safe code to make sure things\n> outside the safe code are actually memory safe, then you have lost the\n> battle.\n\nI think this is probably the root of this misunderstanding. There is nothing in the spec (or the implementation) that *requires* you to limit your review to @trusted code. If your proof of memory safety is based on manual review of @safe code, then as far as the language is concerned, that's a perfectly valid proof.\n\nI agree completely that D should make it *possible* for the programmer to limit their checking to @trusted code (see: DIP 1035), and that @trusted code that relies on manual review of @safe code should be subject to close scrutiny. But I think it would be a step too far for the language spec to outright *forbid* anything that requires any manual review of @safe code--especially since there is no practical way the compiler could enforce such a restriction.",
+          "id": 96203,
+          "creation_time": "2021-02-28T02:45:07Z"
+        }
+      ]
+    }
+  },
+  "comments": {}
+}
