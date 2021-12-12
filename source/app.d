@@ -1,6 +1,7 @@
 import std.array;
 import std.stdio;
-import std.algorithm.iteration : filter, joiner, map, uniq;
+import std.exception;
+import std.algorithm.iteration : filter, joiner, map, fold, uniq;
 import std.algorithm.searching : canFind;
 import std.algorithm.sorting : sort;
 import std.traits;
@@ -15,6 +16,8 @@ import core.thread;
 import core.time;
 
 import rest;
+import markdown;
+import analysis;
 import cliargs;
 import gitauthors;
 import github;
@@ -33,6 +36,21 @@ Comment[] allComment() {
 			.array;
 }
 
+Comment[] getCommentByBugId(long id) {
+	Comment[] parse(string f) {
+		const t = readText(f);
+		return t.empty
+			? []
+			: parseComment(parseJSON(t));
+			//: [];
+	}
+
+	const fn = format("issues/bug%d_comments.json", id);
+	return exists(fn)
+		? parse(fn)
+		: [];
+}
+
 Bug[] allBugs() {
 	return dirEntries("issues/", "bug*.json", SpanMode.depth)
 			.filter!(it => !canFind(it.name, "comment"))
@@ -44,6 +62,20 @@ Bug[] allBugs() {
 			})
 			.joiner
 			.array;
+}
+
+Nullable!Bug getBugById(long id) {
+	const fn = format("issues/bug%d.json", id);
+	Bug[] bugs = exists(fn)
+		? readText(fn).parseJSON().parseBugs()
+		: [];
+	
+	if(bugs.empty) {
+		return Nullable!(Bug).init;
+	}
+
+	bugs[0].comments = getCommentByBugId(bugs[0].id);
+	return nullable(bugs[0]);
 }
 
 string[] allVersions(Bug[] b) {
@@ -224,6 +256,35 @@ UnifiedGitPersonLoaded[] loadAllGithubPersonWithGithubUsername() {
 		.array;
 }
 
+void writeOpenIssuesToFile() {
+	Bug[] b = allBugs();
+	auto bo = b
+		.filter!(it => it.status != "CLOSED" && it.status != "RESOLVED")
+		.map!(it => it.id)
+		.array
+		.sort
+		.release;
+		
+	JSONValue openIssues;
+	openIssues["openIssues"] = JSONValue(bo);
+	auto f = File("openissues.json", "w");
+	f.writeln(openIssues.toPrettyString());
+}
+
+Bug[] readOpenIssues() {
+	enforce(exists("openissues.json"));
+	JSONValue openIssues = readText("openissues.json")
+		.parseJSON();
+	return openIssues["openIssues"].arrayNoRef
+		.map!(j => j.get!int)
+		.map!(i => readText(format("issues/bug%s.json", i)))
+		.map!(t => parseJSON(t))
+		.map!(j => j["bugs"])
+		.map!(j => j.tFromJson!(Bug[])())
+		.joiner
+		.array;
+}
+
 /**
 Afterwards send fixup PR's to fix issue numbers in the
 dmd, druntime, phobos. Thank you WebFreak for the idea
@@ -233,14 +294,41 @@ void main(string[] args) {
 	if(parseOptions(args)) {
 		return;
 	}
-	/*Bug[] b = allBugs();
+	//writeOpenIssuesToFile();
+	//Bug[] ob = allBugs();
+	CommentAnalysis ca = readOpenIssues()
+		.map!(b => getCommentByBugId(b.id))
+		.joiner
+		.doCommentAnalysis();
 	
+	writeln(ca);
+
+	/*
+	BugAnalysis ba = ob
+			//.filter!(it => it.component == "phobos")
+			.doBugAnalysis();
+	writeln(ba);
+	*/
+
+	/*
+	Nullable!Bug b = getBugById(21565);
+	Markdowned m = toMarkdown(b.get());
+	auto f = File("i21565.md", "w");
+	f.write(m.toString());
+	*/
+
+	/*writefln("%(%s\n%)", ob
+			.filter!(it => it.component == "phobos")
+			.map!(it => it.id));
+	*/
+	
+	/*
 	Comment[] c = allComment();
 
 	Bug[long] bugsAA = joinBugsAndComments(b, c);
 	*/
 
-	writefln("%(%s\n%)", loadAllGithubPersonWithGithubUsername());
+	//writefln("%(%s\n%)", loadAllGithubPersonWithGithubUsername());
 
 	/*
 	Person[] allPersons = buildAllPersons(b);
