@@ -2,7 +2,7 @@ module github;
 
 import std.array;
 import std.algorithm.searching : all, startsWith;
-import std.algorithm.iteration : filter;
+import std.algorithm.iteration : filter, map;
 import std.ascii : isASCII;
 import std.typecons : Nullable, nullable;
 import std.range : chain;
@@ -24,10 +24,30 @@ struct GithubRestResult {
 	Nullable!long total_count;
 	Nullable!bool incomplete_results;
 	Nullable!(GithubRestPerson[]) items;
+
+	JSONValue toJSON() const {
+		JSONValue ret = JSONValue(
+			[ "total_count": this.total_count.isNull 
+				? JSONValue(null)
+				: JSONValue(this.total_count.get())
+			, "incomplete_results": this.incomplete_results.isNull 
+				? JSONValue(null)
+				: JSONValue(this.incomplete_results.get())
+			, "items": this.items.isNull 
+				? JSONValue(null)
+				: JSONValue(this.items.get().map!(it => it.toJSON()).array)
+			]);
+		return ret;
+	}
 }
 
 struct GithubRestPerson {
 	string login;
+
+	JSONValue toJSON() const {
+		JSONValue ret = JSONValue([ "login": this.login]);
+		return ret;
+	}
 }
 
 GithubRestResult getByEmail(string email) {

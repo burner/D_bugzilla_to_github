@@ -1,11 +1,9 @@
 module cliargs;
 
-import args : Arg, Optional, parseArgsWithConfigFile, printArgsHelp;
+import std.getopt;
 
 struct Args {
-	@Arg("The github username to use", Optional.yes)
-	string githubUsername;
-	@Arg("The github access token", Optional.yes)
+	string githubUsername = "rburners@gmail.com";
 	string githubToken;
 }
 
@@ -20,10 +18,13 @@ ref Args theArgsWriteable() {
 }
 
 bool parseOptions(ref string[] args) {
-	bool helpWanted = parseArgsWithConfigFile(theArgsWriteable(), args);
-
-	if (helpWanted) {
-		printArgsHelp(theArgsWriteable(), "A text explaining the program");
+	auto helpWanted = getopt(args
+			, "e|email", "The github username to use", &theArgsWriteable().githubUsername
+			, "t|token", "The github access token", &theArgsWriteable().githubToken
+			);
+	if(helpWanted.helpWanted) {
+		defaultGetoptPrinter("A text explaining the program",
+				helpWanted.options);
 		return true;
 	}
 	return false;

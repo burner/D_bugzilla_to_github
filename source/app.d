@@ -1,9 +1,11 @@
 import std.array;
 import std.stdio;
 import std.exception;
+import std.ascii : isASCII;
 import std.algorithm.iteration : filter, joiner, map, fold, uniq;
-import std.algorithm.searching : canFind;
+import std.algorithm.searching : all, canFind;
 import std.algorithm.sorting : sort;
+import std.range : chain;
 import std.traits;
 import std.json;
 import std.file;
@@ -238,12 +240,82 @@ struct UnifiedGitPersonLoaded {
 	string[] emails;
 	Nullable!string githubUsername;
 	Person bugzillaPerson;
+
+	JSONValue toJSON() const {
+		JSONValue ret = JSONValue(["names": this.names, "emails": this.emails]);
+		ret["bugzillaPerson"] = this.bugzillaPerson.toJSON();
+		ret["githubUsername"] = this.githubUsername.isNull()
+			? JSONValue(null)
+			: JSONValue(this.githubUsername.get());
+		return ret;
+	}
+}
+
+struct GithubPersonMultiple {
+	UnifiedGitPersonLoaded gitAuthors;
+	GithubRestResult[] github; // etc. @burner
+
+	JSONValue toJSON() const {
+		JSONValue ret = JSONValue(
+			[ "gitAuthors": this.gitAuthors.toJSON()
+			, "github": JSONValue(this.github.map!(it => it.toJSON()).array)
+			]);
+		return ret;
+	}
+}
+
+GithubPersonMultiple buildGithubPersonNotJustOne(UnifiedGitPersonLoaded ugp) {
+	GithubPersonMultiple ret;
+	ret.gitAuthors = ugp;
+	foreach(it; chain(ugp.emails
+				, ugp.names
+				, [ugp.bugzillaPerson.email, ugp.bugzillaPerson.name, ugp.bugzillaPerson.real_name]
+			)
+			.filter!(it => !it.empty)
+			.filter!(it => it.all!(isASCII))
+		) 
+	{
+		GithubRestResult r = getByEmail(it);
+		ret.github ~= r;
+	}
+	return ret;
+}
+
+UnifiedGitPersonLoaded[] loadAllGithubPersonWithoutGithubUsername() {
+	JSONValue sv = readText("all_people.json").parseJSON();
+	return tFromJson!(UnifiedGitPersonLoaded[])(sv["people"])
+		.filter!(p => p.githubUsername.isNull())
+		.map!(p => UnifiedGitPersonLoaded(p.names.filter!(n => !n.empty).array
+					, p.emails.filter!(e => !e.empty).array, p.githubUsername
+					, p.bugzillaPerson))
+		.filter!(p => !p.names.empty 
+				|| !p.emails.empty
+				|| p.bugzillaPerson.id != 0
+				|| !p.bugzillaPerson.email.empty
+				|| !p.bugzillaPerson.name.empty
+				|| !p.bugzillaPerson.real_name.empty)
+		.array;
 }
 
 UnifiedGitPersonLoaded[] loadAllGithubPersonWithGithubUsername() {
 	JSONValue sv = readText("all_people.json").parseJSON();
 	return tFromJson!(UnifiedGitPersonLoaded[])(sv["people"])
 		.filter!(p => p.githubUsername.isNull())
+		.map!(p => UnifiedGitPersonLoaded(p.names.filter!(n => !n.empty).array
+					, p.emails.filter!(e => !e.empty).array, p.githubUsername
+					, p.bugzillaPerson))
+		.filter!(p => !p.names.empty 
+				|| !p.emails.empty
+				|| p.bugzillaPerson.id != 0
+				|| !p.bugzillaPerson.email.empty
+				|| !p.bugzillaPerson.name.empty
+				|| !p.bugzillaPerson.real_name.empty)
+		.array;
+}
+
+UnifiedGitPersonLoaded[] loadAllGithubPerson() {
+	JSONValue sv = readText("all_people.json").parseJSON();
+	return tFromJson!(UnifiedGitPersonLoaded[])(sv["people"])
 		.map!(p => UnifiedGitPersonLoaded(p.names.filter!(n => !n.empty).array
 					, p.emails.filter!(e => !e.empty).array, p.githubUsername
 					, p.bugzillaPerson))
@@ -285,6 +357,41 @@ Bug[] readOpenIssues() {
 		.array;
 }
 
+void analyzeUnfinshedGithubUsers() {
+	UnifiedGitPersonLoaded[] nullPeople =
+		loadAllGithubPersonWithGithubUsername();
+	GithubPersonMultiple[] rslt;
+
+	foreach(it; nullPeople) {
+		auto gh = buildGithubPersonNotJustOne(it);
+		Thread.sleep( dur!("seconds")(8) );
+		rslt ~= gh;
+	}
+	JSONValue openIssues;
+	openIssues["analyzed"] = JSONValue(rslt
+			.map!(it => it.toJSON())
+			.array);
+	auto f = File("analyzed_people.json", "w");
+	f.writeln(openIssues.toPrettyString());
+}
+
+void analyzeAllGithubUsers() {
+	UnifiedGitPersonLoaded[] nullPeople = loadAllGithubPerson();
+	GithubPersonMultiple[] rslt;
+
+	foreach(it; nullPeople) {
+		auto gh = buildGithubPersonNotJustOne(it);
+		Thread.sleep( dur!("seconds")(8) );
+		rslt ~= gh;
+	}
+	JSONValue openIssues;
+	openIssues["analyzed"] = JSONValue(rslt
+			.map!(it => it.toJSON())
+			.array);
+	auto f = File("all_analyzed_people.json", "w");
+	f.writeln(openIssues.toPrettyString());
+}
+
 /**
 Afterwards send fixup PR's to fix issue numbers in the
 dmd, druntime, phobos. Thank you WebFreak for the idea
@@ -296,12 +403,14 @@ void main(string[] args) {
 	}
 	//writeOpenIssuesToFile();
 	//Bug[] ob = allBugs();
+	/*
 	CommentAnalysis ca = readOpenIssues()
 		.map!(b => getCommentByBugId(b.id))
 		.joiner
 		.doCommentAnalysis();
 	
 	writeln(ca);
+	*/
 
 	/*
 	BugAnalysis ba = ob
@@ -310,12 +419,10 @@ void main(string[] args) {
 	writeln(ba);
 	*/
 
-	/*
 	Nullable!Bug b = getBugById(21565);
 	Markdowned m = toMarkdown(b.get());
 	auto f = File("i21565.md", "w");
 	f.write(m.toString());
-	*/
 
 	/*writefln("%(%s\n%)", ob
 			.filter!(it => it.component == "phobos")
@@ -328,7 +435,9 @@ void main(string[] args) {
 	Bug[long] bugsAA = joinBugsAndComments(b, c);
 	*/
 
-	//writefln("%(%s\n%)", loadAllGithubPersonWithGithubUsername());
+	//writefln("%(%s\n%)", loadAllGithubPersonWithoutGithubUsername());
+	//analyzeUnfinshedGithubUsers();
+	//analyzeAllGithubUsers();
 
 	/*
 	Person[] allPersons = buildAllPersons(b);
