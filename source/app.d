@@ -5,7 +5,7 @@ import std.ascii : isASCII;
 import std.algorithm.iteration : filter, joiner, map, fold, uniq;
 import std.algorithm.searching : all, canFind;
 import std.algorithm.sorting : sort;
-import std.range : chain;
+import std.range : chain, zip;
 import std.traits;
 import std.json;
 import std.file;
@@ -18,6 +18,7 @@ import core.thread;
 import core.time;
 
 import rest;
+import graphql;
 import markdown;
 import analysis;
 import cliargs;
@@ -77,7 +78,9 @@ Nullable!Bug getBugById(long id) {
 	}
 
 	bugs[0].comments = getCommentByBugId(bugs[0].id);
-	return nullable(bugs[0]);
+	Nullable!Bug ret;
+	ret = bugs[0];
+	return ret;
 }
 
 string[] allVersions(Bug[] b) {
@@ -175,6 +178,23 @@ string[] allVersion(Bug[] b) {
 string[] allCC(Bug[] b) {
 	return all!("cc",string[])(b);
 }
+
+string[] allPlatforms(Bug[] b) {
+	return all!("platform",string)(b);
+}
+
+string[] allOPs(Bug[] b) {
+	return all!("op_sys",string)(b);
+}
+
+string[] allClassification(Bug[] b) {
+	return all!("classification",string)(b);
+}
+
+string[] allFlags(Bug[] b) {
+	return all!("flags",string[])(b);
+}
+
 
 Bug[long] joinBugsAndComments(Bug[] bugs, Comment[] comments) {
 	Bug[long] ret = assocArray(bugs.map!(it => it.id), bugs);
@@ -402,7 +422,7 @@ void main(string[] args) {
 		return;
 	}
 	//writeOpenIssuesToFile();
-	//Bug[] ob = allBugs();
+	Bug[] ob = allBugs();
 	/*
 	CommentAnalysis ca = readOpenIssues()
 		.map!(b => getCommentByBugId(b.id))
@@ -419,10 +439,10 @@ void main(string[] args) {
 	writeln(ba);
 	*/
 
-	Nullable!Bug b = getBugById(21565);
-	Markdowned m = toMarkdown(b.get());
-	auto f = File("i21565.md", "w");
-	f.write(m.toString());
+	//Nullable!Bug b = getBugById(21565);
+	//Markdowned m = toMarkdown(b.get());
+	//auto f = File("i21565.md", "w");
+	//f.write(m.toString());
 
 	/*writefln("%(%s\n%)", ob
 			.filter!(it => it.component == "phobos")
@@ -454,4 +474,115 @@ void main(string[] args) {
 	writefln("%(%s\n%)", notFound);
 	writeln(notFound.length);
 	*/
+
+	//writefln("All versions %s", allVersions(ob));
+	//writefln("All keywords %s", allKeywords(ob));
+	//writefln("All platforms %s", allPlatforms(ob));
+	//writefln("All OPs %s", allOPs(ob));
+	//writefln("All classifications %s", allClassification(ob));
+	//writefln("All flags %s", allFlags(ob));
+
+	const toInclude = [ "classification", "flags"
+			, "groups", "keywords", "op_sys", "platform", "priority"
+			, "product", "resolution", "severity", "status"
+			, "target_milestone", "version_", "whiteboard"
+	];
+
+	static foreach(mem; __traits(allMembers, Bug)) {{
+		static if(canFind(toInclude, mem)) {
+			alias MT = typeof(__traits(getMember, Bug, mem));
+			static if(is(MT == string) || is(MT == string[])) {
+				writefln("All %s %s", mem, all!(mem,MT)(ob));
+			}
+		}
+	}}
+	string[] severityColors =
+		[ "000080"
+		, "00008B"
+		, "0000CD"
+		, "0000FF"
+		, "191970"
+		, "4169E1"
+		, "4682B4"
+		, "1E90FF"
+		, "00BFFF"
+		, "6495ED"
+		, "87CEEB"
+		, "87CEFA"
+		, "B0C4DE"
+		, "ADD8E6"
+		, "B0E0E6"
+		];
+	/*
+	string[] platformColors =
+		[ "8B0000"
+		, "FF0000"
+		, "B22222"
+		, "DC143C"
+		, "CD5C5C"
+		, "F08080"
+		, "FA8072"
+		, "E9967A"
+		, "FFA07A"
+		];
+
+	string[] platforms = allPlatforms(ob);
+
+	Repository target = getRepository("burner", "bugzilla_migration_test"
+			, theArgs().githubToken);
+
+	Label[] labels = zip(platforms, platformColors)
+		.map!(p => createLabel(LabelInput(p[1], p[0], target.id)
+					, theArgs().githubToken)
+			)
+		.array;
+
+	writeln(labels);
+	*/
+
+	/*
+	JSONValue vq;
+	vq["name"] = "bugzilla_migration_test";
+	vq["owner"] = "burner";
+	vq["first"] = 10;
+
+
+	JSONValue repo = qlQuerySafe(repoInfo, vq
+				, theArgs().githubToken
+		);
+	//writeln(repo.toPrettyString());
+
+	JSONValue v3 = JSONValue(["input": v]);
+	writeln(v3.toPrettyString());
+
+	JSONValue createLabelRslt = qlMutationSafe(createLabel, v3,
+			theArgs().githubToken);
+
+	writeln(createLabelRslt.toPrettyString());
+
+	return jsonToForgiving!Label(createLabelRslt);
+	*/
+
+	//<meta name="octolytics-dimension-repository_id" content="459916112">
+
+	/*
+	string lg = `query myself($number_of_repos: Int!) { 
+		viewer { 
+			login 
+			repositories(last: $number_of_repos) {
+	     		nodes {
+	     			name
+	     		}
+	   		}
+		}
+	}`;
+
+	JSONValue v2;
+	v2["number_of_repos"] = 3;
+
+	writeln(qlQuerySafe(lg, v2
+				, theArgs().githubToken
+		).toPrettyString());
+	*/
+
 }

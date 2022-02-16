@@ -83,6 +83,7 @@ struct Bug {
 	Nullable!(Comment[]) comments;
 }
 
+
 struct Comment {
 	long id;
 	SysTime time;
