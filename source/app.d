@@ -482,52 +482,110 @@ void main(string[] args) {
 	//writefln("All classifications %s", allClassification(ob));
 	//writefln("All flags %s", allFlags(ob));
 
-	const toInclude = [ "classification", "flags"
-			, "groups", "keywords", "op_sys", "platform", "priority"
-			, "product", "resolution", "severity", "status"
-			, "target_milestone", "version_", "whiteboard"
-	];
+	const toInclude = 
+		[ "op_sys":
+			[ "000000"
+			, "2F4F4F"
+			, "696969"
+			, "708090"
+			, "808080"
+			, "778899"
+			, "A9A9A9"
+			, "C0C0C0"
+			, "D3D3D3"
+			, "DCDCDC"
+			]
+		, "platform": 
+			[ "8B0000"
+			, "FF0000"
+			, "B22222"
+			, "DC143C"
+			, "CD5C5C"
+			, "F08080"
+			, "FA8072"
+			, "E9967A"
+			, "FFA07A"
+			]
+		, "priority":
+			[ "FF4500"
+			, "FF6347"
+			, "FF8C00"
+			, "FF7F50"
+			, "FFA500"
+			]
+		, "resolution":
+			[ "4B0082"
+			, "800080"
+			, "8B008B"
+			, "9400D3"
+			, "483D8B"
+			, "8A2BE2"
+			, "9932CC"
+			, "FF00FF"
+			, "FF00FF"
+			, "6A5ACD"
+			, "7B68EE"
+			, "BA55D3"
+			, "9370DB"
+			, "DA70D6"
+			, "EE82EE"
+			, "DDA0DD"
+			, "D8BFD8"
+			, "E6E6FA"
+			]
+		, "severity":
+			[ "000080"
+			, "00008B"
+			, "0000CD"
+			, "0000FF"
+			, "191970"
+			, "4169E1"
+			, "4682B4"
+			, "1E90FF"
+			, "00BFFF"
+			, "6495ED"
+			, "87CEEB"
+			, "87CEFA"
+			, "B0C4DE"
+			, "ADD8E6"
+			, "B0E0E6"
+			]
+		, "status":
+			[ "006400"
+			, "008000"
+			, "556B2F"
+			, "228B22"
+			, "2E8B57"
+			, "808000"
+			, "6B8E23"
+			, "3CB371"
+			, "32CD32"
+			, "00FF00"
+			, "00FF7F"
+			, "00FA9A"
+			, "8FBC8F"
+			, "66CDAA"
+			, "9ACD32"
+			, "7CFC00"
+			, "7FFF00"
+			, "90EE90"
+			, "ADFF2F"
+			, "98FB98"
+			]
+		];
+
+	const toIncludeKeys = toInclude.keys();
 
 	static foreach(mem; __traits(allMembers, Bug)) {{
-		static if(canFind(toInclude, mem)) {
+		static if(canFind(toIncludeKeys, mem)) {
 			alias MT = typeof(__traits(getMember, Bug, mem));
 			static if(is(MT == string) || is(MT == string[])) {
 				writefln("All %s %s", mem, all!(mem,MT)(ob));
 			}
 		}
 	}}
-	string[] severityColors =
-		[ "000080"
-		, "00008B"
-		, "0000CD"
-		, "0000FF"
-		, "191970"
-		, "4169E1"
-		, "4682B4"
-		, "1E90FF"
-		, "00BFFF"
-		, "6495ED"
-		, "87CEEB"
-		, "87CEFA"
-		, "B0C4DE"
-		, "ADD8E6"
-		, "B0E0E6"
-		];
+
 	/*
-	string[] platformColors =
-		[ "8B0000"
-		, "FF0000"
-		, "B22222"
-		, "DC143C"
-		, "CD5C5C"
-		, "F08080"
-		, "FA8072"
-		, "E9967A"
-		, "FFA07A"
-		];
-
-	string[] platforms = allPlatforms(ob);
-
 	Repository target = getRepository("burner", "bugzilla_migration_test"
 			, theArgs().githubToken);
 
