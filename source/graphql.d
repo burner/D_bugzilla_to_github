@@ -1,16 +1,25 @@
 module graphql;
 
+import std.array;
 import std.json;
 import std.stdio;
+import std.file : readText;
 import std.conv;
 import std.exception;
 import std.datetime;
-import std.algorithm.iteration : splitter;
+import std.algorithm.iteration : map, splitter;
 import std.algorithm.searching : canFind, endsWith, startsWith;
 import std.format : format;
 import std.traits : Unqual, isArray;
 
 @safe:
+
+Label[] parseExistingLabels() {
+	JSONValue t = parseJSON(readText("labels.json"));
+	return t.arrayNoRef()
+		.map!(i => i.jsonToForgiving!Label())
+		.array;
+}
 
 struct Label {
 	string id;
@@ -68,6 +77,39 @@ Repository getRepository(string owner, string projectName, string bearer) {
 	
 	JSONValue repo = qlQuerySafe(repoInfo, vq, bearer);
 	return parseHelper!Repository(repo, "data.repository");
+}
+
+struct CreateIssueInput {
+	string title;
+	string body_;
+	string repoId;
+	string[] labelIds;
+}
+
+struct CreateIssueResult {
+	int number;
+}
+
+CreateIssueResult createIssue(CreateIssueInput input, string bearer) {
+	const createIssue = `
+	mutation CreateIssue($input: CreateIssueInput!) {
+		createIssue(input: $input) {
+			clientMutationId
+			issue {
+				number
+			}
+		}
+	}`;
+
+	JSONValue vars;
+	vars["title"] = input.title;
+	vars["body"] = input.body_;
+	vars["repositoryId"] = input.repoId;
+	vars["labelIds"] = input.labelIds;
+
+	JSONValue v2 = JSONValue(["input" : vars]);
+	JSONValue rslt = qlMutationSafe(createIssue, v2, bearer);
+	return parseHelper!CreateIssueResult(rslt, "data.createIssue.issue");
 }
 
 private T parseHelper(T)(JSONValue input, string accessPath) {

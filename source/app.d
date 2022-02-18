@@ -422,7 +422,12 @@ void main(string[] args) {
 		return;
 	}
 	//writeOpenIssuesToFile();
-	Bug[] ob = allBugs();
+	//Bug[] ob = allBugs();
+	Label[] labels = parseExistingLabels();
+	Label[string] labelsAA = assocArray
+		( labels.map!(it => it.name)
+		, labels
+		);
 	/*
 	CommentAnalysis ca = readOpenIssues()
 		.map!(b => getCommentByBugId(b.id))
@@ -439,8 +444,9 @@ void main(string[] args) {
 	writeln(ba);
 	*/
 
-	//Nullable!Bug b = getBugById(21565);
-	//Markdowned m = toMarkdown(b.get());
+	Nullable!Bug b = getBugById(21565);
+	Bug bnn = b.get();
+	Markdowned m = toMarkdown(bnn);
 	//auto f = File("i21565.md", "w");
 	//f.write(m.toString());
 
@@ -574,28 +580,74 @@ void main(string[] args) {
 			]
 		];
 
-	const toIncludeKeys = toInclude.keys();
+	const string[] toIncludeKeys = toInclude.keys();
+	//const string[] toIncludeKeys = [ "platform" ];
 
-	static foreach(mem; __traits(allMembers, Bug)) {{
-		static if(canFind(toIncludeKeys, mem)) {
-			alias MT = typeof(__traits(getMember, Bug, mem));
-			static if(is(MT == string) || is(MT == string[])) {
-				writefln("All %s %s", mem, all!(mem,MT)(ob));
-			}
-		}
-	}}
-
-	/*
 	Repository target = getRepository("burner", "bugzilla_migration_test"
 			, theArgs().githubToken);
 
-	Label[] labels = zip(platforms, platformColors)
-		.map!(p => createLabel(LabelInput(p[1], p[0], target.id)
-					, theArgs().githubToken)
-			)
-		.array;
+	CreateIssueInput input;
+	input.title = m.title;
+	input.body_ = m.header ~ "\n" ~ m.comments;
+	input.repoId = target.id;
+	static foreach(mem; __traits(allMembers, Bug)) {{
+		static if(canFind(toIncludeKeys, mem)) {
+			alias MT = typeof(__traits(getMember, Bug, mem));
+			static if(is(MT == string)) {{
+				auto has = __traits(getMember, bnn, mem);	
+				if(has in labelsAA) {
+					input.labelIds ~= labelsAA[has].id;
+				}
+			}} else static if(is(MT == string[])) {{
+				auto has = __traits(getMember, bnn, mem);	
+				foreach(it; has) {
+					if(it in labelsAA) {
+						input.labelIds ~= labelsAA[it].id;
+					}
+				}
+			}}
+		}
+	}}
 
-	writeln(labels);
+	createIssue(input, theArgs().githubToken);
+
+
+	/*
+	Label[string] labels;
+	static foreach(mem; __traits(allMembers, Bug)) {{
+		static if(canFind(toIncludeKeys, mem)) {
+			alias MT = typeof(__traits(getMember, Bug, mem));
+			static if(is(MT == string) || is(MT == string[])) {{
+				string[] toInsert = all!(mem,MT)(ob)
+					.filter!(it => !it.empty)
+					.filter!(it => it != "All" && it != "Other")
+					.array;
+				writefln("All %s %s", mem, toInsert);
+				const string[] colors = toInclude[mem];
+				foreach(lr; zip(toInsert, colors)
+						.map!(p => createLabel(LabelInput(p[1], p[0], target.id)
+							, theArgs().githubToken)
+						)
+				) {
+					labels[lr.name] = lr;
+				}
+			}}
+		}
+	}}
+
+	JSONValue labelJson = JSONValue(labels
+		.values()
+		.map!(it => JSONValue(
+				[ "id" : it.id
+				, "color" : it.color
+				, "name" : it.name
+				]
+			))
+		.array
+	);
+
+	auto labelFile = File("labels.json", "w");
+	labelFile.write(labelJson.toPrettyString());
 	*/
 
 	/*
