@@ -5,7 +5,7 @@ import std.ascii : isASCII;
 import std.algorithm.iteration : filter, joiner, map, fold, uniq;
 import std.algorithm.searching : all, canFind;
 import std.algorithm.sorting : sort;
-import std.range : chain, zip;
+import std.range : chain, chunks, zip;
 import std.traits;
 import std.json;
 import std.file;
@@ -25,6 +25,7 @@ import cliargs;
 import gitauthors;
 import github;
 import json;
+import getopenissues;
 
 Comment[] allComment() {
 	return dirEntries("issues/", "bug*.json", SpanMode.depth)
@@ -417,17 +418,62 @@ Afterwards send fixup PR's to fix issue numbers in the
 dmd, druntime, phobos. Thank you WebFreak for the idea
 */
 
+/*
+Label[string] generateLabels(Bug[] ob, string[][string] toIncludeKeys) {
+	Label[string] labels;
+	static foreach(mem; __traits(allMembers, Bug)) {{
+		static if(canFind(toIncludeKeys, mem)) {
+			alias MT = typeof(__traits(getMember, Bug, mem));
+			static if(is(MT == string) || is(MT == string[])) {{
+				string[] toInsert = all!(mem,MT)(ob)
+					.filter!(it => !it.empty)
+					.filter!(it => it != "All" && it != "Other")
+					.array;
+				writefln("All %s %s", mem, toInsert);
+				const string[] colors = toInclude[mem];
+				foreach(lr; zip(toInsert, colors)
+						.map!(p => createLabel(LabelInput(p[1], p[0], target.id)
+							, theArgs().githubToken)
+						)
+				) {
+					labels[lr.name] = lr;
+				}
+			}}
+		}
+	}}
+
+	JSONValue labelJson = JSONValue(labels
+		.values()
+		.map!(it => JSONValue(
+				[ "id" : it.id
+				, "color" : it.color
+				, "name" : it.name
+				]
+			))
+		.array
+	);
+
+	auto labelFile = File("labels.json", "w");
+	labelFile.write(labelJson.toPrettyString());
+	return labels;
+}*/
+
 void main(string[] args) {
 	if(parseOptions(args)) {
 		return;
 	}
+	long[] issues = getOpenIssuesImpl("phobos");
+	auto bs = downloadAsChunks(issues[0 .. 100], 10);
+	Bug[] bsAC = downloadCommentsAndAttachments(bs, 10);
 	//writeOpenIssuesToFile();
 	//Bug[] ob = allBugs();
+	/*
 	Label[] labels = parseExistingLabels();
 	Label[string] labelsAA = assocArray
 		( labels.map!(it => it.name)
 		, labels
 		);
+	*/
 	/*
 	CommentAnalysis ca = readOpenIssues()
 		.map!(b => getCommentByBugId(b.id))
@@ -444,9 +490,11 @@ void main(string[] args) {
 	writeln(ba);
 	*/
 
+	/*
 	Nullable!Bug b = getBugById(21565);
 	Bug bnn = b.get();
 	Markdowned m = toMarkdown(bnn);
+	*/
 	//auto f = File("i21565.md", "w");
 	//f.write(m.toString());
 
@@ -488,6 +536,7 @@ void main(string[] args) {
 	//writefln("All classifications %s", allClassification(ob));
 	//writefln("All flags %s", allFlags(ob));
 
+	/*
 	const toInclude = 
 		[ "op_sys":
 			[ "000000"
@@ -610,45 +659,8 @@ void main(string[] args) {
 	}}
 
 	createIssue(input, theArgs().githubToken);
-
-
-	/*
-	Label[string] labels;
-	static foreach(mem; __traits(allMembers, Bug)) {{
-		static if(canFind(toIncludeKeys, mem)) {
-			alias MT = typeof(__traits(getMember, Bug, mem));
-			static if(is(MT == string) || is(MT == string[])) {{
-				string[] toInsert = all!(mem,MT)(ob)
-					.filter!(it => !it.empty)
-					.filter!(it => it != "All" && it != "Other")
-					.array;
-				writefln("All %s %s", mem, toInsert);
-				const string[] colors = toInclude[mem];
-				foreach(lr; zip(toInsert, colors)
-						.map!(p => createLabel(LabelInput(p[1], p[0], target.id)
-							, theArgs().githubToken)
-						)
-				) {
-					labels[lr.name] = lr;
-				}
-			}}
-		}
-	}}
-
-	JSONValue labelJson = JSONValue(labels
-		.values()
-		.map!(it => JSONValue(
-				[ "id" : it.id
-				, "color" : it.color
-				, "name" : it.name
-				]
-			))
-		.array
-	);
-
-	auto labelFile = File("labels.json", "w");
-	labelFile.write(labelJson.toPrettyString());
 	*/
+
 
 	/*
 	JSONValue vq;

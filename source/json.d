@@ -30,7 +30,7 @@ T tFromJson(T)(JSONValue js) {
 		JSONValue[string] obj = js.objectNoRef();
 		static foreach(memPre; FieldNameTuple!(T)) {{
 			enum mem = memPre.stripRight("_");
-			//writefln("   %s", mem);
+			//writefln("   %s %s", mem, js.toPrettyString());
 			alias MT = typeof(__traits(getMember, T, memPre));
 			static if(is(MT : Nullable!F, F)) {{
 				if(mem in obj && obj[mem].type != JSONType.null_) {
@@ -57,7 +57,17 @@ T tFromJson(T)(JSONValue js) {
 			}} else {{
 				//writefln("%s %s", MT.stringof, mem);
 				//writefln("%s %s", MT.stringof, obj[mem]);
-				__traits(getMember, ret, memPre) = obj[mem].get!MT();
+				static if(is(MT == bool)) {
+					if(obj[mem].type == JSONType.true_) {
+						__traits(getMember, ret, memPre) = true;
+					} else if(obj[mem].type == JSONType.false_) {
+						__traits(getMember, ret, memPre) = false;
+					} else {
+						__traits(getMember, ret, memPre) = obj[mem].get!long() != 0;
+					}
+				} else {
+					__traits(getMember, ret, memPre) = obj[mem].get!MT();
+				}
 			}}
 		}}
 	}}

@@ -9,7 +9,7 @@ import std.conv : to;
 import std.format;
 import std.net.curl;
 import std.traits;
-import std.range : ElementEncodingType;
+import std.range : ElementEncodingType, chunks;
 import std.exception;
 import std.string : stripRight;
 import std.typecons : Nullable, nullable;
@@ -81,6 +81,24 @@ struct Bug {
 
 	// joined in later
 	Nullable!(Comment[]) comments;
+	Nullable!(Attachment[]) attachments;
+}
+
+struct Attachment {
+	long id;
+	string data;
+	long size;
+	SysTime  creation_time;
+	SysTime last_change_time;
+	long bug_id;
+	string file_name;
+	string summary;
+	string content_type;
+	bool is_private;
+	bool is_obsolete;
+	bool is_patch;
+	string creator;
+	string[] flags;
 }
 
 
@@ -121,12 +139,32 @@ Nullable!JSONValue extractCommentArray(JSONValue js) {
 	}
 	auto idJ = keys[0] in *b;
 
-	auto c = "comments" in *idJ;
+	enforce((*idJ).type == JSONType.object, js.toPrettyString());
+	auto c = "comment" in *idJ;
 	if(c is null) {
 		return Nullable!(JSONValue).init;
 	}
 	JSONValue v = *c;
 	return nullable(v);
+}
+
+Nullable!JSONValue extractAttachmentArray(JSONValue js) {
+	auto b = "bugs" in js;
+	if(b is null && b.type() == JSONType.array) {
+		return Nullable!(JSONValue).init;
+	}
+	string[] keys = b.objectNoRef().keys();
+	if(keys.length != 1 && keys[0] !in *b) {
+		return Nullable!(JSONValue).init;
+	}
+	auto idJ = keys[0] in *b;
+
+	if(idJ !is null) {
+		JSONValue r = *idJ;
+		return nullable(r);
+	} else {
+		return Nullable!(JSONValue).init;
+	}
 }
 
 Comment[] parseComment(JSONValue js) {
@@ -137,6 +175,19 @@ Comment[] parseComment(JSONValue js) {
 	return a.isNull()
 		? []
 		: tFromJson!(Comment[])(a.get());
+}
+
+Attachment[] parseAttachment(JSONValue js) {
+	if(js.type() == JSONType.object && "attachment" in js) {
+		return [];
+	}
+	auto a = extractAttachmentArray(js);
+	if(!a.isNull()) {
+		//writefln("Attachments\n%s", a.get().toPrettyString());
+	}
+	return a.isNull()
+		? []
+		: tFromJson!(Attachment[])(a.get());
 }
 
 Nullable!JSONValue filterNonFound(JSONValue js) {
@@ -152,9 +203,24 @@ JSONValue getBug(long id) {
 	return content;
 }
 
+JSONValue getBugs(long[] ids) {
+	string url = "https://issues.dlang.org/rest/bug?id=%(%s,%)";
+	string withId = format(url, ids);
+	writeln(withId);
+	auto content = getContent(withId).to!string().parseJSON();
+	return content;
+}
+
 JSONValue getComment(long id) {
 	string url = "https://issues.dlang.org/rest/bug/%d/comment";
 	string withId = format(url, id);
+	auto content = getContent(withId).to!string().parseJSON();
+	return content;
+}
+
+JSONValue getAttachments(long bugId) {
+	string url = "https://issues.dlang.org/rest/bug/%d/attachment";
+	string withId = format(url, bugId);
 	auto content = getContent(withId).to!string().parseJSON();
 	return content;
 }
@@ -166,4 +232,69 @@ unittest {
 	auto js = parseJSON(h);
 	auto bugs = tFromJson!(Bug[])(js["bugs"]);
 	writeln(bugs);
+}
+
+import core.thread;
+
+class Getter : Thread {
+	Bug[] rslt;
+	long[] ids;
+
+	this(long[] ids) {
+		this.ids = ids;
+		super(&run);
+	}
+
+	void run() {
+		auto js = getBugs(this.ids);
+		this.rslt = parseBugs(js);
+	}
+}
+
+Bug[] downloadAsChunks(long[] ids, ulong chunkSize) {
+	auto chks = chunks(ids, chunkSize);
+	Getter[] getter = chks
+		.map!(chk => cast(Getter)new Getter(chk).start())
+		.array;
+
+	foreach(it; getter) {
+		it.join();
+	}
+
+	return getter
+		.map!(it => it.rslt)
+		.joiner
+		.array;
+}
+
+class GetCommentAttachments : Thread {
+	Bug[] rslt;
+
+	this(Bug[] input) {
+		this.rslt = input;
+		super(&run);
+	}
+
+	void run() {
+		foreach(ref it; this.rslt) {
+			it.attachments = getAttachments(it.id).parseAttachment();
+			it.comments = getComment(it.id).parseComment();
+		}
+	}
+}
+
+Bug[] downloadCommentsAndAttachments(Bug[] bugs, ulong chunkSize) {
+	auto chks = chunks(bugs, chunkSize);
+	GetCommentAttachments[] getter = chks
+		.map!(chk => cast(GetCommentAttachments)new GetCommentAttachments(chk).start())
+		.array;
+
+	foreach(it; getter) {
+		it.join();
+	}
+
+	return getter
+		.map!(it => it.rslt)
+		.joiner
+		.array;
 }
