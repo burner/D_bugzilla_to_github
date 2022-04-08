@@ -3,6 +3,7 @@ module json;
 import std.array;
 import std.json;
 import std.datetime.systime;
+import std.datetime.date;
 import std.exception : enforce;
 import std.algorithm.iteration : map;
 import std.typecons;
@@ -36,6 +37,8 @@ T tFromJson(T)(JSONValue js) {
 				if(mem in obj && obj[mem].type != JSONType.null_) {
 					static if(is(F == SysTime)) {{
 						__traits(getMember, ret, memPre) = SysTime.fromISOExtString(obj[mem].get!string());
+					}} else static if(is(F == Date)) {{
+						__traits(getMember, ret, memPre) = Date.fromISOExtString(obj[mem].get!string());
 					}} else static if(is(F == struct)) {{
 						__traits(getMember, ret, memPre) = tFromJson!F(obj[mem]);
 					}} else static if(isArray!F && !isSomeString!F) {{
@@ -72,4 +75,34 @@ T tFromJson(T)(JSONValue js) {
 		}}
 	}}
 	return ret;
+}
+
+JSONValue toJson(T)(T t) {
+	auto r = toJsonImpl(t);
+	return r;
+}
+
+JSONValue toJsonImpl(T)(T t) {
+	static if(isArray!T && !isSomeString!T) {
+		return JSONValue(t.map!(it => toJsonImpl(it)).array);
+	} else static if(is(T == SysTime)) {
+		return JSONValue(t.toISOExtString());
+	} else static if(is(T == Date)) {
+		return JSONValue(t.toISOExtString());
+	} else static if(isBasicType!T || isSomeString!T) {
+		return JSONValue(t);
+	} else static if(is(T : Nullable!F, F)) {
+		return t.isNull()
+			? JSONValue(null)
+			: JSONValue(toJsonImpl(t.get()));
+	} else static if(is(T == struct)) {
+		JSONValue r;
+		static foreach(memPre; FieldNameTuple!(T)) {{
+			enum mem = memPre.stripRight("_");
+			r[mem] = toJsonImpl(__traits(getMember, t, memPre));
+		}}
+		return r;
+	} else {
+		static assert(false, T.stringof ~ " |" ~ isBasicType!(T).stringof ~ "|");
+	}
 }

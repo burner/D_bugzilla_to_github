@@ -27,6 +27,12 @@ import github;
 import json;
 import getopenissues;
 
+string atReplace(string s) {
+	return s.replace("@safe", "at_safe")
+		.replace("@trusted", "at_trusted")
+		.replace("@system", "at_system");
+}
+
 Comment[] allComment() {
 	return dirEntries("issues/", "bug*.json", SpanMode.depth)
 			.filter!(it => canFind(it.name, "comment"))
@@ -167,35 +173,6 @@ auto all(string mem,T)(Bug[] b) {
 		return getImplSingle!mem(b);
 	}}
 }
-
-string[] allKeywords(Bug[] b) {
-	return all!("keywords",string[])(b);
-}
-
-string[] allVersion(Bug[] b) {
-	return all!("version_",string)(b);
-}
-
-string[] allCC(Bug[] b) {
-	return all!("cc",string[])(b);
-}
-
-string[] allPlatforms(Bug[] b) {
-	return all!("platform",string)(b);
-}
-
-string[] allOPs(Bug[] b) {
-	return all!("op_sys",string)(b);
-}
-
-string[] allClassification(Bug[] b) {
-	return all!("classification",string)(b);
-}
-
-string[] allFlags(Bug[] b) {
-	return all!("flags",string[])(b);
-}
-
 
 Bug[long] joinBugsAndComments(Bug[] bugs, Comment[] comments) {
 	Bug[long] ret = assocArray(bugs.map!(it => it.id), bugs);
@@ -418,19 +395,28 @@ Afterwards send fixup PR's to fix issue numbers in the
 dmd, druntime, phobos. Thank you WebFreak for the idea
 */
 
-/*
-Label[string] generateLabels(Bug[] ob, string[][string] toIncludeKeys) {
+
+Label[string] generateLabels(Bug[] ob
+		, const(string[][string]) toIncludeKeys
+		, Repository target) 
+{
+	if(exists("labels.json")) {
+		return parseExistingLabels()
+			.map!(l => tuple(l.name, l))
+			.assocArray();
+	}
 	Label[string] labels;
 	static foreach(mem; __traits(allMembers, Bug)) {{
-		static if(canFind(toIncludeKeys, mem)) {
+		//static if(canFind(toIncludeKeys, mem)) {
+		if(mem in toIncludeKeys) {
 			alias MT = typeof(__traits(getMember, Bug, mem));
 			static if(is(MT == string) || is(MT == string[])) {{
 				string[] toInsert = all!(mem,MT)(ob)
 					.filter!(it => !it.empty)
 					.filter!(it => it != "All" && it != "Other")
 					.array;
-				writefln("All %s %s", mem, toInsert);
-				const string[] colors = toInclude[mem];
+				writefln("All %s %s %s", mem, toInsert, ob.length);
+				const string[] colors = toIncludeKeys[mem];
 				foreach(lr; zip(toInsert, colors)
 						.map!(p => createLabel(LabelInput(p[1], p[0], target.id)
 							, theArgs().githubToken)
@@ -442,31 +428,73 @@ Label[string] generateLabels(Bug[] ob, string[][string] toIncludeKeys) {
 		}
 	}}
 
-	JSONValue labelJson = JSONValue(labels
-		.values()
-		.map!(it => JSONValue(
-				[ "id" : it.id
-				, "color" : it.color
-				, "name" : it.name
-				]
-			))
-		.array
-	);
+	if(!labels.empty) {
+		JSONValue labelJson = JSONValue(labels
+			.values()
+			.map!(it => JSONValue(
+					[ "id" : it.id
+					, "color" : it.color
+					, "name" : it.name
+					]
+				))
+			.array
+		);
 
-	auto labelFile = File("labels.json", "w");
-	labelFile.write(labelJson.toPrettyString());
+		auto labelFile = File("labels.json", "w");
+		labelFile.write(labelJson.toPrettyString());
+	}
 	return labels;
-}*/
+}
+
+void writeToFiles(Bug[] bugs) {
+	//writefln("how many %s", bugs.length);
+	foreach(b; bugs) {
+		writeln(b);
+		const fn = format("issues/bug%s.json", b.id);
+		assert(!exists(fn), fn ~ " " ~ b.lastTouched.get().toISOExtString());
+		auto f = File(fn, "w");
+		f.writeln(toJson(b).toPrettyString());
+	}
+}
+
+struct BugIssue {
+	CreateIssueResult githubIssue;
+	Bug bugzillaIssue;
+}
 
 void main(string[] args) {
 	if(parseOptions(args)) {
 		return;
 	}
-	long[] issues = getOpenIssuesImpl("phobos");
-	auto bs = downloadAsChunks(issues[0 .. 100], 10);
-	Bug[] bsAC = downloadCommentsAndAttachments(bs, 10);
+	BugDate[] issues = getOpenIssuesImpl("phobos");
+	Bug[long] alreadyLoadedBugs = allBugs()
+		.map!(b => tuple(b.id, b))
+		.assocArray;
+	//writefln("%(%s\n%)", alreadyLoadedBugs.keys()
+	//		.chunks(10));
+
+	BugDate[] issuesFiltered = issues
+		.filter!((i) {
+			auto g = i.id in alreadyLoadedBugs;
+			if(g is null) {
+				return true;
+			} else {
+				const r = i.date != (*g).lastTouched.get();
+				return r;
+			}
+		})
+		.array;
+
+	writefln("sto %5s\nall %5s\nfil %5s", alreadyLoadedBugs.length, issues.length
+			, issuesFiltered.length);
+
+	Bug[] bs = downloadAsChunks(issuesFiltered, 10);
+	Bug[] bsAC = downloadCommentsAndAttachments(bs, 20);
+	writeToFiles(bsAC);
+	writeln(bsAC.length);
+
 	//writeOpenIssuesToFile();
-	//Bug[] ob = allBugs();
+	Bug[] ob = allBugs();
 	/*
 	Label[] labels = parseExistingLabels();
 	Label[string] labelsAA = assocArray
@@ -536,7 +564,6 @@ void main(string[] args) {
 	//writefln("All classifications %s", allClassification(ob));
 	//writefln("All flags %s", allFlags(ob));
 
-	/*
 	const toInclude = 
 		[ "op_sys":
 			[ "000000"
@@ -629,37 +656,46 @@ void main(string[] args) {
 			]
 		];
 
-	const string[] toIncludeKeys = toInclude.keys();
-	//const string[] toIncludeKeys = [ "platform" ];
-
+	writeln("target");
 	Repository target = getRepository("burner", "bugzilla_migration_test"
 			, theArgs().githubToken);
 
-	CreateIssueInput input;
-	input.title = m.title;
-	input.body_ = m.header ~ "\n" ~ m.comments;
-	input.repoId = target.id;
-	static foreach(mem; __traits(allMembers, Bug)) {{
-		static if(canFind(toIncludeKeys, mem)) {
-			alias MT = typeof(__traits(getMember, Bug, mem));
-			static if(is(MT == string)) {{
-				auto has = __traits(getMember, bnn, mem);	
-				if(has in labelsAA) {
-					input.labelIds ~= labelsAA[has].id;
-				}
-			}} else static if(is(MT == string[])) {{
-				auto has = __traits(getMember, bnn, mem);	
-				foreach(it; has) {
-					if(it in labelsAA) {
-						input.labelIds ~= labelsAA[it].id;
-					}
-				}
-			}}
-		}
-	}}
+	writeln("labels");
+	Label[string] labelsAA = generateLabels(ob, toInclude, target);
 
-	createIssue(input, theArgs().githubToken);
-	*/
+	const string[] toIncludeKeys = toInclude.keys();
+
+	BugIssue[] rslt;
+	foreach(ref b; ob[0 .. 50]) {
+		writeln(b);
+		Markdowned m = toMarkdown(b);
+
+		CreateIssueInput input;
+		input.title = m.title.atReplace();
+		input.body_ = (m.header ~ "\n" ~ m.comments).atReplace();
+		input.repoId = target.id;
+		static foreach(mem; __traits(allMembers, Bug)) {{
+			static if(canFind(toIncludeKeys, mem)) {
+				alias MT = typeof(__traits(getMember, Bug, mem));
+				static if(is(MT == string)) {{
+					auto has = __traits(getMember, b, mem);	
+					if(has in labelsAA) {
+						input.labelIds ~= labelsAA[has].id;
+					}
+				}} else static if(is(MT == string[])) {{
+					auto has = __traits(getMember, b, mem);	
+					foreach(it; has) {
+						if(it in labelsAA) {
+							input.labelIds ~= labelsAA[it].id;
+						}
+					}
+				}}
+			}
+		}}
+
+		rslt ~= BugIssue(createIssue(input, theArgs().githubToken), b);
+		Thread.sleep(dur!"msecs"(2000));
+	}
 
 
 	/*

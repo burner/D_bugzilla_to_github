@@ -115,14 +115,16 @@ Markdowned toMarkdown(Bug b) {
 	ret.header ~= "### Description\n\n";
 	enforce(!b.comments.isNull(), format("Bug %s has no comments", b.id));
 	Comment[] comments = b.comments.get();
-	enforce(!comments.empty, format("Bug %s has no description", b.id));
-	ret.header ~= toMarkdown(comments.front, true);
-
-	ret.header ~= "### Comments\n\n";
-	ret.comments = comments[1 .. $]
-		.map!(c => toMarkdown(c, false))
-		.joiner("\n\n")
-		.to!string();
+	if(comments.empty) {
+		ret.header ~= "No description was given";
+	} else {
+		ret.header ~= toMarkdown(comments.front, true);
+		ret.header ~= "### Comments\n\n";
+		ret.comments = comments[1 .. $]
+			.map!(c => toMarkdown(c, false))
+			.joiner("\n\n")
+			.to!string();
+	}
 
 	return ret;
 }

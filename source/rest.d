@@ -14,8 +14,10 @@ import std.exception;
 import std.string : stripRight;
 import std.typecons : Nullable, nullable;
 import std.datetime.systime;
+import std.datetime.date;
 
 import json;
+import getopenissues;
 
 import requests;
 
@@ -82,6 +84,8 @@ struct Bug {
 	// joined in later
 	Nullable!(Comment[]) comments;
 	Nullable!(Attachment[]) attachments;
+
+	Nullable!(Date) lastTouched;
 }
 
 struct Attachment {
@@ -120,12 +124,15 @@ Bug[] parseBugs(JSONValue js) {
 	if(js.type() == JSONType.object && "code" in js) {
 		return [];
 	}
-	return JSONValue(js["bugs"].arrayNoRef()
-		.map!(filterNonFound)
-		.filter!(it => !it.isNull())
-		.map!(it => it.get())
-		.array)
-		.tFromJson!(Bug[])();
+	const b = "bugs";
+	return b in js
+		? JSONValue(js["bugs"].arrayNoRef()
+			.map!(filterNonFound)
+			.filter!(it => !it.isNull())
+			.map!(it => it.get())
+			.array)
+			.tFromJson!(Bug[])()
+		: [ js.tFromJson!(Bug)() ];
 }
 
 Nullable!JSONValue extractCommentArray(JSONValue js) {
@@ -140,7 +147,7 @@ Nullable!JSONValue extractCommentArray(JSONValue js) {
 	auto idJ = keys[0] in *b;
 
 	enforce((*idJ).type == JSONType.object, js.toPrettyString());
-	auto c = "comment" in *idJ;
+	auto c = "comments" in *idJ;
 	if(c is null) {
 		return Nullable!(JSONValue).init;
 	}
@@ -206,7 +213,6 @@ JSONValue getBug(long id) {
 JSONValue getBugs(long[] ids) {
 	string url = "https://issues.dlang.org/rest/bug?id=%(%s,%)";
 	string withId = format(url, ids);
-	writeln(withId);
 	auto content = getContent(withId).to!string().parseJSON();
 	return content;
 }
@@ -238,26 +244,35 @@ import core.thread;
 
 class Getter : Thread {
 	Bug[] rslt;
-	long[] ids;
+	BugDate[] ids;
 
-	this(long[] ids) {
+	this(BugDate[] ids) {
 		this.ids = ids;
 		super(&run);
 	}
 
 	void run() {
-		auto js = getBugs(this.ids);
+		auto js = getBugs(this.ids.map!(it => it.id).array);
 		this.rslt = parseBugs(js);
+		outer: foreach(ref r; this.rslt) {
+			foreach(bd; this.ids) {
+				if(r.id == bd.id) {
+					r.lastTouched = bd.date;
+					continue outer;
+				}
+			}
+		}
 	}
 }
 
-Bug[] downloadAsChunks(long[] ids, ulong chunkSize) {
+Bug[] downloadAsChunks(BugDate[] ids, ulong chunkSize) {
 	auto chks = chunks(ids, chunkSize);
 	Getter[] getter = chks
-		.map!(chk => cast(Getter)new Getter(chk).start())
+		.map!(chk => cast(Getter)new Getter(chk))
 		.array;
 
 	foreach(it; getter) {
+		it.start();
 		it.join();
 	}
 
@@ -268,33 +283,34 @@ Bug[] downloadAsChunks(long[] ids, ulong chunkSize) {
 }
 
 class GetCommentAttachments : Thread {
-	Bug[] rslt;
+	Bug rslt;
 
-	this(Bug[] input) {
+	this(Bug input) {
 		this.rslt = input;
 		super(&run);
 	}
 
 	void run() {
-		foreach(ref it; this.rslt) {
-			it.attachments = getAttachments(it.id).parseAttachment();
-			it.comments = getComment(it.id).parseComment();
-		}
+		this.rslt.attachments = getAttachments(this.rslt.id).parseAttachment();
+		this.rslt.comments = getComment(this.rslt.id).parseComment();
 	}
 }
 
 Bug[] downloadCommentsAndAttachments(Bug[] bugs, ulong chunkSize) {
 	auto chks = chunks(bugs, chunkSize);
-	GetCommentAttachments[] getter = chks
-		.map!(chk => cast(GetCommentAttachments)new GetCommentAttachments(chk).start())
-		.array;
+	Bug[] ret;
+	foreach(chk; chks) {
+		writefln("%(%s,%)", chk.map!(i => i.id));
+		GetCommentAttachments[] getter = chk
+			.map!(it => cast(GetCommentAttachments)new GetCommentAttachments(it).start())
+			.array;
 
-	foreach(it; getter) {
-		it.join();
+		foreach(it; getter) {
+			it.join();
+		}
+		ret ~= getter
+			.map!(it => it.rslt)
+			.array;
 	}
-
-	return getter
-		.map!(it => it.rslt)
-		.joiner
-		.array;
+	return ret;
 }
