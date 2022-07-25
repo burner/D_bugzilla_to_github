@@ -1,19 +1,19 @@
 module analysis;
 
-import std.array;
-import std.json;
-import std.algorithm.sorting;
 import std.algorithm.iteration;
-import std.stdio;
+import std.algorithm.sorting;
+import std.array;
 import std.conv : to;
-import std.format;
-import std.net.curl;
-import std.traits;
-import std.range : ElementEncodingType;
-import std.exception;
-import std.string : stripRight;
-import std.typecons : Nullable, nullable;
 import std.datetime.systime;
+import std.exception;
+import std.format;
+import std.json;
+import std.net.curl;
+import std.range : ElementEncodingType;
+import std.stdio;
+import std.string : stripRight;
+import std.traits;
+import std.typecons : Nullable, nullable;
 
 import json;
 import rest;

@@ -1,15 +1,15 @@
 module github;
 
-import std.array;
-import std.algorithm.searching : all, startsWith;
 import std.algorithm.iteration : filter, map;
+import std.algorithm.searching : all, startsWith;
+import std.array;
 import std.ascii : isASCII;
-import std.typecons : Nullable, nullable;
-import std.range : chain;
+import std.conv : to;
 import std.format;
 import std.json;
+import std.range : chain;
 import std.stdio;
-import std.conv : to;
+import std.typecons : Nullable, nullable;
 
 import requests;
 

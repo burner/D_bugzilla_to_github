@@ -1,18 +1,19 @@
-import std.array;
-import std.stdio;
-import std.exception;
-import std.ascii : isASCII;
 import std.algorithm.iteration : filter, joiner, map, fold, uniq;
 import std.algorithm.searching : all, canFind;
 import std.algorithm.sorting : sort;
-import std.range : chain, chunks, zip;
-import std.traits;
-import std.json;
+import std.array;
+import std.ascii : isASCII;
+import std.exception;
 import std.file;
 import std.format;
+import std.json;
+import std.range : chain, chunks, zip;
+import std.range : iota;
+import std.stdio;
+import std.string : indexOf;
+import std.traits;
 import std.typecons;
 import std.uni : toLower;
-import std.range : iota;
 
 import core.thread;
 import core.time;
@@ -449,9 +450,11 @@ Label[string] generateLabels(Bug[] ob
 void writeToFiles(Bug[] bugs) {
 	//writefln("how many %s", bugs.length);
 	foreach(b; bugs) {
-		writeln(b);
 		const fn = format("issues/bug%s.json", b.id);
-		assert(!exists(fn), fn ~ " " ~ b.lastTouched.get().toISOExtString());
+		if(exists(fn)) {
+			writefln("%s %s %s", b.id, fn, b.lastTouched.get().toISOExtString());
+			continue;
+		}
 		auto f = File(fn, "w");
 		f.writeln(toJson(b).toPrettyString());
 	}
@@ -665,9 +668,11 @@ void main(string[] args) {
 
 	const string[] toIncludeKeys = toInclude.keys();
 
+	writeln(getCurrentRateLimit(theArgs().githubToken));
+
 	BugIssue[] rslt;
-	foreach(ref b; ob[0 .. 50]) {
-		writeln(b);
+	foreach(idx, ref b; ob) {
+		writefln("%s of %s", idx, ob.length);
 		Markdowned m = toMarkdown(b);
 
 		CreateIssueInput input;
@@ -693,8 +698,21 @@ void main(string[] args) {
 			}
 		}}
 
-		rslt ~= BugIssue(createIssue(input, theArgs().githubToken), b);
-		Thread.sleep(dur!"msecs"(2000));
+		// Annoying creation rate limit of github
+		inner: foreach(tries; 0 .. 2) {
+			try {
+				rslt ~= BugIssue(createIssue(input, theArgs().githubToken), b);
+				break inner;
+			} catch(Exception e) {
+				writeln(e.toString());
+				if(e.msg.indexOf("was submitted too quickly") != -1) {
+					Thread.sleep(dur!"minutes"(61));
+					writeln("Sleeping for an 61 minutes");
+					continue inner;
+				}
+			}
+		}
+		Thread.sleep(dur!"msecs"(5000));
 	}
 
 
@@ -742,5 +760,4 @@ void main(string[] args) {
 				, theArgs().githubToken
 		).toPrettyString());
 	*/
-
 }

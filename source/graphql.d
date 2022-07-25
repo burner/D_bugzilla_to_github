@@ -1,18 +1,35 @@
 module graphql;
 
-import std.array;
-import std.json;
-import std.stdio;
-import std.file : readText;
-import std.conv;
-import std.exception;
-import std.datetime;
 import std.algorithm.iteration : map, splitter;
 import std.algorithm.searching : canFind, endsWith, startsWith;
+import std.array;
+import std.conv;
+import std.datetime;
+import std.exception;
+import std.file : readText;
 import std.format : format;
+import std.json;
+import std.stdio;
 import std.traits : Unqual, isArray;
 
 @safe:
+
+JSONValue getCurrentRateLimit(string bearer) {
+	string q = 
+		`query {
+		  viewer {
+		    login
+		  }
+		  rateLimit {
+		    limit
+		    cost
+		    remaining
+		    resetAt
+		  }
+		}`;
+	JSONValue limits = qlQuerySafe(q, JSONValue.init, bearer);
+	return limits;
+}
 
 Label[] parseExistingLabels() {
 	JSONValue t = parseJSON(readText("labels.json"));
@@ -202,7 +219,7 @@ void handleErrors(JSONValue ret, string request, JSONValue vars) {
 		}
 	}
 	enforce("errors" !in ret, ret.toPrettyString() ~ "\n" ~ request ~ "\n"
-			~ vars.toPrettyString());
+			~ vars.toPrettyString() ~ "\n" ~ ret["errors"].toPrettyString());
 }
 
 JSONValue qlMutationSafe(string request, string vars, const string bearer,

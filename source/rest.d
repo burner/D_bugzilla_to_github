@@ -1,20 +1,20 @@
 module rest;
 
-import std.array;
-import std.json;
-import std.algorithm.sorting;
 import std.algorithm.iteration;
-import std.stdio;
+import std.algorithm.sorting;
+import std.array;
 import std.conv : to;
-import std.format;
-import std.net.curl;
-import std.traits;
-import std.range : ElementEncodingType, chunks;
-import std.exception;
-import std.string : stripRight;
-import std.typecons : Nullable, nullable;
-import std.datetime.systime;
 import std.datetime.date;
+import std.datetime.systime;
+import std.exception;
+import std.format;
+import std.json;
+import std.net.curl;
+import std.range : ElementEncodingType, chunks;
+import std.stdio;
+import std.string : stripRight;
+import std.traits;
+import std.typecons : Nullable, nullable;
 
 import json;
 import getopenissues;
@@ -218,10 +218,17 @@ JSONValue getBugs(long[] ids) {
 }
 
 JSONValue getComment(long id) {
-	string url = "https://issues.dlang.org/rest/bug/%d/comment";
-	string withId = format(url, id);
-	auto content = getContent(withId).to!string().parseJSON();
-	return content;
+	foreach(r; 0 .. 2) {
+		try {
+			string url = "https://issues.dlang.org/rest/bug/%d/comment";
+			string withId = format(url, id);
+			auto content = getContent(withId).to!string().parseJSON();
+			return content;
+		} catch(TimeoutException t) {
+			writefln("Timeout exception for %s", id);
+		}
+	}
+	return JSONValue.init;
 }
 
 JSONValue getAttachments(long bugId) {

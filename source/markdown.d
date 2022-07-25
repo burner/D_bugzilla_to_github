@@ -1,13 +1,13 @@
 module markdown;
 
-import std.array;
-import std.conv : to;
-import std.stdio;
-import std.exception;
 import std.algorithm.iteration : filter, joiner, map, fold, uniq, splitter;
 import std.algorithm.searching : canFind, endsWith, startsWith;
 import std.algorithm.sorting : sort;
+import std.array;
+import std.conv : to;
+import std.exception;
 import std.format;
+import std.stdio;
 import std.typecons;
 
 import rest;
@@ -134,7 +134,9 @@ string toMarkdown(Comment c, const bool noHeader) {
 		? ""
 		: format("#### %s commented on %s\n\n", c.creator
 				, c.time.toISOExtString());
-	string body_ = c.text.replace("\\n", "\n");
+	string body_ = c.text
+		.replace("\\n", "\n")
+		.replace("In reply to comment #", "In reply to comment ");
 	string newBody;
 	DConfFinder dcf;
 	foreach(l; body_.splitter("\n")) {
