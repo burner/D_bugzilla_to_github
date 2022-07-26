@@ -48,7 +48,8 @@
   morecomment=[l]{//}, % l is for line comment
   morecomment=[s]{/*}{*/}, % s is for start and end delimiter
   morecomment=[s]{/+}{+/}, % s is for start and end delimiter
-  morestring=[b]" % defines that strings are enclosed in double quotes
+  morestring=[b]{"}, % defines that strings are enclosed in double quotes
+  morestring=[b]{`} % defines that strings are enclosed in double quotes
 }
 \usepackage{color}
 \definecolor{eclipseBlue}{RGB}{42,0.0,255}
@@ -240,14 +241,40 @@
 		\end{onlyenv}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the good)}
-		\lstinputlisting[language=D,firstline=40,lastline=55,basicstyle=\footnotesize\ttfamily]{../source/rest.d}
+			\lstinputlisting[language=D,firstline=40,lastline=55,basicstyle=\footnotesize\ttfamily]{../source/rest.d}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the good)}
-		\lstinputlisting[language=D,firstline=18,lastline=29,basicstyle=\footnotesize\ttfamily]{../source/json.d}
-		\pause
+		\begin{onlyenv}<1,3,5,7,9>
+			\lstinputlisting[language=D,firstline=18,lastline=29,basicstyle=\footnotesize\ttfamily]{../source/json.d}
+		\end{onlyenv}
+		\begin{onlyenv}<2>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{traits.d}
+		\end{onlyenv}
+		\begin{onlyenv}<4>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{map.d}
+		\end{onlyenv}
+		\begin{onlyenv}<6>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{filter.d}
+		\end{onlyenv}
+		\begin{onlyenv}<8>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{filter.d}
+		\end{onlyenv}
+		\begin{onlyenv}<10>
+			\begin{lstlisting}
+import std.json;
+			\end{lstlisting}
+		\end{onlyenv}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the good)}
-		\lstinputlisting[language=D,firstnumber=13,firstline=30,lastline=43,basicstyle=\footnotesize\ttfamily]{../source/json.d}
+		\begin{onlyenv}<1,3,5>
+			\lstinputlisting[language=D,firstnumber=13,firstline=30,lastline=43,basicstyle=\footnotesize\ttfamily]{../source/json.d}
+		\end{onlyenv}
+		\begin{onlyenv}<2>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{enforce.d}
+		\end{onlyenv}
+		\begin{onlyenv}<4>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{fromiso.d}
+		\end{onlyenv}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the good)}
 		\lstinputlisting[language=D,firstnumber=27,firstline=44,lastline=59,basicstyle=\footnotesize\ttfamily]{../source/json.d}
@@ -294,11 +321,41 @@
 		\lstinputlisting[language=D,firstnumber=1,firstline=24,lastline=37,basicstyle=\footnotesize\ttfamily]{../source/getopenissues.d}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the ugly)}
-		\lstinputlisting[language=D,firstnumber=15,firstline=38,lastline=43,basicstyle=\footnotesize\ttfamily]{../source/getopenissues.d}
+		\begin{onlyenv}<1,3>
+			\lstinputlisting[language=D,firstnumber=15,firstline=38,lastline=43,basicstyle=\footnotesize\ttfamily]{../source/getopenissues.d}
+		\end{onlyenv}
+		\begin{onlyenv}<2>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{zip.d}
+		\end{onlyenv}
+		\begin{onlyenv}<4>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{uniq.d}
+		\end{onlyenv}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the ugly)}
-		\lstinputlisting[language=D,firstnumber=21,firstline=45,lastline=58,basicstyle=\footnotesize\ttfamily]{../source/getopenissues.d}
+		\begin{onlyenv}<1,3,5>
+			\lstinputlisting[language=D,firstnumber=21,firstline=45,lastline=58,basicstyle=\footnotesize\ttfamily]{../source/getopenissues.d}
+		\end{onlyenv}
+		\begin{onlyenv}<2>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{find.d}
+		\end{onlyenv}
+		\begin{onlyenv}<4>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{until.d}
+		\end{onlyenv}
+		\begin{onlyenv}<6>
+			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{to.d}
+		\end{onlyenv}
 	\end{frame}
+	\begin{frame}[fragile]{Parsing (the ugly)}
+At this point I was think to redo splitIds without phobos, then I saw I missed to
+talk about regex.
+\onslide<2>{
+... but the phobos cheat sheet was nearly done
+}
+	\end{frame}
+	\begin{frame}[fragile]{std.format}
+		\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{format.d}
+	\end{frame}
+
 	\section{Not everything is Roses and Rainbows}
 	\begin{frame}[fragile]{To few features}
 		\begin{itemize}
