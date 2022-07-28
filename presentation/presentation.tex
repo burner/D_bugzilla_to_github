@@ -10,7 +10,6 @@
 \usepackage{multimedia}
 \usepackage{epstopdf}
 \usepackage{bbding}
-\usepackage{standalone}
 \usepackage[absolute,overlay]{textpos}
 \usepackage[most]{tcolorbox}
 
@@ -352,11 +351,61 @@ talk about regex.
 ... but the phobos cheat sheet was nearly done
 }
 	\end{frame}
+
 	\begin{frame}[fragile]{std.format}
 		\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{format.d}
 	\end{frame}
 
+	\begin{frame}[fragile]{std.algorithm.searching}
+		\begin{itemize}
+			\item \lstinline@find@
+			\begin{itemize}
+				\item \lstinline@canFind@
+				\item \lstinline@countUntil@
+			\end{itemize}
+			\item \lstinline@startsWith@
+			\item \lstinline@endsWith@
+		\end{itemize}
+	\end{frame}
+
 	\section{Not everything is Roses and Rainbows}
+
+	\begin{frame}[fragile]{Common Complaints}
+		\begin{itemize}
+			\item GC
+\uncover<2->{
+			\begin{itemize}
+				\item Humankind is not smart enough for manual memory management, just look at all the CVEs related to buffer overflows and memory corruptions
+			\end{itemize}
+}
+			\item Exceptions
+\uncover<3->{
+			\begin{itemize}
+				\item Unexpected things happen \lstinline@SysTime SysTime.fromISOExtString(string);@
+				\item \lstinline@Nullable!SysTime@ is \includegraphics[width=3mm]{poop.png}
+				\item \lstinline@Result!(SysTime,Error)@ is \includegraphics[width=3mm]{poop.png}
+				\item \lstinline@errno@ is \includegraphics[width=3mm]{poop.png}
+				\item did some say \lstinline@throw new Exception("not an ISO date")@
+			\end{itemize}
+}
+			\item too much coupling
+\uncover<4->{
+			\begin{itemize}
+				\item no global state shared
+				\item no reason to re-implement \lstinline@find@ over and over again
+				\item most of phobos functions are \lstinline@pure@
+				\item this argument is just a red herring
+			\end{itemize}
+}
+			\item auto decoding
+\uncover<5->{
+			\begin{itemize}
+				\item decision between default incorrectness and scapegoating
+			\end{itemize}
+}
+		\end{itemize}
+	\end{frame}
+
 	\begin{frame}[fragile]{To few things}
 		\begin{itemize}
 			\item no html
@@ -366,15 +415,26 @@ talk about regex.
 			\item no eventcore
 			\item no dmd frontend (I want CT D parsing)
 			\item too little coupling
+			\item why is numpy/keras/tensorflow not in phobos
 		\end{itemize}
 	\end{frame}
-	
 
 	\section{Conclusion}
+	\begin{frame}[fragile]{Back to the Topic}
+		\begin{itemize}
+			\item To get more things, we need more people
+			\item We can not tell people\\[1cm]
+			\pause
+			\item {\Huge We can ask people to contribute}\\[1cm]
+			\item But only if they can find what we would like them to contribute too
+			\item We need to ask where people are, that place is github not bugzilla
+		\end{itemize}
+	\end{frame}
 	\begin{frame}[fragile]{Conclusion}
 		\Huge
 		\begin{center}
-		phobos everywhere
+		phobos everywhere\\[1cm]
+		bugzilla $\rightarrow$ github\\[1cm]
 		\end{center}
 	\end{frame}
 	\section{Questions?}
