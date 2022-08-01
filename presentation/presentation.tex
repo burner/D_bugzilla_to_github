@@ -243,7 +243,7 @@
 			\lstinputlisting[language=D,firstline=40,lastline=55,basicstyle=\footnotesize\ttfamily]{../source/rest.d}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the good)}
-		\begin{onlyenv}<1,3,5,7,9>
+		\begin{onlyenv}<1,3,5,7>
 			\lstinputlisting[language=D,firstline=18,lastline=29,basicstyle=\footnotesize\ttfamily]{../source/json.d}
 		\end{onlyenv}
 		\begin{onlyenv}<2>
@@ -256,9 +256,6 @@
 			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{filter.d}
 		\end{onlyenv}
 		\begin{onlyenv}<8>
-			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{filter.d}
-		\end{onlyenv}
-		\begin{onlyenv}<10>
 			\begin{lstlisting}
 import std.json;
 			\end{lstlisting}
@@ -361,6 +358,7 @@ talk about regex.
 			\item \lstinline@find@
 			\begin{itemize}
 				\item \lstinline@canFind@
+				\item \lstinline@until@
 				\item \lstinline@countUntil@
 			\end{itemize}
 			\item \lstinline@startsWith@
@@ -385,7 +383,7 @@ talk about regex.
 				\item \lstinline@Nullable!SysTime@ is \includegraphics[width=3mm]{poop.png}
 				\item \lstinline@Result!(SysTime,Error)@ is \includegraphics[width=3mm]{poop.png}
 				\item \lstinline@errno@ is \includegraphics[width=3mm]{poop.png}
-				\item did some say \lstinline@throw new Exception("not an ISO date")@
+				\item did some say \lstinline@throw new Exception("Invalid Timezone")@
 			\end{itemize}
 }
 			\item too much coupling
@@ -425,12 +423,12 @@ talk about regex.
 			\item To get more things, we need more people
 			\item We can not tell people\\[1cm]
 			\pause
-			\item {\Huge We can ask people to contribute}\\[1cm]
-			\item But only if they can find what we would like them to contribute too
-			\item We need to ask where people are, that place is github not bugzilla
+			\item {\Large But we can ask people to contribute}\\[1cm]
+			\pause
+			\item {\Large Nobody hears us on bugzilla on github they might}
 		\end{itemize}
 	\end{frame}
-	\begin{frame}[fragile]{Conclusion}
+	\begin{frame}[fragile]{TL;DR}
 		\Huge
 		\begin{center}
 		phobos everywhere\\[1cm]

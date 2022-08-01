@@ -32,7 +32,8 @@ private GitPerson[] parseFile(string file) {
 }
 
 private GitPerson[] parseAll() {
-	return ["repos/dmd.json", "repos/phobos.json", "repos/druntime.json"]
+	return ["repos/dmd/", "repos/phobos/"]
+		.map!(f => f ~ "stats.json")
 		.map!(f => parseFile(f))
 		.joiner
 		.filter!(it => !canFind(it.authorEmail, "noreply.github.com"))
