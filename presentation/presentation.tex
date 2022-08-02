@@ -173,6 +173,18 @@
 
 	\begin{frame}[fragile]{Bugzilla to GitHub via Phobos --- A Love Letter}
 		\begin{center}
+			{\huge Objectively, D is the best programming language}
+		\end{center}
+	\end{frame}
+
+	\begin{frame}[fragile]{Bugzilla to GitHub via Phobos --- A Love Letter}
+		\begin{center}
+			{\huge Objectively, phobos is the best standard library}
+		\end{center}
+	\end{frame}
+
+	\begin{frame}[fragile]{Bugzilla to GitHub via Phobos --- A Love Letter}
+		\begin{center}
 			{\huge D needs more people}
 		\end{center}
 	\end{frame}
@@ -192,11 +204,11 @@
 			\item Get issue data via rest api
 			\item Find issues participates on github
 			\item A bit of markdown formatting
-			\item Push to github via graphql api
+			\item Push to isses to github
 		\end{enumerate}
 	\end{frame}
 
-	\section{THIS IS REALLY REALLY BORING -- WE ARE NOT GOING TO TALK ABOUT THIS}
+	\section{THIS IS REALLY REALLY BORING\\ --\\ WE ARE NOT GOING TO TALK ABOUT THIS}
 
 	\begin{frame}[fragile]{The interesting find}
 		\begin{itemize}
@@ -342,10 +354,10 @@ import std.json;
 		\end{onlyenv}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the ugly)}
-At this point I was think to redo splitIds without phobos, then I saw I missed to
+At this point I was thinking to redo splitIds without phobos, then I saw I missed to
 talk about regex.
 \onslide<2>{
-... but the phobos cheat sheet was nearly done
+... but the phobos cheat sheet is nearly done
 }
 	\end{frame}
 
@@ -414,6 +426,10 @@ talk about regex.
 			\item no dmd frontend (I want CT D parsing)
 			\item too little coupling
 			\item why is numpy/keras/tensorflow not in phobos
+			\pause
+			\begin{itemize}
+				\item CT parsing of python type annotations
+			\end{itemize}
 		\end{itemize}
 	\end{frame}
 
@@ -421,11 +437,12 @@ talk about regex.
 	\begin{frame}[fragile]{Back to the Topic}
 		\begin{itemize}
 			\item To get more things, we need more people
+			\pause
 			\item We can not tell people\\[1cm]
 			\pause
 			\item {\Large But we can ask people to contribute}\\[1cm]
 			\pause
-			\item {\Large Nobody hears us on bugzilla on github they might}
+			\item {\Large Nobody hears us on bugzilla, on github they might}
 		\end{itemize}
 	\end{frame}
 	\begin{frame}[fragile]{TL;DR}

@@ -28,7 +28,8 @@ import github;
 import json;
 import getopenissues;
 
-const toInclude = 
+auto toInclude() {
+auto ret = 
 	[ "op_sys":
 		[ "000000"
 		, "2F4F4F"
@@ -119,6 +120,8 @@ const toInclude =
 		, "98FB98"
 		]
 	];
+	return ret;
+}
 
 string atReplace(string s) {
 	return s.replace("@safe", "`@safe`")
@@ -579,6 +582,7 @@ Bug[] downloadOpenBugsAndUnifyWithLocalCopy(string project) {
 	Bug[] bsAC = downloadCommentsAndAttachments(bs, 20);
 	writeToFiles(bsAC);
 	writeln(bsAC.length);
+	return bsAC;
 }
 
 struct BugIssue {
@@ -596,6 +600,8 @@ void main(string[] args) {
 				theArgs().getOpenBugs
 			);
 	}
+
+	Unifier uf = getAllGitPersonsUnifier();
 
 	//writeOpenIssuesToFile();
 	Bug[] ob = allBugs();
