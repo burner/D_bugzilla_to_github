@@ -166,8 +166,8 @@
 \setbeamertemplate{bibliography item}{\insertbiblabel}
 
 \title{Bugzilla to GitHub via Phobos --- A Love Letter}
-\date{\today}
-\author{Dr. Robert Schadek}
+\date{\today \hfill \url{github.com/burner/D\_bugzilla\_to\_github}}
+\author{Dr.\,Robert Schadek}
 \begin{document}
 	\maketitle
 
@@ -239,11 +239,11 @@
 	\begin{frame}[fragile]{source/rest.d}
 		\lstinputlisting[language=D,firstline=3,lastline=17,basicstyle=\footnotesize\ttfamily]{../source/rest.d}
 	\end{frame}
-	\section{All the work}
+	\section{The work}
 	\begin{frame}[fragile]{Parsing (the good)}
 		\lstinputlisting[language=D,firstline=206,lastline=211,basicstyle=\footnotesize\ttfamily]{../source/rest.d}
 		\begin{onlyenv}<1>
-			\vspace{4cm}
+			\vspace{3.85cm}
 		\end{onlyenv}
 		\begin{onlyenv}<2>
 \begin{lstlisting}[basicstyle=\tiny\ttfamily,numbers=none]
@@ -355,7 +355,7 @@ import std.json;
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the ugly)}
 At this point I was thinking to redo splitIds without phobos, then I saw I missed to
-talk about regex.
+talk about \lstinline@std.regex@.
 	\end{frame}
 
 	\begin{frame}[fragile]{splitIds}
@@ -418,7 +418,7 @@ talk about regex.
 		\end{itemize}
 	\end{frame}
 
-	\begin{frame}[fragile]{To few things}
+	\begin{frame}[fragile]{Too few things}
 		\begin{itemize}
 			\item no html
 			\item no xml
