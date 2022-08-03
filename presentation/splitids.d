@@ -16,7 +16,7 @@ long[] splitIds(string page) {
 
 		long num;
 		long mul = 1;
-		while(!it.empty && it.front >= '0' && it.front <= '9')) {
+		while(!it.empty && it.front >= '0' && it.front <= '9') {
 			long t = (cast(char)it.front) - '0';
 			num *= mul;
 			num += t;

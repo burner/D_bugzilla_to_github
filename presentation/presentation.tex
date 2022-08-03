@@ -204,7 +204,7 @@
 			\item Get issue data via rest api
 			\item Find issues participates on github
 			\item A bit of markdown formatting
-			\item Push to isses to github
+			\item Push to issues to github
 		\end{enumerate}
 	\end{frame}
 
@@ -336,7 +336,7 @@ import std.json;
 			\lstinputlisting[language=D,firstline=3,lastline=15,basicstyle=\footnotesize\ttfamily]{zip.d}
 		\end{onlyenv}
 		\begin{onlyenv}<4>
-			\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{uniq.d}
+			\lstinputlisting[language=D,lastline=9,basicstyle=\footnotesize\ttfamily]{uniq.d}
 		\end{onlyenv}
 	\end{frame}
 	\begin{frame}[fragile]{Parsing (the ugly)}
@@ -356,11 +356,13 @@ import std.json;
 	\begin{frame}[fragile]{Parsing (the ugly)}
 At this point I was thinking to redo splitIds without phobos, then I saw I missed to
 talk about regex.
-\onslide<2>{
-... but the phobos cheat sheet is nearly done
-}
 	\end{frame}
 
+	\begin{frame}[fragile]{splitIds}
+		\lstinputlisting[language=D,basicstyle=\tiny\ttfamily]{splitids.d}
+	\end{frame}
+
+	\section{Finishing the phobos Tutorial}
 	\begin{frame}[fragile]{std.format}
 		\lstinputlisting[language=D,basicstyle=\footnotesize\ttfamily]{format.d}
 	\end{frame}
@@ -385,7 +387,7 @@ talk about regex.
 			\item GC
 \uncover<2->{
 			\begin{itemize}
-				\item Humankind is not smart enough for manual memory management, just look at all the CVEs related to buffer overflows and memory corruptions
+				\item Humankind is not smart enough for manual memory management
 			\end{itemize}
 }
 			\item Exceptions
