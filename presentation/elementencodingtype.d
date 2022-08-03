@@ -6,7 +6,7 @@ unittest {
 	static assert(is(ElementEncodingTypeEasy!(string) == dchar)); // fails
 }
 
-T front(T[] t) {
+T front(T)(T[] t) {
 	return t[0];
 }
 

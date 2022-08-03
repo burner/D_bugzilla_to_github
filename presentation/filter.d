@@ -1,6 +1,4 @@
-import std.algorithm.iteration : filter;
-
-T[] filter(Cond)(T[] input) {
+T[] filter(alias Cond,T)(T[] input) {
 	T[] ret;
 	foreach(it; input) {
 		if(Cond(it)) {
@@ -8,4 +6,11 @@ T[] filter(Cond)(T[] input) {
 		}
 	}
 	return ret;
+}
+
+unittest {
+	import std.algorithm : equal;
+	import std.stdio;
+	auto even = [1,2,3,4].filter!(it => it % 2 == 0);
+	writeln(even);
 }
