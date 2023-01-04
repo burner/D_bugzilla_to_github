@@ -225,7 +225,7 @@ JSONValue getComment(long id) {
 			auto content = getContent(withId).to!string().parseJSON();
 			return content;
 		} catch(TimeoutException t) {
-			writefln("Timeout exception for %s", id);
+			writefln("getComment timeout exception for %s", id);
 		}
 	}
 	return JSONValue.init;
@@ -234,8 +234,15 @@ JSONValue getComment(long id) {
 JSONValue getAttachments(long bugId) {
 	string url = "https://issues.dlang.org/rest/bug/%d/attachment";
 	string withId = format(url, bugId);
-	auto content = getContent(withId).to!string().parseJSON();
-	return content;
+	foreach(r; 0 .. 2) {
+		try {
+			auto content = getContent(withId).to!string().parseJSON();
+			return content;
+		} catch(TimeoutException t) {
+			writefln("getAttachments timeout exception for %s", bugId);
+		}
+	}
+	return JSONValue.init;
 }
 
 unittest {

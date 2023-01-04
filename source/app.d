@@ -578,8 +578,8 @@ Bug[] downloadOpenBugsAndUnifyWithLocalCopy(string project) {
 	writefln("sto %5s\nall %5s\nfil %5s", alreadyLoadedBugs.length, issues.length
 			, issuesFiltered.length);
 
-	Bug[] bs = downloadAsChunks(issuesFiltered, 10);
-	Bug[] bsAC = downloadCommentsAndAttachments(bs, 20);
+	Bug[] bs = downloadAsChunks(issuesFiltered, 7);
+	Bug[] bsAC = downloadCommentsAndAttachments(bs, 7);
 	writeToFiles(bsAC);
 	writeln(bsAC.length);
 	return bsAC;
