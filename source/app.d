@@ -595,11 +595,19 @@ void main(string[] args) {
 		return;
 	}
 
+	if(theArgs().bugzillaTest) {
+		const token = bugzillaLogin(theArgs().bugzillaUsername, theArgs().bugzillaPassword);
+		long githubTestIssue = 23609;
+		JSONValue r = postComment(githubTestIssue, "This is a test", token.token);
+		return;
+	}
+
 	if(!theArgs().getOpenBugs.empty) {
 		Bug[] bugsOfProject = downloadOpenBugsAndUnifyWithLocalCopy(
 				theArgs().getOpenBugs
 			);
 	}
+
 
 	Unifier uf = getAllGitPersonsUnifier();
 

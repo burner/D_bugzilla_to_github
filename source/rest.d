@@ -120,6 +120,18 @@ struct Comment {
 	SysTime creation_time;
 }
 
+struct Token {
+	string token;
+	long id;
+}
+
+Token bugzillaLogin(string username, string password) {
+	string url = "https://issues.dlang.org/rest/login?login=%s&password=%s";
+	string withId = format(url, username, password);
+	return getContent(withId).to!string().parseJSON()
+		.tFromJson!(Token)();
+}
+
 Bug[] parseBugs(JSONValue js) {
 	if(js.type() == JSONType.object && "code" in js) {
 		return [];
@@ -215,6 +227,18 @@ JSONValue getBugs(long[] ids) {
 	string withId = format(url, ids);
 	auto content = getContent(withId).to!string().parseJSON();
 	return content;
+}
+
+JSONValue postComment(long issueId, string comment, string token) {
+	string url = "https://issues.dlang.org/rest/bug/%d/comment";
+	string withId = format(url, issueId);
+	writeln(url);
+	string ret = postContent(withId
+		, queryParams("comment", comment
+			, "token", token)
+		).to!string();
+	writeln(ret);
+	return ret.to!string().parseJSON();
 }
 
 JSONValue getComment(long id) {

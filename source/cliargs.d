@@ -8,6 +8,9 @@ struct Args {
 	string getOpenBugs;
 	string githubOrganization = "burner"; // burner for dev, dlang for prod
 	string githubProject = "bugzilla_migration_test";
+	string bugzillaUsername;
+	string bugzillaPassword;
+	bool bugzillaTest;
 }
 
 private Args __theArgs;
@@ -30,6 +33,12 @@ bool parseOptions(ref string[] args) {
 				&theArgsWriteable().githubOrganization
 			, "p|project", "The github project name of the github organization",
 				&theArgsWriteable().githubProject
+			, "b|bugzillaUsername", "Bugzilla Username",
+				&theArgsWriteable().bugzillaUsername
+			, "d|bugzillaPassword", "Bugzilla Password",
+				&theArgsWriteable().bugzillaPassword
+			, "bugzillaTest", "Test Bugzilla",
+				&theArgsWriteable().bugzillaTest
 			);
 	if(helpWanted.helpWanted) {
 		defaultGetoptPrinter("A text explaining the program",
