@@ -6,6 +6,7 @@ import std.ascii : isASCII;
 import std.exception;
 import std.file;
 import std.format;
+import std.process;
 import std.json;
 import std.range : chain, chunks, zip;
 import std.range : iota;
@@ -590,6 +591,24 @@ struct BugIssue {
 	Bug bugzillaIssue;
 }
 
+void cloneAndBuildStats() {
+	string[] repos = [ "https://github.com/dlang/phobos.git"
+		, "https://github.com/dlang/dmd.git"];
+	string[] dirs = ["repos/phobos", "repos/dmd"];
+
+	if(!exists("repos")) {
+	 	mkdir("repos");
+	}
+	foreach(i; 0 .. repos.length) {
+		//execute(["git", "clone", repos[i], dirs[i]]);
+		chdir(dirs[i]);
+		auto r = execute(["../gitlogjson.sh"]);
+		auto f = File("stats.json", "w");
+		f.writeln(r.output);
+		chdir("../..");
+	}
+}
+
 void main(string[] args) {
 	if(parseOptions(args)) {
 		return;
@@ -608,7 +627,7 @@ void main(string[] args) {
 			);
 	}
 
-
+	cloneAndBuildStats();
 	Unifier uf = getAllGitPersonsUnifier();
 
 	//writeOpenIssuesToFile();
