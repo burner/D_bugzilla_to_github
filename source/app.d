@@ -8,8 +8,7 @@ import std.file;
 import std.format;
 import std.process;
 import std.json;
-import std.range : chain, chunks, zip;
-import std.range : iota;
+import std.range : chain, chunks, empty, iota, zip;
 import std.stdio;
 import std.string : indexOf;
 import std.traits;
@@ -614,20 +613,34 @@ void main(string[] args) {
 		return;
 	}
 
+	Token token;
 	if(theArgs().bugzillaTest) {
-		const token = bugzillaLogin(theArgs().bugzillaUsername, theArgs().bugzillaPassword);
+		token = bugzillaLogin(theArgs().bugzillaUsername, theArgs().bugzillaPassword);
 		long githubTestIssue = 23609;
 		JSONValue r = postComment(githubTestIssue, "This is a test", token.token);
 		return;
 	}
 
+	// Get issues for a specific project (dmd, druntime, phobos)
 	if(!theArgs().getOpenBugs.empty) {
 		Bug[] bugsOfProject = downloadOpenBugsAndUnifyWithLocalCopy(
 				theArgs().getOpenBugs
 			);
 	}
 
-	cloneAndBuildStats();
+	// We need to get all open bugs
+	if(!theArgs().getAllBugs) {
+		foreach(p; ["dmd", "druntime", "phobos"]) {
+			Bug[] bugsOfProject = downloadOpenBugsAndUnifyWithLocalCopy(p);
+		}
+	}
+
+	// This is needed to get github authors, which are later matched to
+	// bugzilla authors
+	if(!theArgs().cloneRepos) {
+		cloneAndBuildStats();
+	}
+
 	Unifier uf = getAllGitPersonsUnifier();
 
 	//writeOpenIssuesToFile();
@@ -713,6 +726,13 @@ void main(string[] args) {
 
 	writeln(getCurrentRateLimit(theArgs().githubToken));
 
+	if(token.token.empty) {
+		writeln("You need a bugzilla token at this point\n"
+				~ "Please pass the 'bugzillaUsername' and "
+				~ "bugzillaPassword.");
+		return;
+	}
+
 	BugIssue[] rslt;
 	foreach(idx, ref b; ob) {
 		writefln("%s of %s", idx, ob.length);
@@ -744,7 +764,17 @@ void main(string[] args) {
 		// Annoying creation rate limit of github
 		inner: foreach(tries; 0 .. 2) {
 			try {
-				rslt ~= BugIssue(createIssue(input, theArgs().githubToken), b);
+				auto tmp = BugIssue(createIssue(input, theArgs().githubToken), b);
+				rslt ~= tmp;
+				// comment in the old bugzilla issue
+				postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+						~ "https://github.com/%s/%s/issues/%d\n\n"
+						~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT"
+						~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+						, theArgs().githubOrganization
+						, theArgs().githubProject
+						, tmp.githubIssue.number)
+					, token.token);
 				break inner;
 			} catch(Exception e) {
 				writeln(e.toString());

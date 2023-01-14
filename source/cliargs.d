@@ -6,6 +6,8 @@ struct Args {
 	string githubUsername = "rburners@gmail.com";
 	string githubToken;
 	string getOpenBugs;
+	bool getAllBugs;
+	bool cloneRepos;
 	string githubOrganization = "burner"; // burner for dev, dlang for prod
 	string githubProject = "bugzilla_migration_test";
 	string bugzillaUsername;
@@ -29,6 +31,10 @@ bool parseOptions(ref string[] args) {
 			, "t|token", "The github access token", &theArgsWriteable().githubToken
 			, "g|getOpenBugs", "Get all open bugs for, for example phobos."
 				, &theArgsWriteable().getOpenBugs
+			, "a|getAllBugs", "Download all open bugs"
+				, &theArgsWriteable().getAllBugs
+			, "c|cloneRepos", "Clone repos and build the stats.json"
+				, &theArgsWriteable().cloneRepos
 			, "o|organization", "The github organization name",
 				&theArgsWriteable().githubOrganization
 			, "p|project", "The github project name of the github organization",
