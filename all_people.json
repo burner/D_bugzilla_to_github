@@ -8,6 +8,21 @@
                 "real_name": ""
             },
             "emails": [
+                "daniel.graczer@bosagora.io"
+            ],
+            "githubUsername": "ferencdg",
+            "names": [
+                "Daniel Graczer"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
                 "lempiji@gmail.com"
             ],
             "githubUsername": "lempiji",
@@ -32,10 +47,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "ace17",
-                "id": 536,
-                "name": "ace17",
-                "real_name": "Sebastien Alaiwan"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "sebastien.alaiwan@gmail.com"
@@ -43,6 +58,22 @@
             "githubUsername": "Ace17",
             "names": [
                 "Sebastien Alaiwan"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "sludwig",
+                "id": 401,
+                "name": "sludwig",
+                "real_name": "Sönke Ludwig"
+            },
+            "emails": [
+                "sludwig@outerproduct.org",
+                "sludwig@rejectedsoftware.com"
+            ],
+            "githubUsername": "s-ludwig",
+            "names": [
+                "Sönke Ludwig"
             ]
         },
         {
@@ -55,7 +86,7 @@
             "emails": [
                 "aruncxy@gmail.com"
             ],
-            "githubUsername": "carun",
+            "githubUsername": null,
             "names": [
                 "Arun Chandrasekaran"
             ]
@@ -104,6 +135,21 @@
             "githubUsername": "kiith-sa",
             "names": [
                 "Ferdinand Majerech"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "alexanderheistermann@gmail.com"
+            ],
+            "githubUsername": "12345swordy",
+            "names": [
+                "12345swordy"
             ]
         },
         {
@@ -163,7 +209,7 @@
                 "dlang@ryanjframe.com",
                 "ryan@strangelyinbetween.com"
             ],
-            "githubUsername": "ryan2858",
+            "githubUsername": null,
             "names": [
                 "Ryan Frame"
             ]
@@ -180,7 +226,7 @@
                 "alex@lycus.org",
                 "xtzgzorex@gmail.com"
             ],
-            "githubUsername": "LycusCI",
+            "githubUsername": "alexrp",
             "names": [
                 "Alex Rønne Petersen",
                 "XTZGZoReX",
@@ -189,10 +235,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "jason.brian.king",
-                "id": 1601,
-                "name": "jason.brian.king",
-                "real_name": "Jason King"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "jason.brian.king@gmail.com"
@@ -212,9 +258,24 @@
             "emails": [
                 "alexandru.razvan.c@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "Darredevil",
             "names": [
                 "Alexandru Razvan Caciulescu"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "iuliadmtru@gmail.com"
+            ],
+            "githubUsername": "iuliadmtru",
+            "names": [
+                "Iulia Dumitru"
             ]
         },
         {
@@ -228,7 +289,7 @@
                 "dev@kalekold.net",
                 "dev@nomad.so"
             ],
-            "githubUsername": null,
+            "githubUsername": "nomad-software",
             "names": [
                 "Gary Willoughby"
             ]
@@ -289,7 +350,7 @@
                 "mihails.strasuns.contractor@sociomantic.com",
                 "mihails.strasuns@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "mihails-strasuns",
             "names": [
                 "Mihails Strasuns"
             ]
@@ -311,10 +372,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
+                "email": "lance",
+                "id": 2040,
+                "name": "lance",
+                "real_name": "Lance Bachmeier"
             },
             "emails": [
                 "bachmeil@yahoo.com",
@@ -380,7 +441,7 @@
             "emails": [
                 "yuriy.glukhov@gmail.com"
             ],
-            "githubUsername": "yglukhov",
+            "githubUsername": null,
             "names": [
                 "yglukhov"
             ]
@@ -429,6 +490,21 @@
             "githubUsername": null,
             "names": [
                 "Jonathan Samson"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "bowsworddv@gmail.com"
+            ],
+            "githubUsername": null,
+            "names": [
+                "tynuk"
             ]
         },
         {
@@ -496,10 +572,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "francesco.cattoglio",
-                "id": 1488,
-                "name": "francesco.cattoglio",
-                "real_name": "Francesco Cattoglio"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "francesco.cattoglio@gmail.com"
@@ -539,7 +615,7 @@
                 "thecybershadow@gmail.com",
                 "vladimir@thecybershadow.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "CyberShadow",
             "names": [
                 "Vladimir Panteleev"
             ]
@@ -576,10 +652,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "james",
-                "id": 1106,
-                "name": "james",
-                "real_name": "James Miller"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "bladeon@gmail.com",
@@ -653,7 +729,7 @@
                 "lio@lunesu.com",
                 "lionello@lunesu.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "lionello",
             "names": [
                 "Lionello Lunesu"
             ]
@@ -684,17 +760,17 @@
                 "brocolis@eml.cc",
                 "carlosune@operamail.com"
             ],
-            "githubUsername": "brocolis",
+            "githubUsername": null,
             "names": [
                 "Carlos Une"
             ]
         },
         {
             "bugzillaPerson": {
-                "email": "davidma",
-                "id": 2170,
-                "name": "davidma",
-                "real_name": "David Marquant"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "david.marquant.93@gmail.com"
@@ -718,7 +794,7 @@
                 "martin.nowak@7learnings.com",
                 "martin.nowak@plugintheworld.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "MartinNowak",
             "names": [
                 "Martin Nowak",
                 "dawg"
@@ -734,7 +810,7 @@
             "emails": [
                 "rmanthorpe@symmetryinvestments.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "rmanthorpe",
             "names": [
                 "Richard Manthorpe"
             ]
@@ -750,7 +826,7 @@
                 "kapps@shardsoft.com",
                 "opantm2+git@gmail.com"
             ],
-            "githubUsername": "Kapps",
+            "githubUsername": null,
             "names": [
                 "Kapps",
                 "Ognjen Ivkovic"
@@ -814,7 +890,7 @@
             "emails": [
                 "dayllenger@protonmail.com"
             ],
-            "githubUsername": "dayllenger",
+            "githubUsername": null,
             "names": [
                 "Viktor"
             ]
@@ -827,9 +903,24 @@
                 "real_name": ""
             },
             "emails": [
+                "arne.ludwig@posteo.de"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Arne Ludwig"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
                 "jdunlap@outlook.com"
             ],
-            "githubUsername": "jadbox",
+            "githubUsername": null,
             "names": [
                 "jdunlap"
             ]
@@ -905,7 +996,7 @@
             "emails": [
                 "wolframw@protonmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "wolframw",
             "names": [
                 "wolframw"
             ]
@@ -982,7 +1073,7 @@
             "emails": [
                 "nic.gyrovague@gmail.com"
             ],
-            "githubUsername": "gyrovague",
+            "githubUsername": null,
             "names": [
                 "gyrovague"
             ]
@@ -998,7 +1089,7 @@
                 "doob@me.com",
                 "jacob.carlborg@tretti.se"
             ],
-            "githubUsername": null,
+            "githubUsername": "jacob-carlborg",
             "names": [
                 "Jacob Carlborg",
                 "jacob-carlborg"
@@ -1006,10 +1097,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "nanayamae",
-                "id": 2174,
-                "name": "nanayamae",
-                "real_name": "Marco de Wild"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "mdwild@sogyo.nl",
@@ -1108,7 +1199,8 @@
             },
             "emails": [
                 "n@trelsoft.com",
-                "nick.treleaven@btinternet.com"
+                "nick.treleaven@btinternet.com",
+                "ntrel002@gmail.com"
             ],
             "githubUsername": "ntrel",
             "names": [
@@ -1132,15 +1224,30 @@
         },
         {
             "bugzillaPerson": {
-                "email": "cooper.charles.m",
-                "id": 1751,
-                "name": "cooper.charles.m",
-                "real_name": "Charles Cooper"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "moth.tolias@gmail.com"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Su"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "cooper.charles.m@gmail.com"
             ],
-            "githubUsername": "charles-cooper",
+            "githubUsername": null,
             "names": [
                 "Charles Cooper"
             ]
@@ -1214,6 +1321,36 @@
         },
         {
             "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "priver.david@gmail.com"
+            ],
+            "githubUsername": "drpriver",
+            "names": [
+                "drpriver"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "jlquinn",
+                "id": 421,
+                "name": "jlquinn",
+                "real_name": "Jerry Quinn"
+            },
+            "emails": [
+                "jlquinn@optonline.net"
+            ],
+            "githubUsername": "jlquinn",
+            "names": [
+                "jlquinn"
+            ]
+        },
+        {
+            "bugzillaPerson": {
                 "email": "chloekek",
                 "id": 2400,
                 "name": "chloekek",
@@ -1225,21 +1362,6 @@
             "githubUsername": null,
             "names": [
                 "Chloé"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "alexey.prokhin",
-                "id": 952,
-                "name": "alexey.prokhin",
-                "real_name": "Alexey Prokhin"
-            },
-            "emails": [
-                "alexey.prokhin@yandex.ru"
-            ],
-            "githubUsername": "AlexeyProkhin",
-            "names": [
-                "Alexey Prokhin"
             ]
         },
         {
@@ -1259,10 +1381,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "tankf33der",
-                "id": 2514,
-                "name": "tankf33der",
-                "real_name": "Mike"
+                "email": "slavo5150",
+                "id": 1484,
+                "name": "slavo5150",
+                "real_name": "Mike Franklin"
             },
             "emails": [
                 "slavo5150@yahoo.com"
@@ -1276,10 +1398,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "schlote",
-                "id": 2413,
-                "name": "schlote",
-                "real_name": "Carsten Schlote"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "carsten.schlote@gmx.net",
@@ -1293,21 +1415,6 @@
         },
         {
             "bugzillaPerson": {
-                "email": "jlquinn",
-                "id": 421,
-                "name": "jlquinn",
-                "real_name": "Jerry Quinn"
-            },
-            "emails": [
-                "jlquinn@optonline.net"
-            ],
-            "githubUsername": null,
-            "names": [
-                "jlquinn"
-            ]
-        },
-        {
-            "bugzillaPerson": {
                 "email": "",
                 "id": 0,
                 "name": "",
@@ -1317,9 +1424,24 @@
                 "tomer@weka.io",
                 "tomerfiliba@gmail.com"
             ],
-            "githubUsername": "tomerfiliba",
+            "githubUsername": null,
             "names": [
                 "Tomer Filiba"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "justin",
+                "id": 1070,
+                "name": "justin",
+                "real_name": "Justin Whear"
+            },
+            "emails": [
+                "justin@economicmodeling.com"
+            ],
+            "githubUsername": "jwhear",
+            "names": [
+                "Justin Whear"
             ]
         },
         {
@@ -1339,10 +1461,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "sakhmatd",
-                "id": 2549,
-                "name": "sakhmatd",
-                "real_name": "Sergei Akhmatdinov"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "sakhmatd@darkn.space",
@@ -1382,6 +1504,21 @@
             "githubUsername": null,
             "names": [
                 "MoGu"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "dennis@dennis-pc.home"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Dennis"
             ]
         },
         {
@@ -1460,6 +1597,21 @@
                 "real_name": ""
             },
             "emails": [
+                "ast-x64@protonmail.com"
+            ],
+            "githubUsername": "Ast-x64",
+            "names": [
+                "Ast-x64"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
                 "diggsey@googlemail.com"
             ],
             "githubUsername": "Diggsey",
@@ -1486,10 +1638,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "wwwelkam",
-                "id": 2545,
-                "name": "wwwelkam",
-                "real_name": "welkam"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "wwwelkam@gmail.com"
@@ -1509,7 +1661,7 @@
             "emails": [
                 "chalucha@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "tchaloupka",
             "names": [
                 "Tomáš Chaloupka",
                 "Unknown"
@@ -1525,7 +1677,7 @@
             "emails": [
                 "davidbennett@bravevision.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "DavidBennettPIO",
             "names": [
                 "David Bennett"
             ]
@@ -1580,10 +1732,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "arbmind",
-                "id": 2152,
-                "name": "arbmind",
-                "real_name": "Andreas Reischuck"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "andreas.reischuck@hicknhack-software.com",
@@ -1638,7 +1790,7 @@
             "emails": [
                 "timothee.cour@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "timotheecour",
             "names": [
                 "timotheecour"
             ]
@@ -1653,7 +1805,7 @@
             "emails": [
                 "neuranuz@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "uranuz",
             "names": [
                 "Uranuz"
             ]
@@ -1685,7 +1837,7 @@
             "emails": [
                 "braddr@puremagic.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "braddr",
             "names": [
                 "Brad Roberts"
             ]
@@ -1708,10 +1860,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "msoucy",
-                "id": 1307,
-                "name": "msoucy",
-                "real_name": "Matt Soucy"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "msoucy@csh.rit.edu"
@@ -1731,7 +1883,7 @@
             "emails": [
                 "damianroyday@gmail.com"
             ],
-            "githubUsername": "damianday",
+            "githubUsername": null,
             "names": [
                 "Damian Day",
                 "damianday"
@@ -1739,10 +1891,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "yoplitein",
-                "id": 1863,
-                "name": "yoplitein",
-                "real_name": "Steven Dwy"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "yoplitein+git@gmail.com",
@@ -1764,7 +1916,7 @@
                 "kapps@shardsoft.com",
                 "opantm2+git@gmail.com"
             ],
-            "githubUsername": "Kapps",
+            "githubUsername": null,
             "names": [
                 "Kapps",
                 "Ognjen Ivkovic"
@@ -1826,7 +1978,7 @@
             "emails": [
                 "adamw@prospectivesoftware.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "LightBender",
             "names": [
                 "Adam Wilson"
             ]
@@ -1841,7 +1993,7 @@
             "emails": [
                 "greg@unrelenting.technology"
             ],
-            "githubUsername": "unrelentingtech",
+            "githubUsername": null,
             "names": [
                 "Greg V"
             ]
@@ -1864,10 +2016,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
+                "email": "lance",
+                "id": 2040,
+                "name": "lance",
+                "real_name": "Lance Bachmeier"
             },
             "emails": [
                 "bachmeil@yahoo.com",
@@ -1912,9 +2064,9 @@
         },
         {
             "bugzillaPerson": {
-                "email": "sudo",
-                "id": 1770,
-                "name": "sudo",
+                "email": "kevin",
+                "id": 1079,
+                "name": "kevin",
                 "real_name": "Kevin"
             },
             "emails": [
@@ -1982,9 +2134,25 @@
                 "real_name": ""
             },
             "emails": [
-                "hiroo.ono@gmail.com"
+                "sinkuu@aol.jp",
+                "sinkuupump@gmail.com"
             ],
             "githubUsername": null,
+            "names": [
+                "sinkuu"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "hiroo.ono@gmail.com"
+            ],
+            "githubUsername": "onodaHiroo",
             "names": [
                 "Hiroo Ono"
             ]
@@ -1997,12 +2165,26 @@
                 "real_name": ""
             },
             "emails": [
-                "sinkuu@aol.jp",
-                "sinkuupump@gmail.com"
+                "jasmine@jhegman.com"
+            ],
+            "githubUsername": "r4j4h",
+            "names": [
+                "Jasmine Hegman"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "human@neet.fi"
             ],
             "githubUsername": null,
             "names": [
-                "sinkuu"
+                "human"
             ]
         },
         {
@@ -2076,6 +2258,21 @@
                 "real_name": ""
             },
             "emails": [
+                "yori@waifu.club"
+            ],
+            "githubUsername": null,
+            "names": [
+                "yori"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
                 "ddegroot@talon.nl",
                 "info@talon.nl"
             ],
@@ -2112,7 +2309,7 @@
             "emails": [
                 "ahmetsaitkocak@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "ahmetsait",
             "names": [
                 "Ahmet Sait"
             ]
@@ -2127,7 +2324,7 @@
             "emails": [
                 "kubo39@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "kubo39",
             "names": [
                 "Hiroki Noda"
             ]
@@ -2297,7 +2494,7 @@
                 "erny.castell@gmail.com",
                 "mail@ernestocastellotti.it"
             ],
-            "githubUsername": null,
+            "githubUsername": "ErnyTech",
             "names": [
                 "Ernesto Castellotti"
             ]
@@ -2327,7 +2524,7 @@
             "emails": [
                 "quaker66@gmail.com"
             ],
-            "githubUsername": "q66",
+            "githubUsername": null,
             "names": [
                 "Daniel Kolesa"
             ]
@@ -2438,7 +2635,7 @@
                 "dev@kalekold.net",
                 "dev@nomad.so"
             ],
-            "githubUsername": null,
+            "githubUsername": "nomad-software",
             "names": [
                 "Gary Willoughby"
             ]
@@ -2515,93 +2712,24 @@
             "emails": [
                 "deschenes.j.m@gmail.com"
             ],
-            "githubUsername": "jmdeschenes",
+            "githubUsername": null,
             "names": [
                 "jmdeschenes"
             ]
         },
         {
             "bugzillaPerson": {
-                "email": "pro.mathias.lang",
-                "id": 1392,
-                "name": "pro.mathias.lang",
-                "real_name": "Mathias LANG"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
-                "geod24@gmail.com",
-                "mathias.lang@epitech.eu",
-                "pro.mathias.lang@gmail.com"
+                "alexey.prokhin@yandex.ru"
             ],
-            "githubUsername": "Geod24",
+            "githubUsername": "AlexeyProkhin",
             "names": [
-                "Geod24",
-                "Mathias LANG",
-                "geod"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "nocomentsspb",
-                "id": 2596,
-                "name": "nocomentsspb",
-                "real_name": "Nikolay Belov"
-            },
-            "emails": [
-                "nikolay.v.belov@gmail.com"
-            ],
-            "githubUsername": "nbelov",
-            "names": [
-                "Nikolay Belov"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "bugzilla",
-                "id": 2,
-                "name": "bugzilla",
-                "real_name": "Walter Bright"
-            },
-            "emails": [
-                "walter@digitalmars.com",
-                "walter@walterbright.com"
-            ],
-            "githubUsername": null,
-            "names": [
-                "Walter Bright"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "thomas.mader",
-                "id": 969,
-                "name": "thomas.mader",
-                "real_name": "Thomas Mader"
-            },
-            "emails": [
-                "thomas.mader@gmail.com"
-            ],
-            "githubUsername": null,
-            "names": [
-                "Thomas Mader"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "rschadek",
-                "id": 2472,
-                "name": "rschadek",
-                "real_name": "Robert Schadek"
-            },
-            "emails": [
-                "rburners@gmail.com",
-                "robert.schadek@informatik.uni-oldenburg.de",
-                "rschadek@symmetryinvestments.com"
-            ],
-            "githubUsername": "burner",
-            "names": [
-                "Robert BuRnEr Schadek",
-                "Robert Schadek",
-                "Robert burner Schadek"
+                "Alexey Prokhin"
             ]
         },
         {
@@ -2612,57 +2740,11 @@
                 "real_name": ""
             },
             "emails": [
-                "yvpdgjyf@vomoto.com"
+                "bluepeppers@archlinux.us"
             ],
             "githubUsername": null,
             "names": [
-                "Blumerline"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "clumsycodemonkey",
-                "id": 2033,
-                "name": "clumsycodemonkey",
-                "real_name": "Ryan"
-            },
-            "emails": [
-                "ryan@rcorre.net"
-            ],
-            "githubUsername": "rcorre",
-            "names": [
-                "Ryan",
-                "Ryan Roden-Corrent"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "justin",
-                "id": 1070,
-                "name": "justin",
-                "real_name": "Justin Whear"
-            },
-            "emails": [
-                "justin@economicmodeling.com"
-            ],
-            "githubUsername": "jwhear",
-            "names": [
-                "Justin Whear"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
-            },
-            "emails": [
-                "daniel.graczer@bosagora.io"
-            ],
-            "githubUsername": "ferencdg",
-            "names": [
-                "Daniel Graczer"
+                "Laurie Clark-Michalek"
             ]
         },
         {
@@ -2721,10 +2803,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "nazriel",
-                "id": 1844,
-                "name": "nazriel",
-                "real_name": "Damian Ziemba"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "damian@dzfl.pl"
@@ -2763,6 +2845,21 @@
             "githubUsername": "timotheecour",
             "names": [
                 "Timothee Cour"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "soringabrielmateescu@gmail.com"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Gabriel"
             ]
         },
         {
@@ -2860,18 +2957,34 @@
         },
         {
             "bugzillaPerson": {
-                "email": "jcao219",
-                "id": 786,
-                "name": "jcao219",
-                "real_name": "Jimmy Cao"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "jcao219@gmail.com"
             ],
-            "githubUsername": "jcao219",
+            "githubUsername": null,
             "names": [
                 "Jimmy Cao",
                 "jcao219"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "dorianverna7@gmail.com"
+            ],
+            "githubUsername": "dorianverna17",
+            "names": [
+                "Dorian Verna",
+                "dorianverna17"
             ]
         },
         {
@@ -2891,10 +3004,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "cristi.cobzarenco",
-                "id": 965,
-                "name": "cristi.cobzarenco",
-                "real_name": "Cristi Cobzarenco"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "cristi.cobzarenco@gmail.com"
@@ -2944,7 +3057,7 @@
             "emails": [
                 "ryan.philip.sullivan@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "RyanPSullivan",
             "names": [
                 "Ryan Sullivan"
             ]
@@ -2974,7 +3087,7 @@
             "emails": [
                 "initrd.gz@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "ColonelThirtyTwo",
             "names": [
                 "Alex Parrill"
             ]
@@ -3083,7 +3196,7 @@
                 "tobias.pankrath@vattenfall.de",
                 "tobias@pankrath.net"
             ],
-            "githubUsername": "Panke",
+            "githubUsername": null,
             "names": [
                 "Panke",
                 "Tobias Pankrath"
@@ -3159,7 +3272,7 @@
             "emails": [
                 "bus_github@semitwist.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "Abscissa",
             "names": [
                 "Abscissa"
             ]
@@ -3174,7 +3287,7 @@
             "emails": [
                 "electrolysis.jp@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "e10s",
             "names": [
                 "Kazuya Takahashi",
                 "e10s"
@@ -3212,10 +3325,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "sakhmatd",
-                "id": 2549,
-                "name": "sakhmatd",
-                "real_name": "Sergei Akhmatdinov"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "sakhmatd@darkn.space",
@@ -3228,10 +3341,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "sohgo.takeuchi+dlang",
-                "id": 733,
-                "name": "sohgo.takeuchi+dlang",
-                "real_name": "Sohgo Takeuchi"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "sohgo@sohgo.dyndns.org"
@@ -3463,10 +3576,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "giles.bathgate+dlang",
-                "id": 1966,
-                "name": "giles.bathgate+dlang",
-                "real_name": "Giles Bathgate"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "giles.bathgate@gmail.com",
@@ -3594,7 +3707,7 @@
                 "brocolis@eml.cc",
                 "carlosune@operamail.com"
             ],
-            "githubUsername": "brocolis",
+            "githubUsername": null,
             "names": [
                 "Carlos Une"
             ]
@@ -3625,7 +3738,7 @@
             "emails": [
                 "redballoon36@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "todayman",
             "names": [
                 "Paul O'Neil"
             ]
@@ -3671,7 +3784,7 @@
             "emails": [
                 "maxsamukha@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "maxsamukha",
             "names": [
                 "Max Samukha"
             ]
@@ -3686,7 +3799,7 @@
             "emails": [
                 "goldmax3000@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "GoldMax",
             "names": [
                 "GoldMax"
             ]
@@ -3745,6 +3858,21 @@
                 "real_name": ""
             },
             "emails": [
+                "think@hotmail.de"
+            ],
+            "githubUsername": null,
+            "names": [
+                "lindt"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
                 "julian.fondren@gmail.com"
             ],
             "githubUsername": null,
@@ -3754,10 +3882,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "euan+dlang-bugzilla",
-                "id": 2574,
-                "name": "euan+dlang-bugzilla",
-                "real_name": "Euan Torano"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "euan@torano.co.uk"
@@ -3940,21 +4068,6 @@
         },
         {
             "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
-            },
-            "emails": [
-                "bluepeppers@archlinux.us"
-            ],
-            "githubUsername": null,
-            "names": [
-                "Laurie Clark-Michalek"
-            ]
-        },
-        {
-            "bugzillaPerson": {
                 "email": "lt.infiltrator",
                 "id": 1273,
                 "name": "lt.infiltrator",
@@ -3970,28 +4083,41 @@
         },
         {
             "bugzillaPerson": {
-                "email": "d.bugs",
-                "id": 2131,
-                "name": "d.bugs",
-                "real_name": "Jan Jurzitza"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
-                "gh@webfreak.org",
-                "janju007@web.de"
+                "harrison@0xcc.pw"
             ],
-            "githubUsername": "WebFreak001",
+            "githubUsername": "hatf0",
             "names": [
-                "Jan",
-                "Jan Jurzitza",
-                "WebFreak001"
+                "Harrison",
+                "hatf0"
             ]
         },
         {
             "bugzillaPerson": {
-                "email": "torarind",
-                "id": 800,
-                "name": "torarind",
-                "real_name": "Torarin"
+                "email": "menodinulla",
+                "id": 765,
+                "name": "menodinulla",
+                "real_name": "godmyoh"
+            },
+            "emails": [
+                "menodinulla@gmail.com"
+            ],
+            "githubUsername": "godmyoh",
+            "names": [
+                "godmyoh"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "torarin@gmail.com"
@@ -4065,10 +4191,25 @@
                 "martin.nowak@7learnings.com",
                 "martin.nowak@plugintheworld.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "MartinNowak",
             "names": [
                 "Martin Nowak",
                 "dawg"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "james",
+                "id": 1106,
+                "name": "james",
+                "real_name": "James Miller"
+            },
+            "emails": [
+                "jamesragray@bitbucket.org"
+            ],
+            "githubUsername": null,
+            "names": [
+                "james"
             ]
         },
         {
@@ -4082,7 +4223,7 @@
                 "tomer@weka.io",
                 "tomerfiliba@gmail.com"
             ],
-            "githubUsername": "tomerfiliba",
+            "githubUsername": null,
             "names": [
                 "Tomer Filiba"
             ]
@@ -4100,6 +4241,22 @@
             "githubUsername": "araspik",
             "names": [
                 "ARaspiK"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "default_357-line",
+                "id": 97,
+                "name": "default_357-line",
+                "real_name": "FeepingCreature"
+            },
+            "emails": [
+                "default_357-line@yahoo.de",
+                "feepingcreature@gmail.com"
+            ],
+            "githubUsername": "FeepingCreature",
+            "names": [
+                "FeepingCreature"
             ]
         },
         {
@@ -4150,10 +4307,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "xammy",
-                "id": 861,
-                "name": "xammy",
-                "real_name": "Matthias Walter"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "xammy@xammy.homelinux.net"
@@ -4189,7 +4346,7 @@
             "emails": [
                 "mathias.lang@sociomantic.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "Geod24",
             "names": [
                 "Mathias Lang"
             ]
@@ -4208,7 +4365,7 @@
                 "martin.nowak@7learnings.com",
                 "martin.nowak@plugintheworld.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "MartinNowak",
             "names": [
                 "Martin Nowak",
                 "dawg"
@@ -4246,10 +4403,27 @@
         },
         {
             "bugzillaPerson": {
-                "email": "chris",
-                "id": 69,
-                "name": "chris",
-                "real_name": "Chris Miller"
+                "email": "nick",
+                "id": 781,
+                "name": "nick",
+                "real_name": "Nick Treleaven"
+            },
+            "emails": [
+                "n@trelsoft.com",
+                "nick.treleaven@btinternet.com",
+                "ntrel002@gmail.com"
+            ],
+            "githubUsername": "ntrel",
+            "names": [
+                "Nick Treleaven"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "chris@dprogramming.com"
@@ -4300,9 +4474,9 @@
         },
         {
             "bugzillaPerson": {
-                "email": "post-dlang-issues",
+                "email": "post",
                 "id": 586,
-                "name": "post-dlang-issues",
+                "name": "post",
                 "real_name": "Lars T. Kyllingstad"
             },
             "emails": [
@@ -4310,7 +4484,7 @@
                 "lars.kyllingstad@sintef.no",
                 "public@kyllingen.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "kyllingstad",
             "names": [
                 "Lars T. Kyllingstad"
             ]
@@ -4424,10 +4598,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "nairolf",
-                "id": 17,
-                "name": "nairolf",
-                "real_name": "Florian"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "moonlightsentinel@disroot.org"
@@ -4471,10 +4645,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "dbugreporter",
-                "id": 2555,
-                "name": "dbugreporter",
-                "real_name": "Harry Gillanders"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "contact@harrygillanders.com"
@@ -4540,7 +4714,7 @@
             "emails": [
                 "zwinkau@kit.edu"
             ],
-            "githubUsername": "qznc",
+            "githubUsername": null,
             "names": [
                 "Andreas Zwinkau"
             ]
@@ -4562,10 +4736,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "richardpalme5b",
-                "id": 2384,
-                "name": "richardpalme5b",
-                "real_name": "Richard Palme"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "richardpalme@tutanota.de"
@@ -4585,7 +4759,7 @@
             "emails": [
                 "10equals2@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "1100110",
             "names": [
                 "1100110"
             ]
@@ -4601,7 +4775,7 @@
                 "tobias.pankrath@vattenfall.de",
                 "tobias@pankrath.net"
             ],
-            "githubUsername": "Panke",
+            "githubUsername": null,
             "names": [
                 "Panke",
                 "Tobias Pankrath"
@@ -4633,10 +4807,26 @@
                 "doob@me.com",
                 "jacob.carlborg@tretti.se"
             ],
-            "githubUsername": null,
+            "githubUsername": "jacob-carlborg",
             "names": [
                 "Jacob Carlborg",
                 "jacob-carlborg"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "bcallah",
+                "id": 2700,
+                "name": "bcallah",
+                "real_name": "Brian Callahan"
+            },
+            "emails": [
+                "bcallah@openbsd.org",
+                "bcallah@posteo.net"
+            ],
+            "githubUsername": "ibara",
+            "names": [
+                "Brian Callahan"
             ]
         },
         {
@@ -4712,7 +4902,7 @@
             "emails": [
                 "robert.klotzner@gmx.at"
             ],
-            "githubUsername": "eskimor",
+            "githubUsername": null,
             "names": [
                 "Robert Klotzner"
             ]
@@ -4761,7 +4951,7 @@
                 "martin.nowak@7learnings.com",
                 "martin.nowak@plugintheworld.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "MartinNowak",
             "names": [
                 "Martin Nowak",
                 "dawg"
@@ -4825,7 +5015,7 @@
                 "dragos.carp@funkwerk-itk.com",
                 "dragoscarp@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "dcarp",
             "names": [
                 "Dragos Carp"
             ]
@@ -4987,10 +5177,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "yoplitein",
-                "id": 1863,
-                "name": "yoplitein",
-                "real_name": "Steven Dwy"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "yoplitein+git@gmail.com",
@@ -5013,7 +5203,7 @@
                 "lio@lunesu.com",
                 "lionello@lunesu.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "lionello",
             "names": [
                 "Lionello Lunesu"
             ]
@@ -5061,7 +5251,7 @@
             "emails": [
                 "k.hara.pg@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "9rnsr",
             "names": [
                 "Kenji Hara",
                 "k-hara"
@@ -5085,10 +5275,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "sascha",
-                "id": 1031,
-                "name": "sascha",
-                "real_name": "Sascha Heylik"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "sascha@heylik.at"
@@ -5174,6 +5364,21 @@
                 "real_name": ""
             },
             "emails": [
+                "rnowling@gmail.com"
+            ],
+            "githubUsername": "rnowling",
+            "names": [
+                "RJ Nowling"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
                 "thomas.bockman@gmail.com"
             ],
             "githubUsername": "tsbockman",
@@ -5193,7 +5398,8 @@
             ],
             "githubUsername": "teodutu",
             "names": [
-                "Teodor Dutu"
+                "Teodor Dutu",
+                "teo"
             ]
         },
         {
@@ -5273,33 +5479,70 @@
         },
         {
             "bugzillaPerson": {
+                "email": "jan",
+                "id": 2714,
+                "name": "jan",
+                "real_name": "Jan"
+            },
+            "emails": [
+                "gh@webfreak.org",
+                "janju007@web.de"
+            ],
+            "githubUsername": "WebFreak001",
+            "names": [
+                "Jan",
+                "Jan Jurzitza",
+                "WebFreak001"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "pro.mathias.lang",
+                "id": 1392,
+                "name": "pro.mathias.lang",
+                "real_name": "Mathias LANG"
+            },
+            "emails": [
+                "geod24@gmail.com",
+                "mathias.lang@epitech.eu",
+                "pro.mathias.lang@gmail.com"
+            ],
+            "githubUsername": "Geod24",
+            "names": [
+                "Geod24",
+                "Mathias LANG",
+                "geod"
+            ]
+        },
+        {
+            "bugzillaPerson": {
                 "email": "",
                 "id": 0,
                 "name": "",
                 "real_name": ""
             },
             "emails": [
-                "harrison@0xcc.pw"
+                "gruen_tobias@web.de",
+                "tobygruen@gmail.com"
             ],
-            "githubUsername": "hatf0",
+            "githubUsername": null,
             "names": [
-                "Harrison",
-                "hatf0"
+                "togrue"
             ]
         },
         {
             "bugzillaPerson": {
-                "email": "menodinulla",
-                "id": 765,
-                "name": "menodinulla",
-                "real_name": "godmyoh"
+                "email": "puremagic",
+                "id": 1235,
+                "name": "puremagic",
+                "real_name": "Felix Hufnagel"
             },
             "emails": [
-                "menodinulla@gmail.com"
+                "github@zoadian.de"
             ],
-            "githubUsername": "godmyoh",
+            "githubUsername": "Zoadian",
             "names": [
-                "godmyoh"
+                "Felix Hufnagel"
             ]
         },
         {
@@ -5310,11 +5553,41 @@
                 "real_name": ""
             },
             "emails": [
-                "niklas.volcz@gmail.com"
+                "nmtigor.wang@googlemail.com"
             ],
-            "githubUsername": "NVolcz",
+            "githubUsername": "nmtigor",
             "names": [
-                "NVolcz"
+                "nmtigor"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "markus.kuehni",
+                "id": 2642,
+                "name": "markus.kuehni",
+                "real_name": "Mark"
+            },
+            "emails": [
+                "mark@qtrac.eu"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Mark"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "k.hara.pg+dev@gmail.com"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Hara Kenji"
             ]
         },
         {
@@ -5398,10 +5671,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "slayerbeast",
-                "id": 1119,
-                "name": "slayerbeast",
-                "real_name": "darkstalker"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "slayerbeast@gmail.com"
@@ -5609,7 +5882,7 @@
             "emails": [
                 "mail@skoppe.eu"
             ],
-            "githubUsername": null,
+            "githubUsername": "skoppe",
             "names": [
                 "Sebastiaan Koppe"
             ]
@@ -5686,7 +5959,7 @@
                 "erny.castell@gmail.com",
                 "mail@ernestocastellotti.it"
             ],
-            "githubUsername": null,
+            "githubUsername": "ErnyTech",
             "names": [
                 "Ernesto Castellotti"
             ]
@@ -5748,7 +6021,7 @@
             "emails": [
                 "growlercab@gmail.com"
             ],
-            "githubUsername": "growlercab",
+            "githubUsername": null,
             "names": [
                 "growler",
                 "growlercab"
@@ -5771,10 +6044,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "schlote",
-                "id": 2413,
-                "name": "schlote",
-                "real_name": "Carsten Schlote"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "carsten.schlote@gmx.net",
@@ -5796,7 +6069,7 @@
             "emails": [
                 "pjotr.public01@thebird.nl"
             ],
-            "githubUsername": "pjotrp",
+            "githubUsername": null,
             "names": [
                 "Pjotr Prins"
             ]
@@ -5824,39 +6097,6 @@
                 "real_name": ""
             },
             "emails": [
-                "maevans@blizzard.com",
-                "turkeyman@gmail.com"
-            ],
-            "githubUsername": "TurkeyMan",
-            "names": [
-                "Manu Evans"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "andrei",
-                "id": 334,
-                "name": "andrei",
-                "real_name": "Andrei Alexandrescu"
-            },
-            "emails": [
-                "aalexandre@fb.com",
-                "andrei@erdani.com"
-            ],
-            "githubUsername": null,
-            "names": [
-                "Andrei Alexandrescu",
-                "andralex"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
-            },
-            "emails": [
                 "monarchdodra@gmail.com",
                 "sik@pc-82.ik.local"
             ],
@@ -5871,10 +6111,43 @@
         },
         {
             "bugzillaPerson": {
-                "email": "arbmind",
-                "id": 2152,
-                "name": "arbmind",
-                "real_name": "Andreas Reischuck"
+                "email": "andrei",
+                "id": 334,
+                "name": "andrei",
+                "real_name": "Andrei Alexandrescu"
+            },
+            "emails": [
+                "aalexandre@fb.com",
+                "andrei@erdani.com"
+            ],
+            "githubUsername": "andralex",
+            "names": [
+                "Andrei Alexandrescu",
+                "andralex"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "maevans@blizzard.com",
+                "turkeyman@gmail.com"
+            ],
+            "githubUsername": "TurkeyMan",
+            "names": [
+                "Manu Evans"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "andreas.reischuck@hicknhack-software.com",
@@ -5887,10 +6160,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "james",
-                "id": 1106,
-                "name": "james",
-                "real_name": "James Miller"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "bladeon@gmail.com",
@@ -5918,10 +6191,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "d.bugs",
-                "id": 2131,
-                "name": "d.bugs",
-                "real_name": "Jan Jurzitza"
+                "email": "jan",
+                "id": 2714,
+                "name": "jan",
+                "real_name": "Jan"
             },
             "emails": [
                 "gh@webfreak.org",
@@ -5960,17 +6233,17 @@
             "emails": [
                 "tobias.stengel@student.kit.edu"
             ],
-            "githubUsername": null,
+            "githubUsername": "Panke",
             "names": [
                 "tobias"
             ]
         },
         {
             "bugzillaPerson": {
-                "email": "rostislav.dzinko",
-                "id": 1568,
-                "name": "rostislav.dzinko",
-                "real_name": "Rostyslav Dzinko"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "rostislav.dzinko@gmail.com"
@@ -6073,7 +6346,7 @@
                 "mihails.strasuns.contractor@sociomantic.com",
                 "mihails.strasuns@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "mihails-strasuns",
             "names": [
                 "Mihails Strasuns"
             ]
@@ -6100,10 +6373,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "venix1",
-                "id": 798,
-                "name": "venix1",
-                "real_name": "Daniel Green"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "venix1@gmail.com"
@@ -6115,9 +6388,9 @@
         },
         {
             "bugzillaPerson": {
-                "email": "rschadek",
-                "id": 2472,
-                "name": "rschadek",
+                "email": "robertschadek",
+                "id": 2709,
+                "name": "robertschadek",
                 "real_name": "Robert Schadek"
             },
             "emails": [
@@ -6149,10 +6422,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "tastyminerals",
-                "id": 2573,
-                "name": "tastyminerals",
-                "real_name": "tastyminerals@gmail.com"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "tastyminerals@gmail.com"
@@ -6211,7 +6484,7 @@
                 "thecybershadow@gmail.com",
                 "vladimir@thecybershadow.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "CyberShadow",
             "names": [
                 "Vladimir Panteleev"
             ]
@@ -6243,7 +6516,7 @@
             "emails": [
                 "uplink.coder@googlemail.com"
             ],
-            "githubUsername": "UplinkCoder",
+            "githubUsername": null,
             "names": [
                 "Stefan Koch",
                 "UplinkCoder"
@@ -6251,10 +6524,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "giles.bathgate+dlang",
-                "id": 1966,
-                "name": "giles.bathgate+dlang",
-                "real_name": "Giles Bathgate"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "giles.bathgate@gmail.com",
@@ -6328,7 +6601,7 @@
                 "thecybershadow@gmail.com",
                 "vladimir@thecybershadow.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "CyberShadow",
             "names": [
                 "Vladimir Panteleev"
             ]
@@ -6350,10 +6623,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "webby",
-                "id": 645,
-                "name": "webby",
-                "real_name": "Richard Webb"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "webby@beardmouse.org.uk"
@@ -6480,7 +6753,7 @@
                 "public@dicebot.lv",
                 "registrations@dicebot.lv"
             ],
-            "githubUsername": null,
+            "githubUsername": "mihails-strasuns",
             "names": [
                 "Dicebot",
                 "Михаил Страшун"
@@ -6511,9 +6784,24 @@
             "emails": [
                 "idanarye@gmail.com"
             ],
-            "githubUsername": "idanarye",
+            "githubUsername": null,
             "names": [
                 "IdanArye"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "lucidanescu28@yahoo.com"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Lucian Danescu"
             ]
         },
         {
@@ -6564,10 +6852,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "mcsherry.liam",
-                "id": 1778,
-                "name": "mcsherry.liam",
-                "real_name": "Liam McSherry"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "mcsherry.liam@gmail.com"
@@ -6575,6 +6863,21 @@
             "githubUsername": "McSherry",
             "names": [
                 "Liam McSherry"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "nocomentsspb",
+                "id": 2596,
+                "name": "nocomentsspb",
+                "real_name": "Nikolay Belov"
+            },
+            "emails": [
+                "nikolay.v.belov@gmail.com"
+            ],
+            "githubUsername": "nbelov",
+            "names": [
+                "Nikolay Belov"
             ]
         },
         {
@@ -6600,22 +6903,6 @@
                 "real_name": ""
             },
             "emails": [
-                "alex.jercaianu@gmail.com"
-            ],
-            "githubUsername": null,
-            "names": [
-                "Alexandru Jercaianu",
-                "jercaianu"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
-            },
-            "emails": [
                 "grogan.colin@gmail.com"
             ],
             "githubUsername": "grogancolin",
@@ -6625,26 +6912,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "mxfomin",
-                "id": 1623,
-                "name": "mxfomin",
-                "real_name": "Maxim Fomin"
-            },
-            "emails": [
-                "maxim-fomin@outlook.com",
-                "maxim@maxim-fomin.ru"
-            ],
-            "githubUsername": "Makcal",
-            "names": [
-                "Maxim Fomin"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "dmd",
-                "id": 1265,
-                "name": "dmd",
-                "real_name": "David Held"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "github@wyntrmute.com"
@@ -6656,6 +6927,21 @@
         },
         {
             "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "andrew.benton675@gmail.com"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Andrew Benton"
+            ]
+        },
+        {
+            "bugzillaPerson": {
                 "email": "mxfomin",
                 "id": 1623,
                 "name": "mxfomin",
@@ -6665,7 +6951,7 @@
                 "maxim-fomin@outlook.com",
                 "maxim@maxim-fomin.ru"
             ],
-            "githubUsername": "Makcal",
+            "githubUsername": null,
             "names": [
                 "Maxim Fomin"
             ]
@@ -6703,9 +6989,9 @@
         },
         {
             "bugzillaPerson": {
-                "email": "post-dlang-issues",
+                "email": "post",
                 "id": 586,
-                "name": "post-dlang-issues",
+                "name": "post",
                 "real_name": "Lars T. Kyllingstad"
             },
             "emails": [
@@ -6713,7 +6999,7 @@
                 "lars.kyllingstad@sintef.no",
                 "public@kyllingen.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "kyllingstad",
             "names": [
                 "Lars T. Kyllingstad"
             ]
@@ -6726,7 +7012,8 @@
                 "real_name": "FeepingCreature"
             },
             "emails": [
-                "default_357-line@yahoo.de"
+                "default_357-line@yahoo.de",
+                "feepingcreature@gmail.com"
             ],
             "githubUsername": "FeepingCreature",
             "names": [
@@ -6793,7 +7080,7 @@
                 "dlang@ryanjframe.com",
                 "ryan@strangelyinbetween.com"
             ],
-            "githubUsername": "ryan2858",
+            "githubUsername": null,
             "names": [
                 "Ryan Frame"
             ]
@@ -6840,7 +7127,7 @@
                 "alex@lycus.org",
                 "xtzgzorex@gmail.com"
             ],
-            "githubUsername": "LycusCI",
+            "githubUsername": "alexrp",
             "names": [
                 "Alex Rønne Petersen",
                 "XTZGZoReX",
@@ -6941,7 +7228,7 @@
                 "public@dicebot.lv",
                 "registrations@dicebot.lv"
             ],
-            "githubUsername": null,
+            "githubUsername": "mihails-strasuns",
             "names": [
                 "Dicebot",
                 "Михаил Страшун"
@@ -6964,10 +7251,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "francois.chabot.dev",
-                "id": 1144,
-                "name": "francois.chabot.dev",
-                "real_name": "Francois Chabot"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "francois.chabot.dev@gmail.com"
@@ -6979,10 +7266,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "akaquinn",
-                "id": 121,
-                "name": "akaquinn",
-                "real_name": "Gregor Richards"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "richards@codu.org"
@@ -7048,7 +7335,7 @@
             "emails": [
                 "lorenzolespaul@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "lolgab",
             "names": [
                 "Lorenzo Gabriele"
             ]
@@ -7081,7 +7368,7 @@
                 "alex@lycus.org",
                 "xtzgzorex@gmail.com"
             ],
-            "githubUsername": "LycusCI",
+            "githubUsername": "alexrp",
             "names": [
                 "Alex Rønne Petersen",
                 "XTZGZoReX",
@@ -7098,7 +7385,7 @@
             "emails": [
                 "schuetzm@gmx.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "schuetzm",
             "names": [
                 "Marc Schütz"
             ]
@@ -7131,7 +7418,7 @@
                 "jmdavis@jmdavisprog.com",
                 "jmdavisprog@gmx.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "jmdavis",
             "names": [
                 "Jonathan M Davis",
                 "jmdavis"
@@ -7248,15 +7535,15 @@
         },
         {
             "bugzillaPerson": {
-                "email": "itsallaboutthedyo",
-                "id": 796,
-                "name": "itsallaboutthedyo",
-                "real_name": "Tim Keating"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "mrtact@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "timkeatingCDW",
             "names": [
                 "Tim Keating"
             ]
@@ -7269,9 +7556,10 @@
                 "real_name": "Sönke Ludwig"
             },
             "emails": [
+                "sludwig@outerproduct.org",
                 "sludwig@rejectedsoftware.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "s-ludwig",
             "names": [
                 "Sönke Ludwig"
             ]
@@ -7286,7 +7574,7 @@
             "emails": [
                 "lelouch.cpp@gmail.com"
             ],
-            "githubUsername": "Kriyszig",
+            "githubUsername": null,
             "names": [
                 "Kriyszig"
             ]
@@ -7301,7 +7589,7 @@
             "emails": [
                 "henning@still-hidden.de"
             ],
-            "githubUsername": null,
+            "githubUsername": "hpohl",
             "names": [
                 "Henning Pohl"
             ]
@@ -7473,7 +7761,7 @@
                 "martin.nowak@7learnings.com",
                 "martin.nowak@plugintheworld.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "MartinNowak",
             "names": [
                 "Martin Nowak",
                 "dawg"
@@ -7520,7 +7808,7 @@
                 "jmdavis@jmdavisprog.com",
                 "jmdavisprog@gmx.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "jmdavis",
             "names": [
                 "Jonathan M Davis",
                 "jmdavis"
@@ -7528,10 +7816,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "yao.gomez",
-                "id": 788,
-                "name": "yao.gomez",
-                "real_name": "Yao Gomez"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "yaoltzin@gmail.com"
@@ -7556,17 +7844,17 @@
                 "thecybershadow@gmail.com",
                 "vladimir@thecybershadow.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "CyberShadow",
             "names": [
                 "Vladimir Panteleev"
             ]
         },
         {
             "bugzillaPerson": {
-                "email": "vasniktel",
-                "id": 2427,
-                "name": "vasniktel",
-                "real_name": "Vasyl Teliman"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "vasniktel@gmail.com"
@@ -7658,10 +7946,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "schlote",
-                "id": 2413,
-                "name": "schlote",
-                "real_name": "Carsten Schlote"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "carsten.schlote@gmx.net",
@@ -7717,7 +8005,7 @@
                 "crom29@hotmail.fr",
                 "cromfr@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "CromFr",
             "names": [
                 "Crom (Thibaut CHARLES)",
                 "Thibaut CHARLES"
@@ -7732,7 +8020,8 @@
             },
             "emails": [
                 "n@trelsoft.com",
-                "nick.treleaven@btinternet.com"
+                "nick.treleaven@btinternet.com",
+                "ntrel002@gmail.com"
             ],
             "githubUsername": "ntrel",
             "names": [
@@ -7741,10 +8030,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "huhlig",
-                "id": 507,
-                "name": "huhlig",
-                "real_name": "Hans W. Uhlig"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "huhlig@uhlisys.com"
@@ -7797,7 +8086,7 @@
                 "crom29@hotmail.fr",
                 "cromfr@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "CromFr",
             "names": [
                 "Crom (Thibaut CHARLES)",
                 "Thibaut CHARLES"
@@ -7836,15 +8125,15 @@
         },
         {
             "bugzillaPerson": {
-                "email": "rbanderton",
-                "id": 1532,
-                "name": "rbanderton",
-                "real_name": "Blake Anderton"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "rbanderton@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "rbanderton",
             "names": [
                 "Blake Anderton",
                 "Robert Blake Anderton"
@@ -7973,17 +8262,49 @@
         },
         {
             "bugzillaPerson": {
-                "email": "andrew.benton675",
-                "id": 1901,
-                "name": "andrew.benton675",
-                "real_name": "Andrew Benton"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
-                "andrew.benton675@gmail.com"
+                "alex.jercaianu@gmail.com"
             ],
             "githubUsername": null,
             "names": [
-                "Andrew Benton"
+                "Alexandru Jercaianu",
+                "jercaianu"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "caron800",
+                "id": 373,
+                "name": "caron800",
+                "real_name": "Janice Caron"
+            },
+            "emails": [
+                "caron800@googlemail.com"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Janice Caron"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "bugzilla",
+                "id": 2,
+                "name": "bugzilla",
+                "real_name": "Walter Bright"
+            },
+            "emails": [
+                "walter@digitalmars.com",
+                "walter@walterbright.com"
+            ],
+            "githubUsername": "WalterBright",
+            "names": [
+                "Walter Bright"
             ]
         },
         {
@@ -7994,11 +8315,92 @@
                 "real_name": ""
             },
             "emails": [
-                "k.hara.pg+dev@gmail.com"
+                "thomas.mader@gmail.com"
             ],
             "githubUsername": null,
             "names": [
-                "Hara Kenji"
+                "Thomas Mader"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "robertschadek",
+                "id": 2709,
+                "name": "robertschadek",
+                "real_name": "Robert Schadek"
+            },
+            "emails": [
+                "rburners@gmail.com",
+                "robert.schadek@informatik.uni-oldenburg.de",
+                "rschadek@symmetryinvestments.com"
+            ],
+            "githubUsername": "burner",
+            "names": [
+                "Robert BuRnEr Schadek",
+                "Robert Schadek",
+                "Robert burner Schadek"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "yvpdgjyf@vomoto.com"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Blumerline"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "clumsycodemonkey",
+                "id": 2033,
+                "name": "clumsycodemonkey",
+                "real_name": "Ryan"
+            },
+            "emails": [
+                "ryan@rcorre.net"
+            ],
+            "githubUsername": "rcorre",
+            "names": [
+                "Ryan",
+                "Ryan Roden-Corrent"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "niklas.volcz@gmail.com"
+            ],
+            "githubUsername": "NVolcz",
+            "names": [
+                "NVolcz"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "mxfomin",
+                "id": 1623,
+                "name": "mxfomin",
+                "real_name": "Maxim Fomin"
+            },
+            "emails": [
+                "maxim-fomin@outlook.com",
+                "maxim@maxim-fomin.ru"
+            ],
+            "githubUsername": null,
+            "names": [
+                "Maxim Fomin"
             ]
         },
         {
@@ -8026,9 +8428,24 @@
             "emails": [
                 "trikkuz@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "trikko",
             "names": [
                 "Andrea Fontana"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "richard@cattermole.co.nz"
+            ],
+            "githubUsername": null,
+            "names": [
+                "richard (rikki) andrew cattermole"
             ]
         },
         {
@@ -8079,10 +8496,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "christian.koestlin",
-                "id": 1103,
-                "name": "christian.koestlin",
-                "real_name": "Christian Köstlin"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "christian.koestlin@esrlabs.com"
@@ -8195,7 +8612,7 @@
             "emails": [
                 "iamthewilsonator@hotmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "thewilsonator",
             "names": [
                 "Nicholas Lindsay Wilson",
                 "Nicholas Wilson"
@@ -8308,16 +8725,16 @@
             "emails": [
                 "repeatedly@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "repeatedly",
             "names": [
                 "Masahiro Nakagawa"
             ]
         },
         {
             "bugzillaPerson": {
-                "email": "post-dlang-issues",
+                "email": "post",
                 "id": 586,
-                "name": "post-dlang-issues",
+                "name": "post",
                 "real_name": "Lars T. Kyllingstad"
             },
             "emails": [
@@ -8325,7 +8742,7 @@
                 "lars.kyllingstad@sintef.no",
                 "public@kyllingen.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "kyllingstad",
             "names": [
                 "Lars T. Kyllingstad"
             ]
@@ -8572,7 +8989,7 @@
             "emails": [
                 "wiz3kid@gmail.com"
             ],
-            "githubUsername": "d3dave",
+            "githubUsername": null,
             "names": [
                 "David Dorfman"
             ]
@@ -8603,7 +9020,7 @@
             "emails": [
                 "elvis.x.zhou@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "elvisxzhou",
             "names": [
                 "Elvis Zhou"
             ]
@@ -8638,7 +9055,7 @@
                 "lio@lunesu.com",
                 "lionello@lunesu.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "lionello",
             "names": [
                 "Lionello Lunesu"
             ]
@@ -8828,10 +9245,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "gorox",
-                "id": 1766,
-                "name": "gorox",
-                "real_name": "Dan Olson"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "danole@comcast.net"
@@ -8920,16 +9337,17 @@
         },
         {
             "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
+                "email": "grimmaple95",
+                "id": 2590,
+                "name": "grimmaple95",
+                "real_name": "Grim Maple"
             },
             "emails": [
                 "grimmaple95@gmail.com"
             ],
             "githubUsername": "GrimMaple",
             "names": [
+                "Grim Maple",
                 "GrimMaple"
             ]
         },
@@ -8959,7 +9377,7 @@
                 "aalexandre@fb.com",
                 "andrei@erdani.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "andralex",
             "names": [
                 "Andrei Alexandrescu",
                 "andralex"
@@ -8990,7 +9408,7 @@
             "emails": [
                 "eyal@weka.io"
             ],
-            "githubUsername": null,
+            "githubUsername": "Peaker",
             "names": [
                 "Eyal Lotem"
             ]
@@ -9012,6 +9430,21 @@
         },
         {
             "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
+                "rubytheroobster@yandex.com"
+            ],
+            "githubUsername": "RubyTheRoobster",
+            "names": [
+                "RubyTheRoobster"
+            ]
+        },
+        {
+            "bugzillaPerson": {
                 "email": "aronrobert293",
                 "id": 2565,
                 "name": "aronrobert293",
@@ -9020,7 +9453,7 @@
             "emails": [
                 "aronrobert293@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "RA4Z",
             "names": [
                 "Robert Aron"
             ]
@@ -9038,6 +9471,7 @@
             "githubUsername": "deadalnix",
             "names": [
                 "Amaury SECHET",
+                "Amaury Séchet",
                 "deadalnix"
             ]
         },
@@ -9051,7 +9485,7 @@
             "emails": [
                 "sfrijters@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "SFrijters",
             "names": [
                 "Stefan Frijters"
             ]
@@ -9064,9 +9498,10 @@
                 "real_name": "Brian Callahan"
             },
             "emails": [
-                "bcallah@openbsd.org"
+                "bcallah@openbsd.org",
+                "bcallah@posteo.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "ibara",
             "names": [
                 "Brian Callahan"
             ]
@@ -9088,10 +9523,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "dlang",
-                "id": 2542,
-                "name": "dlang",
-                "real_name": "Rasmus Thomsen"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "oss@cogitri.dev"
@@ -9126,7 +9561,7 @@
             "emails": [
                 "datamanrb@gmail.com"
             ],
-            "githubUsername": "data-man",
+            "githubUsername": null,
             "names": [
                 "Dmitry Atamanov"
             ]
@@ -9215,11 +9650,11 @@
                 "real_name": ""
             },
             "emails": [
-                "denis.feklushkin@gmail.com"
+                "kennytm@gmail.com"
             ],
-            "githubUsername": "denizzzka",
+            "githubUsername": null,
             "names": [
-                "Denis Feklushkin"
+                "KennyTM~"
             ]
         },
         {
@@ -9230,11 +9665,11 @@
                 "real_name": ""
             },
             "emails": [
-                "sanduleac.dan@gmail.com"
+                "denis.feklushkin@gmail.com"
             ],
-            "githubUsername": "dansanduleac",
+            "githubUsername": "denizzzka",
             "names": [
-                "dansanduleac"
+                "Denis Feklushkin"
             ]
         },
         {
@@ -9247,9 +9682,24 @@
             "emails": [
                 "davispuh@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "davispuh",
             "names": [
                 "Dāvis"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "kipthemudkip",
+                "id": 2762,
+                "name": "kipthemudkip",
+                "real_name": "TheGag96"
+            },
+            "emails": [
+                "thegag96@gmail.com"
+            ],
+            "githubUsername": "TheGag96",
+            "names": [
+                "TheGag96"
             ]
         },
         {
@@ -9262,7 +9712,7 @@
             "emails": [
                 "github@bernis-buecher.de"
             ],
-            "githubUsername": null,
+            "githubUsername": "berni44",
             "names": [
                 "berni44"
             ]
@@ -9284,10 +9734,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "gileadis",
-                "id": 1071,
-                "name": "gileadis",
-                "real_name": "David Gileadi"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "gileadis@gmail.com"
@@ -9295,21 +9745,6 @@
             "githubUsername": "dgileadi",
             "names": [
                 "David Gileadi"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "markus.kuehni",
-                "id": 2642,
-                "name": "markus.kuehni",
-                "real_name": "Mark"
-            },
-            "emails": [
-                "mark@qtrac.eu"
-            ],
-            "githubUsername": null,
-            "names": [
-                "Mark"
             ]
         },
         {
@@ -9329,10 +9764,26 @@
         },
         {
             "bugzillaPerson": {
-                "email": "graham.fawcett",
-                "id": 734,
-                "name": "graham.fawcett",
-                "real_name": "Graham Fawcett"
+                "email": "maximzms",
+                "id": 942,
+                "name": "maximzms",
+                "real_name": "Maksim Zholudev"
+            },
+            "emails": [
+                "maksim@mint",
+                "maximzms@gmail.com"
+            ],
+            "githubUsername": "MaksimZh",
+            "names": [
+                "Maksim Zholudev"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "graham.fawcett@gmail.com"
@@ -9359,10 +9810,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "marcioapm",
-                "id": 1640,
-                "name": "marcioapm",
-                "real_name": "Márcio Martins"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "marcioapm@gmail.com"
@@ -9404,10 +9855,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "nanayamae",
-                "id": 2174,
-                "name": "nanayamae",
-                "real_name": "Marco de Wild"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "mdwild@sogyo.nl",
@@ -9436,10 +9887,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "mingodad",
-                "id": 1612,
-                "name": "mingodad",
-                "real_name": "Domingo Alvarez Duarte"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "mingodad@gmail.com"
@@ -9483,10 +9934,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "greg",
-                "id": 1234,
-                "name": "greg",
-                "real_name": "Greg Ward"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "greg@gerg.ca"
@@ -9498,10 +9949,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "marco.nembrini.co",
-                "id": 1278,
-                "name": "marco.nembrini.co",
-                "real_name": "Marco Nembrini"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "marco.nembrini.co@gmail.com"
@@ -9536,7 +9987,7 @@
             "emails": [
                 "joe@webdrake.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "WebDrake",
             "names": [
                 "Joseph Rushton Wakeling"
             ]
@@ -9597,7 +10048,7 @@
             "emails": [
                 "pineapplemachine@gmail.com"
             ],
-            "githubUsername": "pineapplemachine",
+            "githubUsername": "sophiekirschner",
             "names": [
                 "Sophie Kirschner"
             ]
@@ -9617,7 +10068,7 @@
                 "thecybershadow@gmail.com",
                 "vladimir@thecybershadow.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "CyberShadow",
             "names": [
                 "Vladimir Panteleev"
             ]
@@ -9713,7 +10164,7 @@
             "emails": [
                 "jmaschme@gmail.com"
             ],
-            "githubUsername": "jrmConduce",
+            "githubUsername": null,
             "names": [
                 "John Maschmeyer"
             ]
@@ -9781,10 +10232,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "wallbraker",
-                "id": 949,
-                "name": "wallbraker",
-                "real_name": "Jakob Bornecrantz"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "wallbraker@gmail.com"
@@ -9891,10 +10342,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "jeremiep",
-                "id": 635,
-                "name": "jeremiep",
-                "real_name": "Jeremie Pelletier"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "jeremiep@gmail.com"
@@ -9919,7 +10370,7 @@
                 "thecybershadow@gmail.com",
                 "vladimir@thecybershadow.net"
             ],
-            "githubUsername": null,
+            "githubUsername": "CyberShadow",
             "names": [
                 "Vladimir Panteleev"
             ]
@@ -9935,7 +10386,7 @@
                 "gruen_tobias@web.de",
                 "tobygruen@gmail.com"
             ],
-            "githubUsername": "togrue",
+            "githubUsername": null,
             "names": [
                 "togrue"
             ]
@@ -9958,10 +10409,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "erik",
-                "id": 1508,
-                "name": "erik",
-                "real_name": "Erik van Velzen"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "erik@evanv.nl"
@@ -9997,8 +10448,9 @@
             "emails": [
                 "dkorpel@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "dkorpel",
             "names": [
+                "Dennis Korpel",
                 "dkorpel"
             ]
         },
@@ -10029,7 +10481,7 @@
                 "walter@digitalmars.com",
                 "walter@walterbright.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "WalterBright",
             "names": [
                 "Walter Bright"
             ]
@@ -10089,7 +10541,7 @@
             "emails": [
                 "simendsjo@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "simendsjo",
             "names": [
                 "simendsjo"
             ]
@@ -10177,6 +10629,21 @@
                 "real_name": ""
             },
             "emails": [
+                "bobvalentin2003@gmail.com"
+            ],
+            "githubUsername": "vali0901",
+            "names": [
+                "vali0901"
+            ]
+        },
+        {
+            "bugzillaPerson": {
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
+            },
+            "emails": [
                 "marklaptop@mohr"
             ],
             "githubUsername": null,
@@ -10194,7 +10661,7 @@
             "emails": [
                 "timokhin.iv@gmail.com"
             ],
-            "githubUsername": "UserNameBlaBlaBlaBla",
+            "githubUsername": null,
             "names": [
                 "Ivan Timokhin"
             ]
@@ -10233,16 +10700,17 @@
         },
         {
             "bugzillaPerson": {
-                "email": "9il",
-                "id": 725,
-                "name": "9il",
-                "real_name": "Ilya Yaroshenko"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "ilyayaroshenko@gmail.com"
             ],
-            "githubUsername": "9il",
+            "githubUsername": null,
             "names": [
+                "Ilia Ki",
                 "Ilya",
                 "Ilya Yaroshenko"
             ]
@@ -10339,10 +10807,10 @@
         },
         {
             "bugzillaPerson": {
-                "email": "tknott",
-                "id": 170,
-                "name": "tknott",
-                "real_name": "Tyler Knott"
+                "email": "",
+                "id": 0,
+                "name": "",
+                "real_name": ""
             },
             "emails": [
                 "tknott@gmail.com"
@@ -10425,7 +10893,7 @@
             "emails": [
                 "irritate@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "irritate",
             "names": [
                 "irritate"
             ]
@@ -10462,9 +10930,9 @@
         },
         {
             "bugzillaPerson": {
-                "email": "rschadek",
-                "id": 2472,
-                "name": "rschadek",
+                "email": "robertschadek",
+                "id": 2709,
+                "name": "robertschadek",
                 "real_name": "Robert Schadek"
             },
             "emails": [
@@ -10493,7 +10961,7 @@
                 "emailsdontbelong@inarepository.com",
                 "nospam@nospam.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "donc",
             "names": [
                 "Don Clugston",
                 "Don.Clugston",
@@ -10525,7 +10993,7 @@
             "emails": [
                 "sdegtiarev@yahoo.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "sdegtiarev",
             "names": [
                 "Sergei Degtiarev"
             ]
@@ -10555,88 +11023,11 @@
                 "real_name": ""
             },
             "emails": [
-                "kennytm@gmail.com"
+                "sanduleac.dan@gmail.com"
             ],
-            "githubUsername": null,
+            "githubUsername": "dansanduleac",
             "names": [
-                "KennyTM~"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "caron800",
-                "id": 373,
-                "name": "caron800",
-                "real_name": "Janice Caron"
-            },
-            "emails": [
-                "caron800@googlemail.com"
-            ],
-            "githubUsername": null,
-            "names": [
-                "Janice Caron"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
-            },
-            "emails": [
-                "gruen_tobias@web.de",
-                "tobygruen@gmail.com"
-            ],
-            "githubUsername": "togrue",
-            "names": [
-                "togrue"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "puremagic",
-                "id": 1235,
-                "name": "puremagic",
-                "real_name": "Felix Hufnagel"
-            },
-            "emails": [
-                "github@zoadian.de"
-            ],
-            "githubUsername": "Zoadian",
-            "names": [
-                "Felix Hufnagel"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "",
-                "id": 0,
-                "name": "",
-                "real_name": ""
-            },
-            "emails": [
-                "nmtigor.wang@googlemail.com"
-            ],
-            "githubUsername": "nmtigor",
-            "names": [
-                "nmtigor"
-            ]
-        },
-        {
-            "bugzillaPerson": {
-                "email": "maximzms",
-                "id": 942,
-                "name": "maximzms",
-                "real_name": "Maksim Zholudev"
-            },
-            "emails": [
-                "maksim@mint",
-                "maximzms@gmail.com"
-            ],
-            "githubUsername": "MaksimZh",
-            "names": [
-                "Maksim Zholudev"
+                "dansanduleac"
             ]
         }
     ]

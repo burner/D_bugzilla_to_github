@@ -7,6 +7,8 @@ import std.ascii : isASCII;
 import std.conv : to;
 import std.format;
 import std.json;
+import std.file;
+import std.string;
 import std.range : chain;
 import std.stdio;
 import std.typecons : Nullable, nullable;
@@ -54,26 +56,30 @@ GithubRestResult getByEmail(string email) {
 	string url = "https://api.github.com/search/users?q=%s";
 	email = email.replace(" ", "+");
 	string withId = format(url, email);
-	try {
-		auto r = Request();
-		r.authenticator = new BasicAuthentication(theArgs().githubUsername
-				, theArgs().githubToken);
-		auto content = r.get(withId);
+	foreach(_; 0 .. 2) {
+		try {
+			auto r = Request();
+			r.authenticator = new BasicAuthentication(theArgs().githubUsername
+					, theArgs().githubToken);
+			auto content = r.get(withId);
 
-		writefln("%s\n%s", email, content.responseBody.to!string());
-		JSONValue parsed = content.responseBody.to!string().parseJSON();
-		if("message" in parsed && parsed["message"].type() == JSONType.string
-				&& parsed["message"].get!string()
-				.startsWith("API rate limit exceeded for user"))
-		{
-			writeln("API limit execeeded need to sleep");
-			Thread.sleep( dur!("minutes")(2));
-			writeln("Sleeping done");
+			writefln("%s\n%s", email, content.responseBody.to!string());
+			JSONValue parsed = content.responseBody.to!string().parseJSON();
+			if("message" in parsed && parsed["message"].type() == JSONType.string
+					&& parsed["message"].get!string()
+					.indexOf("API rate limit exceeded for") != -1)
+			{
+				writeln("API limit execeeded need to sleep");
+				Thread.sleep( dur!("minutes")(1));
+				writeln("Sleeping done");
+				continue;
+			}
+			return tFromJson!GithubRestResult(parsed);
+		} catch(Exception e) {
+			return GithubRestResult.init;
 		}
-		return tFromJson!GithubRestResult(parsed);
-	} catch(Exception e) {
-		return GithubRestResult.init;
 	}
+	return GithubRestResult.init;
 }
 
 struct GithubPerson {
@@ -89,12 +95,24 @@ GithubPerson buildGithubPerson(UnifiedGitPerson ugp) {
 			) 
 	{
 		GithubRestResult r = getByEmail(it);
-		if(!r.items.isNull() 
-				&& r.items.get().length == 1 
-				&& !r.items.get()[0].login.empty) 
-		{
-			ret.githubUserName = nullable(r.items.get()[0].login);
-			break;
+		if(!r.items.isNull()) {
+			if(r.items.get().length == 1 && !r.items.get()[0].login.empty) {
+				ret.githubUserName = nullable(r.items.get()[0].login);
+				break;
+			} else if(r.items.get().length > 1) {
+				JSONValue g = JSONValue(["search": ugp.toJSON()]);
+				g["found"] = r.toJSON();
+				if(exists("many_matches.json")) {
+					JSONValue[] v = parseJSON(readText("many_matches.json")).arrayNoRef;
+					v ~= g;
+					auto f = File("many_matches.json", "w");
+					f.writeln(JSONValue(v).toPrettyString());
+				} else {
+					auto f = File("many_matches.json", "w");
+					f.writeln(JSONValue([g]));
+				}
+				break;
+			}
 		}
 	}
 	return ret;

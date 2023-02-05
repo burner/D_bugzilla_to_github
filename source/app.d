@@ -27,6 +27,7 @@ import gitauthors;
 import github;
 import json;
 import getopenissues;
+import allpeople;
 
 auto toInclude() {
 auto ret = 
@@ -313,11 +314,20 @@ Unifier getUnifier(Person[] allPersons) {
 	UnifiedGitPerson[] afterGithub;
 	foreach(idx, UnifiedGitPerson it; uf.getUniq()) {
 		GithubPerson gh = buildGithubPerson(it);
-		Thread.sleep( dur!("seconds")(8) );
+		Thread.sleep( dur!("seconds")(10) );
 		if(!gh.githubUserName.isNull()) {
 			it.githubUsername = gh.githubUserName.get();
 		} else {
 			writefln("%(%s, %) ;; NOT FOUND", gh.gitAuthors.emails);
+			if(exists("no_matches.json")) {
+				JSONValue[] v = parseJSON(readText("no_matches.json")).arrayNoRef;
+				v ~= it.toJSON();
+				auto f = File("no_matches.json", "w");
+				f.writeln(JSONValue(v).toPrettyString());
+			} else {
+				auto f = File("no_matches.json", "w");
+				f.writeln(JSONValue([it.toJSON()]));
+			}
 		}
 		afterGithub ~= it;
 	}
@@ -612,6 +622,7 @@ void main(string[] args) {
 	if(parseOptions(args)) {
 		return;
 	}
+	writeln(theArgs());
 
 	Token token;
 	if(theArgs().bugzillaTest) {
@@ -621,30 +632,36 @@ void main(string[] args) {
 		return;
 	}
 
+	Bug[] bugsOfProject;
 	// Get issues for a specific project (dmd, druntime, phobos)
 	if(!theArgs().getOpenBugs.empty) {
-		Bug[] bugsOfProject = downloadOpenBugsAndUnifyWithLocalCopy(
+		bugsOfProject = downloadOpenBugsAndUnifyWithLocalCopy(
 				theArgs().getOpenBugs
 			);
 	}
 
 	// We need to get all open bugs
-	if(!theArgs().getAllBugs) {
+	if(theArgs().getAllBugs) {
 		foreach(p; ["dmd", "druntime", "phobos"]) {
-			Bug[] bugsOfProject = downloadOpenBugsAndUnifyWithLocalCopy(p);
+			writefln("getting bugs from bugzilla for '%s'", p);
+			bugsOfProject ~= downloadOpenBugsAndUnifyWithLocalCopy(p);
 		}
 	}
 
 	// This is needed to get github authors, which are later matched to
 	// bugzilla authors
-	if(!theArgs().cloneRepos) {
+	if(theArgs().cloneRepos) {
 		cloneAndBuildStats();
 	}
 
-	Unifier uf = getAllGitPersonsUnifier();
+	Bug[] ob;
 
 	//writeOpenIssuesToFile();
-	Bug[] ob = allBugs();
+	if(theArgs().findGithubUserMatches) {
+ 		ob = allBugs();
+		Unifier uf = getUnifier(buildAllPersons(ob));
+	}
+
 	/*
 	Label[] labels = parseExistingLabels();
 	Label[string] labelsAA = assocArray
@@ -714,6 +731,8 @@ void main(string[] args) {
 	//writefln("All classifications %s", allClassification(ob));
 	//writefln("All flags %s", allFlags(ob));
 
+	AllPeopleHandler aph;
+	aph.load();
 
 	writeln("target");
 	Repository target = getRepository(theArgs().githubOrganization

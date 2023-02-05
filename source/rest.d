@@ -290,7 +290,9 @@ class Getter : Thread {
 	}
 
 	void run() {
-		auto js = getBugs(this.ids.map!(it => it.id).array);
+		long[] issueIds = this.ids.map!(it => it.id).array;
+		writefln("download issues %(%s,%)", issueIds);
+		auto js = getBugs(issueIds);
 		this.rslt = parseBugs(js);
 		outer: foreach(ref r; this.rslt) {
 			foreach(bd; this.ids) {
@@ -338,7 +340,7 @@ Bug[] downloadCommentsAndAttachments(Bug[] bugs, ulong chunkSize) {
 	auto chks = chunks(bugs, chunkSize);
 	Bug[] ret;
 	foreach(chk; chks) {
-		writefln("%(%s,%)", chk.map!(i => i.id));
+		writefln("download comments and attachements for %(%s,%)", chk.map!(i => i.id));
 		GetCommentAttachments[] getter = chk
 			.map!(it => cast(GetCommentAttachments)new GetCommentAttachments(it).start())
 			.array;
