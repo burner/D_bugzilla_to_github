@@ -67,7 +67,7 @@ GithubRestResult getByEmail(string email) {
 			JSONValue parsed = content.responseBody.to!string().parseJSON();
 			if("message" in parsed && parsed["message"].type() == JSONType.string
 					&& parsed["message"].get!string()
-					.indexOf("API rate limit exceeded for") != -1)
+					.indexOf("API rate limit exceeded") != -1)
 			{
 				writeln("API limit execeeded need to sleep");
 				Thread.sleep( dur!("minutes")(1));
