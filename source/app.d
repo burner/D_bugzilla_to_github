@@ -755,7 +755,7 @@ void main(string[] args) {
 	BugIssue[] rslt;
 	foreach(idx, ref b; ob) {
 		writefln("%s of %s", idx, ob.length);
-		Markdowned m = toMarkdown(b);
+		Markdowned m = toMarkdown(b, aph);
 
 		CreateIssueInput input;
 		input.title = m.title.atReplace();

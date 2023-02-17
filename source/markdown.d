@@ -11,6 +11,7 @@ import std.stdio;
 import std.typecons;
 
 import rest;
+import allpeople;
 
 @safe:
 
@@ -96,11 +97,16 @@ void main() @safe
 	assert(dcf.isDcode);
 }
 
-Markdowned toMarkdown(Bug b) {
+Markdowned toMarkdown(Bug b, ref AllPeopleHandler aph) {
 	Markdowned ret;
+	AllPeople* ap = b.creator_detail.id in aph.byBugzillaId;
 	ret.title = b.summary;
-	ret.header = format("## %s reported this on %s\n\n"
-				, b.creator, b.creation_time.toISOExtString()
+	ret.header = format("## %s%s reported this on %s\n\n"
+				, b.creator
+				, ap is null 
+					? "" 
+					: " (" ~ (*ap).githubUser ~ ")"
+				, b.creation_time.toISOExtString()
 			)
 		~ format("### Transfered from https://issues.dlang.org/show_bug.cgi?id=%s\n\n"
 				, b.id
@@ -118,10 +124,10 @@ Markdowned toMarkdown(Bug b) {
 	if(comments.empty) {
 		ret.header ~= "No description was given";
 	} else {
-		ret.header ~= toMarkdown(comments.front, true);
+		ret.header ~= toMarkdown(comments.front, true, aph);
 		ret.header ~= "### Comments\n\n";
 		ret.comments = comments[1 .. $]
-			.map!(c => toMarkdown(c, false))
+			.map!(c => toMarkdown(c, false, aph))
 			.joiner("\n\n")
 			.to!string();
 	}
@@ -129,10 +135,15 @@ Markdowned toMarkdown(Bug b) {
 	return ret;
 }
 
-string toMarkdown(Comment c, const bool noHeader) {
+string toMarkdown(Comment c, const bool noHeader, ref AllPeopleHandler aph) {
+	// TODO we need to have AA to search by email in here
+	AllPeople* ap = c.creator in aph.by;
 	string header = noHeader
 		? ""
-		: format("#### %s commented on %s\n\n", c.creator
+		: format("#### %s%s commented on %s\n\n", c.creator
+				, ap is null 
+					? "" 
+					: " (" ~ (*ap).githubUser ~ ")"
 				, c.time.toISOExtString());
 	string body_ = c.text
 		.replace("\\n", "\n")

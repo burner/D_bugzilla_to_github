@@ -92,7 +92,7 @@ struct Attachment {
 	long id;
 	string data;
 	long size;
-	SysTime  creation_time;
+	SysTime creation_time;
 	SysTime last_change_time;
 	long bug_id;
 	string file_name;

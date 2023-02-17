@@ -7,7 +7,7 @@ import std.algorithm.sorting : sort;
 import std.typecons;
 import std.exception : enforce;
 import std.format;
-import std.file : readText;
+import std.file : exists, readText;
 import std.json;
 
 import rest;
@@ -39,6 +39,9 @@ struct AllPeopleHandler {
 	AllPeople[string] byGithubId;
 
 	void load() {
+		if(!exists("all_people.json")) {
+			return;
+		}
 		AllPeoples ap = tFromJson!AllPeoples(parseJSON(readText("all_people.json")));
 		foreach(ref UnifiedGitPersonAll it; ap.people
 				.filter!(h => !h.githubUsername.isNull())
