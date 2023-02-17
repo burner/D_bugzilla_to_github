@@ -15,11 +15,18 @@ import json;
 
 class AllPeople {
 	long[] bugzillaIds;
+	string[] emails;
 	string githubUser;
 
 	this(long bId, string ghu) {
 		this.bugzillaIds = [bId];
 		this.githubUser = ghu;
+	}
+
+	this(long bId, string ghu, string[] email) {
+		this.bugzillaIds = [bId];
+		this.githubUser = ghu;
+		this.emails ~= email;
 	}
 }
 
@@ -37,6 +44,7 @@ struct AllPeoples {
 struct AllPeopleHandler {
 	AllPeople[long] byBugzillaId;
 	AllPeople[string] byGithubId;
+	AllPeople[string] byEmail;
 
 	void load() {
 		if(!exists("all_people.json")) {
@@ -52,13 +60,19 @@ struct AllPeopleHandler {
 			AllPeople* byGh = it.githubUsername.get() in this.byGithubId;
 			if(byId is null && byGh is null) {
 				auto t = new AllPeople(it.bugzillaPerson.id,
-						it.githubUsername.get());
+						it.githubUsername.get(), it.emails);
 				this.byBugzillaId[it.bugzillaPerson.id] = t;
 				this.byGithubId[t.githubUser] = t;
+				foreach(id; t.emails) {
+					this.byEmail[id] = *byGh;
+				}
 			} else if(byId is null && byGh !is null) {
 				(*byGh).bugzillaIds = ((*byGh).bugzillaIds ~ it.bugzillaPerson.id).sort.uniq.array;
 				foreach(id; (*byGh).bugzillaIds) {
 					this.byBugzillaId[id] = *byGh;
+				}
+				foreach(id; (*byGh).emails) {
+					this.byEmail[id] = *byGh;
 				}
 			} else if(byId !is null && byGh is null) {
 				enforce((*byId).githubUser == it.githubUsername.get(), format("%s", it));
@@ -66,14 +80,22 @@ struct AllPeopleHandler {
 				foreach(id; (*byGh).bugzillaIds) {
 					this.byBugzillaId[id] = *byGh;
 				}
+				foreach(id; (*byGh).emails) {
+					this.byEmail[id] = *byGh;
+				}
 			} else if(byId !is null && byGh !is null) {
 				enforce((*byId).githubUser == it.githubUsername.get(), format("%s", it));
 				enforce((*byId).githubUser == (*byGh).githubUser, format("%s", it));
 				(*byGh).bugzillaIds = ((*byGh).bugzillaIds 
 						~ (*byId).bugzillaIds
 						~ it.bugzillaPerson.id).sort.uniq.array;
+				(*byGh).emails = ((*byGh).emails ~ (*byId).emails ~
+						it.bugzillaPerson.email).sort.uniq.array;
 				foreach(id; (*byGh).bugzillaIds) {
 					this.byBugzillaId[id] = *byGh;
+				}
+				foreach(id; (*byGh).emails) {
+					this.byEmail[id] = *byGh;
 				}
 			}
 		}

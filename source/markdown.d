@@ -136,8 +136,7 @@ Markdowned toMarkdown(Bug b, ref AllPeopleHandler aph) {
 }
 
 string toMarkdown(Comment c, const bool noHeader, ref AllPeopleHandler aph) {
-	// TODO we need to have AA to search by email in here
-	AllPeople* ap = c.creator in aph.by;
+	AllPeople* ap = c.creator in aph.byEmail;
 	string header = noHeader
 		? ""
 		: format("#### %s%s commented on %s\n\n", c.creator
