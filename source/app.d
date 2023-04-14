@@ -618,6 +618,11 @@ void cloneAndBuildStats() {
 	}
 }
 
+/*
+./d_bugzilla_to_github --organization=dlang
+	--bugzillaPassword="email@gmail.com" --bugzillaPassword="PASSWORD"
+	--project=bugzilla_migration_test --token=GITHUB_TOKEN --components=druntime
+*/
 void main(string[] args) {
 	if(parseOptions(args)) {
 		return;

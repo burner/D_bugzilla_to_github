@@ -106,6 +106,7 @@ Markdowned toMarkdown(Bug b, ref AllPeopleHandler aph) {
 				, ap is null 
 					? "" 
 					: " (" ~ (*ap).githubUser ~ ")"
+					// TODO : " (@" ~ (*ap).githubUser ~ ")"
 				, b.creation_time.toISOExtString()
 			)
 		~ format("### Transfered from https://issues.dlang.org/show_bug.cgi?id=%s\n\n"
@@ -114,7 +115,13 @@ Markdowned toMarkdown(Bug b, ref AllPeopleHandler aph) {
 		~ (b.cc_detail.empty
 			? ""
 			: format("### CC List\n\n%--(* %s\n%)\n\n"
-					, b.cc_detail.map!(c => c.name)
+					, b.cc_detail.map!((c) {
+						AllPeople* cc = c.email in aph.byEmail;
+						return cc is null && !(*cc).githubUser.empty
+							? c.name
+							//TODO : format("%s (@%s)", c.name, (*cc).githubUser);
+							: format("%s (%s)", c.name, (*cc).githubUser);
+					})
 				)
 			);
 
