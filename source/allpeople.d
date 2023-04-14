@@ -64,7 +64,7 @@ struct AllPeopleHandler {
 				this.byBugzillaId[it.bugzillaPerson.id] = t;
 				this.byGithubId[t.githubUser] = t;
 				foreach(id; t.emails) {
-					this.byEmail[id] = *byGh;
+					this.byEmail[id] = t;
 				}
 			} else if(byId is null && byGh !is null) {
 				(*byGh).bugzillaIds = ((*byGh).bugzillaIds ~ it.bugzillaPerson.id).sort.uniq.array;
@@ -77,11 +77,11 @@ struct AllPeopleHandler {
 			} else if(byId !is null && byGh is null) {
 				enforce((*byId).githubUser == it.githubUsername.get(), format("%s", it));
 				(*byGh).bugzillaIds = ((*byGh).bugzillaIds ~ it.bugzillaPerson.id).sort.uniq.array;
-				foreach(id; (*byGh).bugzillaIds) {
-					this.byBugzillaId[id] = *byGh;
+				foreach(id; (*byId).bugzillaIds) {
+					this.byBugzillaId[id] = *byId;
 				}
-				foreach(id; (*byGh).emails) {
-					this.byEmail[id] = *byGh;
+				foreach(id; (*byId).emails) {
+					this.byEmail[id] = *byId;
 				}
 			} else if(byId !is null && byGh !is null) {
 				enforce((*byId).githubUser == it.githubUsername.get(), format("%s", it));

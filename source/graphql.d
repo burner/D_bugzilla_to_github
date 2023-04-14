@@ -6,7 +6,7 @@ import std.array;
 import std.conv;
 import std.datetime;
 import std.exception;
-import std.file : readText;
+import std.file : exists, readText;
 import std.format : format;
 import std.json;
 import std.stdio;
@@ -32,6 +32,9 @@ JSONValue getCurrentRateLimit(string bearer) {
 }
 
 Label[] parseExistingLabels() {
+	if(!exists("labels.json")) {
+		return [];
+	}
 	JSONValue t = parseJSON(readText("labels.json"));
 	return t.arrayNoRef()
 		.map!(i => i.jsonToForgiving!Label())

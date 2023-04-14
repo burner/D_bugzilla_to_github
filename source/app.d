@@ -98,7 +98,7 @@ auto ret =
 		, "ADD8E6"
 		, "B0E0E6"
 		]
-	, "status":
+	/*, "status":
 		[ "006400"
 		, "008000"
 		, "556B2F"
@@ -119,7 +119,7 @@ auto ret =
 		, "90EE90"
 		, "ADFF2F"
 		, "98FB98"
-		]
+		]*/
 	];
 	return ret;
 }
@@ -506,12 +506,12 @@ Label[string] generateLabels(Bug[] ob
 		, const(string[][string]) toIncludeKeys
 		, Repository target) 
 {
+	Label[string] labels;
 	if(exists("labels.json")) {
-		return parseExistingLabels()
+		labels = parseExistingLabels()
 			.map!(l => tuple(l.name, l))
 			.assocArray();
 	}
-	Label[string] labels;
 	static foreach(mem; __traits(allMembers, Bug)) {{
 		//static if(canFind(toIncludeKeys, mem)) {
 		if(mem in toIncludeKeys) {
@@ -524,9 +524,9 @@ Label[string] generateLabels(Bug[] ob
 				writefln("All %s %s %s", mem, toInsert, ob.length);
 				const string[] colors = toIncludeKeys[mem];
 				foreach(lr; zip(toInsert, colors)
-						.map!(p => createLabel(LabelInput(p[1], p[0], target.id)
-							, theArgs().githubToken)
-						)
+						.map!(p => LabelInput(p[1], p[0], target.id))
+						.filter!(li => li.name !in labels)
+						.map!(li => createLabel(li, theArgs().githubToken))
 				) {
 					labels[lr.name] = lr;
 				}
@@ -624,6 +624,13 @@ void main(string[] args) {
 	}
 	writeln(theArgs());
 
+	if(theArgs().buildAllPeople) {
+		import allpeople2;
+		AllPeopleJoined apj;
+		apj.loadFromIssues();
+		return;
+	}
+
 	Token token;
 	if(theArgs().bugzillaTest) {
 		token = bugzillaLogin(theArgs().bugzillaUsername, theArgs().bugzillaPassword);
@@ -656,104 +663,41 @@ void main(string[] args) {
 
 	Bug[] ob;
 
-	//writeOpenIssuesToFile();
 	if(theArgs().findGithubUserMatches) {
  		ob = allBugs();
 		Unifier uf = getUnifier(buildAllPersons(ob));
+		return;
 	}
 
-	/*
-	Label[] labels = parseExistingLabels();
-	Label[string] labelsAA = assocArray
-		( labels.map!(it => it.name)
-		, labels
-		);
-	*/
-	/*
-	CommentAnalysis ca = readOpenIssues()
-		.map!(b => getCommentByBugId(b.id))
-		.joiner
-		.doCommentAnalysis();
-	
-	writeln(ca);
-	*/
-
-	/*
-	BugAnalysis ba = ob
-			//.filter!(it => it.component == "phobos")
-			.doBugAnalysis();
-	writeln(ba);
-	*/
-
-	/*
-	Nullable!Bug b = getBugById(21565);
-	Bug bnn = b.get();
-	Markdowned m = toMarkdown(bnn);
-	*/
-	//auto f = File("i21565.md", "w");
-	//f.write(m.toString());
-
-	/*writefln("%(%s\n%)", ob
-			.filter!(it => it.component == "phobos")
-			.map!(it => it.id));
-	*/
-	
-	/*
-	Comment[] c = allComment();
-
-	Bug[long] bugsAA = joinBugsAndComments(b, c);
-	*/
-
-	//writefln("%(%s\n%)", loadAllGithubPersonWithoutGithubUsername());
-	//analyzeUnfinshedGithubUsers();
-	//analyzeAllGithubUsers();
-
-	/*
-	Person[] allPersons = buildAllPersons(b);
-
-	writefln("%(%s\n%)", allPersons);
-	*/
-
-	/*
-	auto notFound = allPersons
-		.filter!(p => p.email !in uf.byEmail 
-				&& p.name !in uf.byName 
-				&& p.real_name !in uf.byName)
-		.array;
-	writefln("%(%s\n%)", notFound);
-	writeln(notFound.length);
-	*/
-
-	//writefln("All versions %s", allVersions(ob));
-	//writefln("All keywords %s", allKeywords(ob));
-	//writefln("All platforms %s", allPlatforms(ob));
-	//writefln("All OPs %s", allOPs(ob));
-	//writefln("All classifications %s", allClassification(ob));
-	//writefln("All flags %s", allFlags(ob));
+	if(!theArgs().components.empty) {
+		ob = allBugs()
+			.filter!(b => canFind(theArgs().components, b.component))
+			.array;
+		writefln("%s bugs", ob.length);
+	}
 
 	AllPeopleHandler aph;
 	aph.load();
 
-	writeln("target");
 	Repository target = getRepository(theArgs().githubOrganization
 			, theArgs().githubProject, theArgs().githubToken);
 
-	writeln("labels");
 	Label[string] labelsAA = generateLabels(ob, toInclude, target);
 
 	const string[] toIncludeKeys = toInclude.keys();
 
-	writeln(getCurrentRateLimit(theArgs().githubToken));
+	//writeln(getCurrentRateLimit(theArgs().githubToken));
 
-	if(token.token.empty) {
+	/* TODO ENABLE AGAIN TODO !!!!!!!!!!!!!
+	   if(token.token.empty) {
 		writeln("You need a bugzilla token at this point\n"
 				~ "Please pass the 'bugzillaUsername' and "
 				~ "bugzillaPassword.");
 		return;
-	}
+	}*/
 
 	BugIssue[] rslt;
-	foreach(idx, ref b; ob) {
+	outer: foreach(idx, ref b; ob) {
 		writefln("%s of %s", idx, ob.length);
 		Markdowned m = toMarkdown(b, aph);
 
@@ -786,70 +730,38 @@ void main(string[] args) {
 				auto tmp = BugIssue(createIssue(input, theArgs().githubToken), b);
 				rslt ~= tmp;
 				// comment in the old bugzilla issue
-				postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-						~ "https://github.com/%s/%s/issues/%d\n\n"
-						~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT"
-						~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-						, theArgs().githubOrganization
-						, theArgs().githubProject
-						, tmp.githubIssue.number)
-					, token.token);
-				break inner;
+				try {
+					writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+							~ "https://github.com/%s/%s/issues/%d\n\n"
+							~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+							~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+							, theArgs().githubOrganization
+							, theArgs().githubProject
+							, tmp.githubIssue.number);
+					// TODO enable for actual run TODO
+					//postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+					//		~ "https://github.com/%s/%s/issues/%d\n\n"
+					//		~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+					//		~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+					//		, theArgs().githubOrganization
+					//		, theArgs().githubProject
+					//		, tmp.githubIssue.number)
+					//	, token.token);
+				} catch(Exception e) {
+					writefln("Failed to tell bugzilla that issue %s now is"
+							~ " github issue %s", b.id
+							, tmp.githubIssue.number);
+				}
+				continue inner;
 			} catch(Exception e) {
-				writeln(e.toString());
 				if(e.msg.indexOf("was submitted too quickly") != -1) {
-					Thread.sleep(dur!"minutes"(61));
 					writeln("Sleeping for an 61 minutes");
+					Thread.sleep(dur!"minutes"(61));
 					continue inner;
 				}
 			}
 		}
+		writefln("Failed two of two tries of bug %s", b.id);
 		Thread.sleep(dur!"msecs"(5000));
 	}
-
-
-	/*
-	JSONValue vq;
-	vq["name"] = "bugzilla_migration_test";
-	vq["owner"] = "burner";
-	vq["first"] = 10;
-
-
-	JSONValue repo = qlQuerySafe(repoInfo, vq
-				, theArgs().githubToken
-		);
-	//writeln(repo.toPrettyString());
-
-	JSONValue v3 = JSONValue(["input": v]);
-	writeln(v3.toPrettyString());
-
-	JSONValue createLabelRslt = qlMutationSafe(createLabel, v3,
-			theArgs().githubToken);
-
-	writeln(createLabelRslt.toPrettyString());
-
-	return jsonToForgiving!Label(createLabelRslt);
-	*/
-
-	//<meta name="octolytics-dimension-repository_id" content="459916112">
-
-	/*
-	string lg = `query myself($number_of_repos: Int!) { 
-		viewer { 
-			login 
-			repositories(last: $number_of_repos) {
-	     		nodes {
-	     			name
-	     		}
-	   		}
-		}
-	}`;
-
-	JSONValue v2;
-	v2["number_of_repos"] = 3;
-
-	writeln(qlQuerySafe(lg, v2
-				, theArgs().githubToken
-		).toPrettyString());
-	*/
 }
