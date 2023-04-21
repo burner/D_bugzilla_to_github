@@ -16,6 +16,7 @@ struct Args {
 	string bugzillaPassword;
 	bool bugzillaTest;
 	bool findGithubUserMatches;
+	bool mentionPeopleInGithubAndPostOnBugzilla;
 }
 
 private Args __theArgs;
@@ -53,6 +54,8 @@ bool parseOptions(ref string[] args) {
 				&theArgsWriteable().bugzillaTest
 			, "findGithubUserMatches", "Find the people matching bugzilla users on github",
 				&theArgsWriteable().findGithubUserMatches
+			, "mentionPeopleInGithubAndPostOnBugzilla", "Do the @GITHUB name mention",
+				&theArgsWriteable().mentionPeopleInGithubAndPostOnBugzilla
 			);
 	if(helpWanted.helpWanted) {
 		defaultGetoptPrinter("A text explaining the program",

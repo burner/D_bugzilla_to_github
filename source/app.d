@@ -622,6 +622,7 @@ void cloneAndBuildStats() {
 ./d_bugzilla_to_github --organization=dlang
 	--bugzillaPassword="email@gmail.com" --bugzillaPassword="PASSWORD"
 	--project=bugzilla_migration_test --token=GITHUB_TOKEN --components=druntime
+	--mentionPeopleInGithubAndPostOnBugzilla
 */
 void main(string[] args) {
 	if(parseOptions(args)) {
@@ -693,13 +694,12 @@ void main(string[] args) {
 
 	//writeln(getCurrentRateLimit(theArgs().githubToken));
 
-	/* TODO ENABLE AGAIN TODO !!!!!!!!!!!!!
-	   if(token.token.empty) {
+	if(token.token.empty) {
 		writeln("You need a bugzilla token at this point\n"
 				~ "Please pass the 'bugzillaUsername' and "
 				~ "bugzillaPassword.");
 		return;
-	}*/
+	}
 
 	BugIssue[] rslt;
 	outer: foreach(idx, ref b; ob) {
@@ -736,22 +736,24 @@ void main(string[] args) {
 				rslt ~= tmp;
 				// comment in the old bugzilla issue
 				try {
-					writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-							~ "https://github.com/%s/%s/issues/%d\n\n"
-							~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-							~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-							, theArgs().githubOrganization
-							, theArgs().githubProject
-							, tmp.githubIssue.number);
-					// TODO enable for actual run TODO
-					//postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-					//		~ "https://github.com/%s/%s/issues/%d\n\n"
-					//		~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-					//		~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-					//		, theArgs().githubOrganization
-					//		, theArgs().githubProject
-					//		, tmp.githubIssue.number)
-					//	, token.token);
+					if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
+						postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+								~ "https://github.com/%s/%s/issues/%d\n\n"
+								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+								, theArgs().githubOrganization
+								, theArgs().githubProject
+								, tmp.githubIssue.number)
+							, token.token);
+					} else {
+						writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+								~ "https://github.com/%s/%s/issues/%d\n\n"
+								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+								, theArgs().githubOrganization
+								, theArgs().githubProject
+								, tmp.githubIssue.number);
+					}
 				} catch(Exception e) {
 					writefln("Failed to tell bugzilla that issue %s now is"
 							~ " github issue %s", b.id

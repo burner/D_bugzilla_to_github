@@ -11,6 +11,7 @@ import std.stdio;
 import std.typecons;
 
 import rest;
+import cliargs;
 import allpeople;
 
 @safe:
@@ -101,12 +102,14 @@ Markdowned toMarkdown(Bug b, ref AllPeopleHandler aph) {
 	Markdowned ret;
 	AllPeople* ap = b.creator_detail.id in aph.byBugzillaId;
 	ret.title = b.summary;
-	ret.header = format("## %s%s reported this on %s\n\n"
+	ret.header = () @trusted { 
+		return format("## %s%s reported this on %s\n\n"
 				, b.creator
 				, ap is null 
 					? "" 
-					: " (" ~ (*ap).githubUser ~ ")"
-					// TODO : " (@" ~ (*ap).githubUser ~ ")"
+					: theArgs().mentionPeopleInGithubAndPostOnBugzilla
+						? " (@" ~ (*ap).githubUser ~ ")"
+						: " (" ~ (*ap).githubUser ~ ")"
 				, b.creation_time.toISOExtString()
 			)
 		~ format("### Transfered from https://issues.dlang.org/show_bug.cgi?id=%s\n\n"
@@ -119,11 +122,13 @@ Markdowned toMarkdown(Bug b, ref AllPeopleHandler aph) {
 						AllPeople* cc = c.email in aph.byEmail;
 						return cc is null && !(*cc).githubUser.empty
 							? c.name
-							//TODO : format("%s (@%s)", c.name, (*cc).githubUser);
-							: format("%s (%s)", c.name, (*cc).githubUser);
+							: theArgs().mentionPeopleInGithubAndPostOnBugzilla
+								? format("%s (@%s)", c.name, (*cc).githubUser)
+								: format("%s (%s)", c.name, (*cc).githubUser);
 					})
 				)
 			);
+	}();
 
 	ret.header ~= "### Description\n\n";
 	enforce(!b.comments.isNull(), format("Bug %s has no comments", b.id));
