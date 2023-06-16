@@ -159,6 +159,9 @@ Comment[] getCommentByBugId(long id) {
 }
 
 Bug[] allBugs() {
+	if(!exists("issues")) {
+		mkdir("issues");
+	}
 	return dirEntries("issues/", "bug*.json", SpanMode.depth)
 			.filter!(it => !canFind(it.name, "comment"))
 			.map!((de) {
@@ -502,7 +505,8 @@ dmd, druntime, phobos. Thank you WebFreak for the idea
 */
 
 
-Label[string] generateLabels(Bug[] ob
+Label[string] generateLabels(string org, string repoName
+		, Bug[] ob
 		, const(string[][string]) toIncludeKeys
 		, Repository target) 
 {
@@ -526,7 +530,7 @@ Label[string] generateLabels(Bug[] ob
 				foreach(lr; zip(toInsert, colors)
 						.map!(p => LabelInput(p[1], p[0], target.id))
 						.filter!(li => li.name !in labels)
-						.map!(li => createLabel(li, theArgs().githubToken))
+						.map!(li => createLabel(org, repoName, li, theArgs().githubToken))
 				) {
 					labels[lr.name] = lr;
 				}
@@ -643,6 +647,10 @@ void main(string[] args) {
 		long githubTestIssue = 23609;
 		JSONValue r = postComment(githubTestIssue, "This is a test", token.token);
 		return;
+	} else if(!theArgs().bugzillaPassword.empty
+			&& !theArgs().bugzillaUsername.empty) 
+	{
+		token = bugzillaLogin(theArgs().bugzillaUsername, theArgs().bugzillaPassword);
 	}
 
 	Bug[] bugsOfProject;
@@ -655,7 +663,7 @@ void main(string[] args) {
 
 	// We need to get all open bugs
 	if(theArgs().getAllBugs) {
-		foreach(p; ["dmd", "druntime", "phobos"]) {
+		foreach(p; ["dmd", "druntime", "phobos", "tools", "visuald"]) {
 			writefln("getting bugs from bugzilla for '%s'", p);
 			bugsOfProject ~= downloadOpenBugsAndUnifyWithLocalCopy(p);
 		}
@@ -688,7 +696,8 @@ void main(string[] args) {
 	Repository target = getRepository(theArgs().githubOrganization
 			, theArgs().githubProject, theArgs().githubToken);
 
-	Label[string] labelsAA = generateLabels(ob, toInclude, target);
+	Label[string] labelsAA = generateLabels(theArgs().githubOrganization
+			, theArgs().githubProject, ob, toInclude, target);
 
 	const string[] toIncludeKeys = toInclude.keys();
 
@@ -735,31 +744,34 @@ void main(string[] args) {
 				auto tmp = BugIssue(createIssue(input, theArgs().githubToken), b);
 				rslt ~= tmp;
 				// comment in the old bugzilla issue
-				try {
-					if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
-						postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-								~ "https://github.com/%s/%s/issues/%d\n\n"
-								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-								, theArgs().githubOrganization
-								, theArgs().githubProject
-								, tmp.githubIssue.number)
-							, token.token);
-					} else {
-						writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-								~ "https://github.com/%s/%s/issues/%d\n\n"
-								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-								, theArgs().githubOrganization
-								, theArgs().githubProject
-								, tmp.githubIssue.number);
+				if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
+					bzl: foreach(bz; 0 .. 2) {
+						try {
+							postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+									~ "https://github.com/%s/%s/issues/%d\n\n"
+									~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+									~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+									, theArgs().githubOrganization
+									, theArgs().githubProject
+									, tmp.githubIssue.number)
+								, token.token);
+						} catch(Exception e) {
+							writefln("Failed to tell bugzilla that issue %s now is"
+									~ " github issue %s", b.id
+									, tmp.githubIssue.number);
+							continue bzl;
+						}
 					}
-				} catch(Exception e) {
-					writefln("Failed to tell bugzilla that issue %s now is"
-							~ " github issue %s", b.id
+				} else {
+					writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+							~ "https://github.com/%s/%s/issues/%d\n\n"
+							~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+							~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+							, theArgs().githubOrganization
+							, theArgs().githubProject
 							, tmp.githubIssue.number);
 				}
-				continue inner;
+				continue outer;
 			} catch(Exception e) {
 				if(e.msg.indexOf("was submitted too quickly") != -1) {
 					writeln("Sleeping for an 61 minutes");

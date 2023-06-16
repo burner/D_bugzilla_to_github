@@ -10,6 +10,7 @@ import std.file : exists, readText;
 import std.format : format;
 import std.json;
 import std.stdio;
+import std.typecons;
 import std.traits : Unqual, isArray;
 
 @safe:
@@ -53,7 +54,35 @@ struct LabelInput {
 	string repositoryId;
 }
 
-Label createLabel(LabelInput input, string bearer) {
+Nullable!Label getLabelByName(LabelInput input, string org, string repoName, string bearer) {
+	string getLabel = `
+		query GetLabel($owner: String!, $name: String!, $labelName: String!) {
+			repository(owner: $owner, name: $name) {
+				label(name: $labelName) {
+					id
+					color
+					name
+				}
+			}
+		}
+	`;
+
+	JSONValue vars;
+	vars["owner"] = org;
+	vars["name"] = repoName;
+	vars["labelName"] = input.name;
+	//JSONValue v2 = JSONValue(["input" : vars]);
+
+	JSONValue rslt = qlMutationSafe(getLabel, vars, bearer);
+	writefln("getLabel %s", rslt.toPrettyString());
+	return parseHelper!(Nullable!Label)(rslt, "data.repository.label");
+}
+
+Label createLabel(string org, string repoName, LabelInput input, string bearer) {
+	Nullable!Label checkIfExists = getLabelByName(input, org, repoName, bearer);
+	if(!checkIfExists.isNull()) {
+		return checkIfExists.get();
+	}
 	string createLabel = `
 	mutation CreateLabel($input: CreateLabelInput!) {
 		createLabel(input: $input) {
@@ -335,46 +364,52 @@ template canBeNull(T) {
 
 
 @safe T resolveNested(T)(JSONValue input, string field) {
-	static if(is(T : Nullable!F, F)) {{
+	static if(is(T == Nullable!F, F)) {
 		JSONValue ret;
 		const bool exists = hasPathTo!JSONValue(input, field, ret);
 		return exists && ret.type != JSONType.null_
 			? nullable(resolveNested!F(ret, ""))
 			: T.init;
-	}} else {{
+	} else {
 		JSONValue ret;
 		const bool exists = hasPathTo!JSONValue(input, field, ret);
 		enforce(exists, format("No field '%s' found in %s"
 				, field, input.toPrettyString())
 			);
 		return customDeserialize!T(ret);
-	}}
+	}
 }
 
 @safe T jsonToForgiving(T)(JSONValue j) {
 	import std.traits : FieldNameTuple;
 
-	T ret;
-	static foreach(mem; FieldNameTuple!T) {{
-		alias FieldType = typeof(__traits(getMember, T, mem));
-		static if(is(FieldType : NullableStore!F, F)) {
-		} else static if(is(FieldType : Nullable!F, F)) {
-			JSONValue* ptr = mem in j;
-			if(ptr && ptr.type == JSONType.null_) {
-				__traits(getMember, ret, mem) = FieldType.init;
-			} else if(ptr && ptr.type != JSONType.null_) {
-				__traits(getMember, ret, mem) = nullable(extract!F(j, mem));
+	static if(is(T == Nullable!F, F)) {
+		return j.type != JSONType.null_
+			? nullable(jsonToForgiving!F(j))
+			: T.init;
+	} else {
+		T ret;
+		static foreach(mem; FieldNameTuple!T) {{
+			alias FieldType = typeof(__traits(getMember, T, mem));
+			static if(is(FieldType : NullableStore!F, F)) {
+			} else static if(is(FieldType : Nullable!F, F)) {
+				JSONValue* ptr = mem in j;
+				if(ptr && ptr.type == JSONType.null_) {
+					__traits(getMember, ret, mem) = FieldType.init;
+				} else if(ptr && ptr.type != JSONType.null_) {
+					__traits(getMember, ret, mem) = nullable(extract!F(j, mem));
+				}
+			} else {
+				const(JSONValue)* ptr = mem in j;
+				if(ptr && ptr.type != JSONType.null_) {
+					__traits(getMember, ret, mem) =
+						resolveNested!FieldType(j, mem);
+				}
 			}
-		} else {
-			const(JSONValue)* ptr = mem in j;
-			if(ptr && ptr.type != JSONType.null_) {
-				__traits(getMember, ret, mem) =
-					resolveNested!FieldType(j, mem);
-			}
-		}
-		
-	}}
-	return ret;
+			
+		}}
+		return ret;
+	}
 }
 
 JSONValue getNested(JSONValue data, string path) {
