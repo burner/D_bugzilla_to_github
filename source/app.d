@@ -28,6 +28,7 @@ import github;
 import json;
 import getopenissues;
 import allpeople;
+import githubmigrationapi;
 
 auto toInclude() {
 auto ret = 
@@ -713,74 +714,80 @@ void main(string[] args) {
 	BugIssue[] rslt;
 	outer: foreach(idx, ref b; ob) {
 		writefln("%s of %s", idx, ob.length);
-		Markdowned m = toMarkdown(b, aph);
+		if(theArgs().newMigrationApi) {
+			MigrationIssue mi = bugToMigration(b, aph, labelsAA,
+					toIncludeKeys);
+			writefln("%s %s", idx, mi);
+		} else {
+			Markdowned m = toMarkdown(b, aph);
 
-		CreateIssueInput input;
-		input.title = m.title.atReplace();
-		input.body_ = (m.header ~ "\n" ~ m.comments).atReplace();
-		input.repoId = target.id;
-		static foreach(mem; __traits(allMembers, Bug)) {{
-			static if(canFind(toIncludeKeys, mem)) {
-				alias MT = typeof(__traits(getMember, Bug, mem));
-				static if(is(MT == string)) {{
-					auto has = __traits(getMember, b, mem);	
-					if(has in labelsAA) {
-						input.labelIds ~= labelsAA[has].id;
-					}
-				}} else static if(is(MT == string[])) {{
-					auto has = __traits(getMember, b, mem);	
-					foreach(it; has) {
-						if(it in labelsAA) {
-							input.labelIds ~= labelsAA[it].id;
+			CreateIssueInput input;
+			input.title = m.title.atReplace();
+			input.body_ = (m.header ~ "\n" ~ m.comments).atReplace();
+			input.repoId = target.id;
+			static foreach(mem; __traits(allMembers, Bug)) {{
+				static if(canFind(toIncludeKeys, mem)) {
+					alias MT = typeof(__traits(getMember, Bug, mem));
+					static if(is(MT == string)) {{
+						auto has = __traits(getMember, b, mem);	
+						if(has in labelsAA) {
+							input.labelIds ~= labelsAA[has].id;
 						}
-					}
-				}}
-			}
-		}}
+					}} else static if(is(MT == string[])) {{
+						auto has = __traits(getMember, b, mem);	
+						foreach(it; has) {
+							if(it in labelsAA) {
+								input.labelIds ~= labelsAA[it].id;
+							}
+						}
+					}}
+				}
+			}}
 
-		// Annoying creation rate limit of github
-		inner: foreach(tries; 0 .. 2) {
-			try {
-				auto tmp = BugIssue(createIssue(input, theArgs().githubToken), b);
-				rslt ~= tmp;
-				// comment in the old bugzilla issue
-				if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
-					bzl: foreach(bz; 0 .. 2) {
-						try {
-							postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-									~ "https://github.com/%s/%s/issues/%d\n\n"
-									~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-									~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-									, theArgs().githubOrganization
-									, theArgs().githubProject
-									, tmp.githubIssue.number)
-								, token.token);
-						} catch(Exception e) {
-							writefln("Failed to tell bugzilla that issue %s now is"
-									~ " github issue %s", b.id
-									, tmp.githubIssue.number);
-							continue bzl;
+			// Annoying creation rate limit of github
+			inner: foreach(tries; 0 .. 2) {
+				try {
+					auto tmp = BugIssue(createIssue(input, theArgs().githubToken), b);
+					rslt ~= tmp;
+					// comment in the old bugzilla issue
+					if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
+						bzl: foreach(bz; 0 .. 2) {
+							try {
+								postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+										~ "https://github.com/%s/%s/issues/%d\n\n"
+										~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+										~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+										, theArgs().githubOrganization
+										, theArgs().githubProject
+										, tmp.githubIssue.number)
+									, token.token);
+							} catch(Exception e) {
+								writefln("Failed to tell bugzilla that issue %s now is"
+										~ " github issue %s", b.id
+										, tmp.githubIssue.number);
+								continue bzl;
+							}
 						}
+					} else {
+						writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+								~ "https://github.com/%s/%s/issues/%d\n\n"
+								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+								, theArgs().githubOrganization
+								, theArgs().githubProject
+								, tmp.githubIssue.number);
 					}
-				} else {
-					writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-							~ "https://github.com/%s/%s/issues/%d\n\n"
-							~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-							~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-							, theArgs().githubOrganization
-							, theArgs().githubProject
-							, tmp.githubIssue.number);
-				}
-				continue outer;
-			} catch(Exception e) {
-				if(e.msg.indexOf("was submitted too quickly") != -1) {
-					writeln("Sleeping for an 61 minutes");
-					Thread.sleep(dur!"minutes"(61));
-					continue inner;
+					continue outer;
+				} catch(Exception e) {
+					if(e.msg.indexOf("was submitted too quickly") != -1) {
+						writeln("Sleeping for an 61 minutes");
+						Thread.sleep(dur!"minutes"(61));
+						continue inner;
+					}
 				}
 			}
+			writefln("Failed two of two tries of bug %s", b.id);
+			Thread.sleep(dur!"msecs"(5000));
 		}
-		writefln("Failed two of two tries of bug %s", b.id);
-		Thread.sleep(dur!"msecs"(5000));
 	}
 }

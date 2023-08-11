@@ -17,6 +17,7 @@ struct Args {
 	bool bugzillaTest;
 	bool findGithubUserMatches;
 	bool mentionPeopleInGithubAndPostOnBugzilla;
+	bool newMigrationApi;
 }
 
 private Args __theArgs;
@@ -56,6 +57,8 @@ bool parseOptions(ref string[] args) {
 				&theArgsWriteable().findGithubUserMatches
 			, "mentionPeopleInGithubAndPostOnBugzilla", "Do the @GITHUB name mention",
 				&theArgsWriteable().mentionPeopleInGithubAndPostOnBugzilla
+			, "newMigrationApi", "Use the undocumented github issue migration api",
+				&theArgsWriteable().newMigrationApi
 			);
 	if(helpWanted.helpWanted) {
 		defaultGetoptPrinter("A text explaining the program",
