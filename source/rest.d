@@ -225,8 +225,18 @@ JSONValue getBug(long id) {
 JSONValue getBugs(long[] ids) {
 	string url = "https://issues.dlang.org/rest/bug?id=%(%s,%)";
 	string withId = format(url, ids);
-	auto content = getContent(withId).to!string().parseJSON();
-	return content;
+	Exception f;
+	foreach(_; 0 .. 2) {
+		try {
+			auto content = getContent(withId);
+			string s = content.to!string();
+			JSONValue j = s.parseJSON();
+			return j;
+		} catch(Exception e) {
+			f = e;
+		}
+	}
+	throw f;
 }
 
 JSONValue postComment(long issueId, string comment, string token) {

@@ -718,6 +718,49 @@ void main(string[] args) {
 			MigrationIssue mi = bugToMigration(b, aph, labelsAA,
 					toIncludeKeys);
 			writefln("%s %s", idx, mi);
+			inner2: foreach(tries; 0 .. 2) {
+				try {
+					auto tmp = BugIssue(createMigrationissue(mi, theArgs().githubToken), b);
+					rslt ~= tmp;
+					// comment in the old bugzilla issue
+					if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
+						bzl: foreach(bz; 0 .. 2) {
+							try {
+								postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+										~ "https://github.com/%s/%s/issues/%d\n\n"
+										~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+										~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+										, theArgs().githubOrganization
+										, theArgs().githubProject
+										, tmp.githubIssue.number)
+									, token.token);
+							} catch(Exception e) {
+								writefln("Failed to tell bugzilla that issue %s now is"
+										~ " github issue %s", b.id
+										, tmp.githubIssue.number);
+								continue bzl;
+							}
+						}
+					} else {
+						writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+								~ "https://github.com/%s/%s/issues/%d\n\n"
+								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+								, theArgs().githubOrganization
+								, theArgs().githubProject
+								, tmp.githubIssue.number);
+					}
+					continue outer;
+				} catch(Exception e) {
+					if(e.msg.indexOf("was submitted too quickly") != -1) {
+						writeln("Sleeping for an 61 minutes");
+						Thread.sleep(dur!"minutes"(61));
+						continue inner2;
+					}
+				}
+			}
+			writefln("Failed two of two tries of bug %s", b.id);
+			Thread.sleep(dur!"msecs"(5000));
 		} else {
 			Markdowned m = toMarkdown(b, aph);
 
@@ -751,7 +794,7 @@ void main(string[] args) {
 					rslt ~= tmp;
 					// comment in the old bugzilla issue
 					if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
-						bzl: foreach(bz; 0 .. 2) {
+						bzl2: foreach(bz; 0 .. 2) {
 							try {
 								postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
 										~ "https://github.com/%s/%s/issues/%d\n\n"
@@ -765,7 +808,7 @@ void main(string[] args) {
 								writefln("Failed to tell bugzilla that issue %s now is"
 										~ " github issue %s", b.id
 										, tmp.githubIssue.number);
-								continue bzl;
+								continue bzl2;
 							}
 						}
 					} else {

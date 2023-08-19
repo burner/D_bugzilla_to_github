@@ -4,11 +4,20 @@ import std.array : array;
 import std.algorithm.searching : canFind;
 import std.algorithm.iteration : map;
 import std.format : format;
+import std.json;
+import std.conv : to;
+
 import std.datetime;
 import std.typecons : Nullable;
+import std.stdio;
+
+import requests;
+
 import rest;
+import json;
 import allpeople;
-import graphql : Label;
+import graphql;
+import cliargs;
 
 //
 // https://gist.github.com/jonmagic/5282384165e0f86ef105
@@ -93,4 +102,29 @@ MigrationIssue bugToMigration(Bug b, ref AllPeopleHandler aph, Label[string] lab
 		.map!(it => commentToMigration(it, aph))
 		.array;
 	return ret;
+}
+
+CreateIssueResult createMigrationissue(MigrationIssue mi, string githubToken) {
+	JSONValue jv = toJson(mi);
+	Request rq = Request();
+	string uri = "https://api.hithub.com/repos/%s/%s/import/issues"
+				.format(theArgs().githubOrganization
+					, theArgs().githubProject);
+	rq.addHeaders(["Accept": "application/vnd.github.golden-comet-preview+json"
+			, "Authorization" : "token " ~ githubToken
+	]);
+	Response re = rq.post(uri, jv.toPrettyString());
+	string t = re.responseBody.to!string();
+	writeln(t);
+	JSONValue ret;
+	try {
+		ret = parseJSON(t);
+	} catch(Exception e) {
+		throw new Exception(format(
+				"request: '%s'\nvars: '%s'\nret: '%s'",
+				re, jv.toPrettyString(), t),
+				__FILE__, __LINE__, e);
+	}
+
+	return jsonToForgiving!CreateIssueResult(ret);	
 }
