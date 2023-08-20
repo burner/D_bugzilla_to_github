@@ -5,6 +5,7 @@
 	"copyright": "Copyright © 2021, Robert burner Schadek",
 	"dependencies": {
 		"dxml": "~>0.4.3",
+		"nullablestore": "~>2.1.0",
 		"requests": "~>2.1.1"
 	},
 	"description": "A tool to do the bugzilla to github transition a success",

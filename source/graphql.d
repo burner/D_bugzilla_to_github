@@ -13,6 +13,8 @@ import std.stdio;
 import std.typecons;
 import std.traits : Unqual, isArray;
 
+import nullablestore;
+
 @safe:
 
 JSONValue getCurrentRateLimit(string bearer) {
@@ -137,6 +139,8 @@ struct CreateIssueInput {
 
 struct CreateIssueResult {
 	int number;
+	Nullable!long id;
+	//Nullable!string url;
 }
 
 CreateIssueResult createIssue(CreateIssueInput input, string bearer) {
@@ -397,7 +401,7 @@ template canBeNull(T) {
 				if(ptr && ptr.type == JSONType.null_) {
 					__traits(getMember, ret, mem) = FieldType.init;
 				} else if(ptr && ptr.type != JSONType.null_) {
-					__traits(getMember, ret, mem) = nullable(extract!F(j, mem));
+					__traits(getMember, ret, mem) = nullable(resolveNested!F(j, mem));
 				}
 			} else {
 				const(JSONValue)* ptr = mem in j;

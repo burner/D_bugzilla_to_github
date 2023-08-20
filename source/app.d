@@ -713,9 +713,12 @@ void main(string[] args) {
 
 	BugIssue[] rslt;
 	outer: foreach(idx, ref b; ob) {
+		if(idx >= 10) {
+			break;
+		}
 		writefln("%s of %s", idx, ob.length);
 		if(theArgs().newMigrationApi) {
-			MigrationIssue mi = bugToMigration(b, aph, labelsAA,
+			Migration mi = bugToMigration(b, aph, labelsAA,
 					toIncludeKeys);
 			writefln("%s %s", idx, mi);
 			inner2: foreach(tries; 0 .. 2) {
@@ -734,6 +737,7 @@ void main(string[] args) {
 										, theArgs().githubProject
 										, tmp.githubIssue.number)
 									, token.token);
+								continue outer;
 							} catch(Exception e) {
 								writefln("Failed to tell bugzilla that issue %s now is"
 										~ " github issue %s", b.id
@@ -759,7 +763,7 @@ void main(string[] args) {
 					}
 				}
 			}
-			writefln("Failed two of two tries of bug %s", b.id);
+			writefln("Failed two of two tries of bug %s new API", b.id);
 			Thread.sleep(dur!"msecs"(5000));
 		} else {
 			Markdowned m = toMarkdown(b, aph);
@@ -831,6 +835,37 @@ void main(string[] args) {
 			}
 			writefln("Failed two of two tries of bug %s", b.id);
 			Thread.sleep(dur!"msecs"(5000));
+		}
+	}
+	Thread.sleep( dur!("minutes")(2) );
+	if(theArgs().newMigrationApi) {
+		foreach(it; rslt) {
+			writeln(it);
+			MigrationResult e = getImportStatus(it, theArgs().githubToken);
+			writeln(e);
+			if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
+				bzl4: foreach(bz; 0 .. 2) {
+					try {
+						postComment(it.bugzillaIssue.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+								~ "%s\n\n"
+								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+								, e.issue_url)
+							, token.token);
+					} catch(Exception e) {
+						writefln("Failed to tell bugzilla that issue %s now is"
+								~ " a github issue\n%s", it.bugzillaIssue.id
+								, e.toString());
+						continue bzl4;
+					}
+				}
+			} else {
+				writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+						~ "%s\n\n"
+						~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+						~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+						, e.issue_url);
+			}
 		}
 	}
 }

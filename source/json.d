@@ -67,6 +67,8 @@ T tFromJson(T)(JSONValue js) {
 						__traits(getMember, ret, memPre) = obj[mem].get!long()!=0;
 					}
 				} else {
+					enforce(mem in obj, format("%s not in %s", mem,
+								js.toPrettyString()));
 					__traits(getMember, ret, memPre) = obj[mem].get!MT();
 				}
 			}}
@@ -85,6 +87,8 @@ JSONValue toJsonImpl(T)(T t) {
 		return JSONValue(t.map!(it => toJsonImpl(it)).array);
 	} else static if(is(T == SysTime)) {
 		return JSONValue(t.toISOExtString());
+	} else static if(is(T == DateTime)) {
+		return JSONValue(t.toISOExtString() ~ "Z");
 	} else static if(is(T == Date)) {
 		return JSONValue(t.toISOExtString());
 	} else static if(isBasicType!T || isSomeString!T) {

@@ -102,7 +102,22 @@ Markdowned toMarkdown(Bug b, ref AllPeopleHandler aph) {
 	Markdowned ret;
 	AllPeople* ap = b.creator_detail.id in aph.byBugzillaId;
 	ret.title = b.summary;
-	ret.header = () @trusted { 
+	ret.header = markdownBody(b, aph);
+
+	ret.header ~= "### Comments\n\n";
+
+	Comment[] comments = b.comments.get();
+	ret.comments = comments[1 .. $]
+		.map!(c => toMarkdown(c, false, aph))
+		.joiner("\n\n")
+		.to!string();
+
+	return ret;
+}
+
+string markdownBody(Bug b, ref AllPeopleHandler aph) {
+	AllPeople* ap = b.creator_detail.id in aph.byBugzillaId;
+	string ret = () @trusted { 
 		return format("## %s%s reported this on %s\n\n"
 				, b.creator
 				, ap is null 
@@ -130,20 +145,14 @@ Markdowned toMarkdown(Bug b, ref AllPeopleHandler aph) {
 			);
 	}();
 
-	ret.header ~= "### Description\n\n";
+	ret ~= "### Description\n\n";
 	enforce(!b.comments.isNull(), format("Bug %s has no comments", b.id));
 	Comment[] comments = b.comments.get();
 	if(comments.empty) {
-		ret.header ~= "No description was given";
+		ret ~= "No description was given";
 	} else {
-		ret.header ~= toMarkdown(comments.front, true, aph);
-		ret.header ~= "### Comments\n\n";
-		ret.comments = comments[1 .. $]
-			.map!(c => toMarkdown(c, false, aph))
-			.joiner("\n\n")
-			.to!string();
+		ret ~= toMarkdown(comments.front, true, aph);
 	}
-
 	return ret;
 }
 

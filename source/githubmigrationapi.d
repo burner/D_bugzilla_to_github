@@ -1,6 +1,6 @@
 module githubmigrationapi;
 
-import std.array : array;
+import std.array : array, empty;
 import std.algorithm.searching : canFind;
 import std.algorithm.iteration : map;
 import std.format : format;
@@ -13,6 +13,8 @@ import std.stdio;
 
 import requests;
 
+import app : BugIssue;
+import markdown;
 import rest;
 import json;
 import allpeople;
@@ -42,6 +44,11 @@ import cliargs;
     }
 */
 
+struct Migration {
+	MigrationIssue issue;
+	MigrationComments[] comments;
+}
+
 struct MigrationComments {
 	string body_;
 	DateTime created_at;
@@ -51,12 +58,11 @@ struct MigrationIssue {
 	string title;
 	string body_;
 	DateTime created_at;
-	Nullable!DateTime closed_at;
+	//Nullable!DateTime closed_at;
 	DateTime updated_at;
 	Nullable!string assignee;
-	Nullable!bool closed;
+	bool closed;
 	string[] labels;
-	MigrationComments[] comments;
 }
 
 MigrationComments commentToMigration(Comment c, ref AllPeopleHandler aph) {
@@ -72,13 +78,20 @@ MigrationComments commentToMigration(Comment c, ref AllPeopleHandler aph) {
 	return ret;
 }
 
-MigrationIssue bugToMigration(Bug b, ref AllPeopleHandler aph, Label[string] labelsAA
+Migration bugToMigration(Bug b, ref AllPeopleHandler aph, Label[string] labelsAA
 		, const(string[]) toIncludeKeys) 
 {
+	AllPeople* ap = b.creator_detail.id in aph.byBugzillaId;
+
 	MigrationIssue ret;
 	ret.title = b.summary;
 	ret.created_at = cast(DateTime)b.creation_time;
-	ret.assignee = b.assigned_to;
+	ret.assignee = ap !is null && !(*ap).githubUser.empty && theArgs().mentionPeopleInGithubAndPostOnBugzilla
+		? (*ap).githubUser
+		: b.creator_detail.name;
+	ret.assignee = "burner";
+	ret.closed = false;
+	ret.body_ = markdownBody(b, aph);
 	ret.updated_at = cast(DateTime)b.last_change_time;
 	static foreach(mem; __traits(allMembers, Bug)) {{
 		if(canFind(toIncludeKeys, mem)) {
@@ -86,39 +99,45 @@ MigrationIssue bugToMigration(Bug b, ref AllPeopleHandler aph, Label[string] lab
 			static if(is(MT == string)) {{
 				auto has = __traits(getMember, b, mem);	
 				if(has in labelsAA) {
-					ret.labels ~= labelsAA[has].id;
+					ret.labels ~= labelsAA[has].name;
 				}
 			}} else static if(is(MT == string[])) {{
 				auto has = __traits(getMember, b, mem);	
 				foreach(it; has) {
 					if(it in labelsAA) {
-						ret.labels ~= labelsAA[it].id;
+						ret.labels ~= labelsAA[it].name;
 					}
 				}
 			}}
 		}
 	}}
-	ret.comments = b.comments.get([])
+	Migration actualReturn;
+	actualReturn.issue = ret;
+	actualReturn.comments = b.comments.get([])[1 .. $]
 		.map!(it => commentToMigration(it, aph))
 		.array;
-	return ret;
+
+	return actualReturn;
 }
 
-CreateIssueResult createMigrationissue(MigrationIssue mi, string githubToken) {
+CreateIssueResult createMigrationissue(Migration mi, string githubToken) {
 	JSONValue jv = toJson(mi);
+	writeln(jv.toPrettyString());
 	Request rq = Request();
-	string uri = "https://api.hithub.com/repos/%s/%s/import/issues"
+	string uri = "https://api.github.com/repos/%s/%s/import/issues"
 				.format(theArgs().githubOrganization
 					, theArgs().githubProject);
 	rq.addHeaders(["Accept": "application/vnd.github.golden-comet-preview+json"
 			, "Authorization" : "token " ~ githubToken
 	]);
-	Response re = rq.post(uri, jv.toPrettyString());
-	string t = re.responseBody.to!string();
-	writeln(t);
+	Response re;
+	string t;
 	JSONValue ret;
 	try {
+		re = rq.post(uri, jv.toPrettyString());
+		t = re.responseBody.to!string();
 		ret = parseJSON(t);
+		writefln("\n\n%s\n\n", ret.toPrettyString());
 	} catch(Exception e) {
 		throw new Exception(format(
 				"request: '%s'\nvars: '%s'\nret: '%s'",
@@ -126,5 +145,51 @@ CreateIssueResult createMigrationissue(MigrationIssue mi, string githubToken) {
 				__FILE__, __LINE__, e);
 	}
 
-	return jsonToForgiving!CreateIssueResult(ret);	
+	return tFromJson!CreateIssueResult(ret);	
+}
+
+struct MigrationError {
+	string location;
+	string resource;
+	string field;
+	string value;
+	string code;
+	string url;
+	string created_at;
+	string updated_at;
+}
+
+struct MigrationResult {
+	long id;
+	string status;
+	string url;
+	string issue_url;
+	MigrationError[] errors;
+}
+
+MigrationResult getImportStatus(BugIssue b, string githubToken) {
+	Request rq = Request();
+	string uri = "https://api.github.com/repos/%s/%s/import/issues/%s"
+				.format(theArgs().githubOrganization
+					, theArgs().githubProject
+					, b.githubIssue.id.get(0));
+	rq.addHeaders(["Accept": "application/vnd.github.golden-comet-preview+json"
+			, "Authorization" : "token " ~ githubToken
+	]);
+	Response re;
+	string t;
+	JSONValue ret;
+	try {
+		re = rq.get(uri);
+		t = re.responseBody.to!string();
+		ret = parseJSON(t);
+		writefln("\n\n%s\n\n", ret.toPrettyString());
+	} catch(Exception e) {
+		throw new Exception(format(
+				"request: '%s'\nret: '%s'",
+				re, t),
+				__FILE__, __LINE__, e);
+	}
+
+	return tFromJson!MigrationResult(ret);	
 }
