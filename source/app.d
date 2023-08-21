@@ -718,17 +718,18 @@ void main(string[] args) {
 		}
 		writefln("%s of %s", idx, ob.length);
 		if(theArgs().newMigrationApi) {
-			Migration mi = bugToMigration(b, aph, labelsAA,
-					toIncludeKeys);
-			writefln("%s %s", idx, mi);
 			inner2: foreach(tries; 0 .. 2) {
 				try {
-					auto tmp = BugIssue(createMigrationissue(mi, theArgs().githubToken), b);
-					rslt ~= tmp;
 					// comment in the old bugzilla issue
+					BugIssue tmp;
+					Migration mi = bugToMigration(b, aph, labelsAA,
+							toIncludeKeys);
+					tmp = BugIssue(createMigrationissue(mi, theArgs().githubToken), b);
+					rslt ~= tmp;
 					if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
 						bzl: foreach(bz; 0 .. 2) {
 							try {
+								//writefln("%s %s", idx, mi);
 								postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
 										~ "https://github.com/%s/%s/issues/%d\n\n"
 										~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
@@ -837,7 +838,7 @@ void main(string[] args) {
 			Thread.sleep(dur!"msecs"(5000));
 		}
 	}
-	Thread.sleep( dur!("minutes")(2) );
+	Thread.sleep( dur!("seconds")(30) );
 	if(theArgs().newMigrationApi) {
 		foreach(it; rslt) {
 			writeln(it);

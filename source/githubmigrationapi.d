@@ -137,7 +137,7 @@ CreateIssueResult createMigrationissue(Migration mi, string githubToken) {
 		re = rq.post(uri, jv.toPrettyString());
 		t = re.responseBody.to!string();
 		ret = parseJSON(t);
-		writefln("\n\n%s\n\n", ret.toPrettyString());
+		//writefln("\n\n%s\n\n", ret.toPrettyString());
 	} catch(Exception e) {
 		throw new Exception(format(
 				"request: '%s'\nvars: '%s'\nret: '%s'",
