@@ -168,6 +168,7 @@ string toMarkdown(Comment c, const bool noHeader, ref AllPeopleHandler aph) {
 	string body_ = c.text
 		.replace("\\n", "\n")
 		.replace("In reply to comment #", "In reply to comment ");
+	/*
 	string newBody;
 	DConfFinder dcf;
 	foreach(l; body_.splitter("\n")) {
@@ -187,7 +188,7 @@ string toMarkdown(Comment c, const bool noHeader, ref AllPeopleHandler aph) {
 	}
 	if(dcf.isDcode) {
 		newBody ~= format("```dlang\n%--(%s\n%)\n```\n", dcf.reset);
-	}
+	}*/
 
-	return header ~ newBody;
+	return header ~ body_;
 }
