@@ -728,9 +728,9 @@ void main(string[] args) {
 			break outer;
 		}
 		if(theArgs().limit != 0) {
-			writefln("%s of %s", idx, theArgs().limit);
+			writefln("%4s of %4s : BZ_ID %4s", idx, theArgs().limit, b.id);
 		} else {
-			writefln("%s of %s", idx, ob.length);
+			writefln("%4s of %4s : BZ_ID %4s", idx, ob.length, b.id);
 		}
 		if(theArgs().newMigrationApi) {
 			rslt ~= newApiRunner(b, labelsAA, toIncludeKeys, aph);
