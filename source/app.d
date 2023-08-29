@@ -820,12 +820,19 @@ string extractIssueId(string s) {
 }
 
 void postToBugzillaWithNewApi(BugIssue it, Token token) {
-	MigrationResult e = getImportStatus(it, theArgs().githubToken);
-	string url = format("https://github.com/%s/%s/issues/%s"
-			, theArgs().githubOrganization
-			, theArgs().githubProject
-			, extractIssueId(e.issue_url)
-		);
+	string url;
+	try {
+		MigrationResult e = getImportStatus(it, theArgs().githubToken);
+		url = format("https://github.com/%s/%s/issues/%s"
+				, theArgs().githubOrganization
+				, theArgs().githubProject
+				, extractIssueId(e.issue_url)
+			);
+	} catch(Exception e) {
+		writefln("Failed to find bugzilla issue %s in github issues with error"
+				~ " %s", it.bugzillaIssue.id, e.toString());
+		return;
+	}
 	if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
 		foreach(bz; 0 .. 2) {
 			try {

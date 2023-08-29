@@ -7,9 +7,13 @@ import std.format : format;
 import std.json;
 import std.conv : to;
 
+import core.thread;
+import core.time;
+
 import std.datetime;
 import std.typecons : Nullable;
 import std.stdio;
+import std.string;
 
 import requests;
 
@@ -179,16 +183,27 @@ MigrationResult getImportStatus(BugIssue b, string githubToken) {
 	Response re;
 	string t;
 	JSONValue ret;
-	try {
-		re = rq.get(uri);
-		t = re.responseBody.to!string();
-		ret = parseJSON(t);
-	} catch(Exception e) {
-		throw new Exception(format(
-				"request: '%s'\nret: '%s'",
-				re, t),
-				__FILE__, __LINE__, e);
+	Exception exp;
+	foreach(_; 0 .. 2) {
+		try {
+			re = rq.get(uri);
+			t = re.responseBody.to!string();
+			ret = parseJSON(t);
+			return tFromJson!MigrationResult(ret);	
+		} catch(Exception e) {
+			if(e.toString().indexOf("API rate limit exceeded")) {
+				writeln("Sleeping for an 61 minutes");
+				Thread.sleep(dur!"minutes"(61));
+			}
+			exp = new Exception(format(
+					"request: '%s'\nret: '%s'",
+					re, t),
+					__FILE__, __LINE__, e);
+		}
 	}
+	throw exp is null
+		? new Exception("Should get here")
+		: exp;
 
-	return tFromJson!MigrationResult(ret);	
+
 }
