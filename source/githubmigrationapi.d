@@ -71,7 +71,7 @@ MigrationComments commentToMigration(Comment c, ref AllPeopleHandler aph) {
 	string header = format("#### %s%s commented on %s\n\n", c.creator
 				, ap is null 
 					? "" 
-					: " (" ~ (*ap).githubUser ~ ")"
+					: " (@" ~ (*ap).githubUser ~ ")"
 				, c.time.toISOExtString());
 
 	ret.body_ = header ~ "\n\n" ~ c.text;
@@ -122,7 +122,7 @@ Migration bugToMigration(Bug b, ref AllPeopleHandler aph, Label[string] labelsAA
 
 CreateIssueResult createMigrationissue(Migration mi, string githubToken) {
 	JSONValue jv = toJson(mi);
-	writeln(jv.toPrettyString());
+	//writeln(jv.toPrettyString());
 	Request rq = Request();
 	string uri = "https://api.github.com/repos/%s/%s/import/issues"
 				.format(theArgs().githubOrganization
@@ -164,7 +164,7 @@ struct MigrationResult {
 	string status;
 	string url;
 	string issue_url;
-	MigrationError[] errors;
+	Nullable!(MigrationError[]) errors;
 }
 
 MigrationResult getImportStatus(BugIssue b, string githubToken) {
@@ -183,7 +183,6 @@ MigrationResult getImportStatus(BugIssue b, string githubToken) {
 		re = rq.get(uri);
 		t = re.responseBody.to!string();
 		ret = parseJSON(t);
-		writefln("\n\n%s\n\n", ret.toPrettyString());
 	} catch(Exception e) {
 		throw new Exception(format(
 				"request: '%s'\nret: '%s'",

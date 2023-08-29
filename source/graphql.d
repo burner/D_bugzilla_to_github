@@ -138,7 +138,7 @@ struct CreateIssueInput {
 }
 
 struct CreateIssueResult {
-	int number;
+	Nullable!int number;
 	Nullable!long id;
 	//Nullable!string url;
 }

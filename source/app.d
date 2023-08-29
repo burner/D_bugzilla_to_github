@@ -1,8 +1,10 @@
 import std.algorithm.iteration : filter, joiner, map, fold, uniq;
-import std.algorithm.searching : all, canFind;
+import std.algorithm.searching : all, canFind, until;
 import std.algorithm.sorting : sort;
+import std.algorithm.mutation : reverse;
 import std.array;
-import std.ascii : isASCII;
+import std.ascii : isASCII, isDigit;
+import std.conv : to;
 import std.exception;
 import std.file;
 import std.format;
@@ -14,6 +16,7 @@ import std.string : indexOf;
 import std.traits;
 import std.typecons;
 import std.uni : toLower;
+import std.utf;
 
 import core.thread;
 import core.time;
@@ -624,16 +627,19 @@ void cloneAndBuildStats() {
 }
 
 /*
-./d_bugzilla_to_github --organization=dlang
-	--bugzillaPassword="email@gmail.com" --bugzillaPassword="PASSWORD"
-	--project=bugzilla_migration_test --token=GITHUB_TOKEN --components=druntime
-	--mentionPeopleInGithubAndPostOnBugzilla
+dub build && ./d_bugzilla_to_github --organization=GH_PROJECT \
+	--project=GH_REPO --bugzillaUsername=BZ_Username \
+	--bugzillaPassword=BZ_PASSWORD \
+	--token=GH_CLASSIC_TOKEN \
+	--components=(dmd|phobos|druntime|tools) \
+	-g (dmd|phobos|druntime|tools) \
+	--newMigrationApi=true \
+	--mentionPeopleInGithubAndPostOnBugzilla=true // THIS ONE is for prod only
 */
 void main(string[] args) {
 	if(parseOptions(args)) {
 		return;
 	}
-	writeln(theArgs());
 
 	if(theArgs().buildAllPeople) {
 		import allpeople2;
@@ -713,59 +719,9 @@ void main(string[] args) {
 
 	BugIssue[] rslt;
 	outer: foreach(idx, ref b; ob) {
-		if(idx >= 10) {
-			break;
-		}
 		writefln("%s of %s", idx, ob.length);
 		if(theArgs().newMigrationApi) {
-			inner2: foreach(tries; 0 .. 2) {
-				try {
-					// comment in the old bugzilla issue
-					BugIssue tmp;
-					Migration mi = bugToMigration(b, aph, labelsAA,
-							toIncludeKeys);
-					tmp = BugIssue(createMigrationissue(mi, theArgs().githubToken), b);
-					rslt ~= tmp;
-					if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
-						bzl: foreach(bz; 0 .. 2) {
-							try {
-								//writefln("%s %s", idx, mi);
-								postComment(b.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-										~ "https://github.com/%s/%s/issues/%d\n\n"
-										~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-										~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-										, theArgs().githubOrganization
-										, theArgs().githubProject
-										, tmp.githubIssue.number)
-									, token.token);
-								continue outer;
-							} catch(Exception e) {
-								writefln("Failed to tell bugzilla that issue %s now is"
-										~ " github issue %s", b.id
-										, tmp.githubIssue.number);
-								continue bzl;
-							}
-						}
-					} else {
-						writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-								~ "https://github.com/%s/%s/issues/%d\n\n"
-								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-								, theArgs().githubOrganization
-								, theArgs().githubProject
-								, tmp.githubIssue.number);
-					}
-					continue outer;
-				} catch(Exception e) {
-					if(e.msg.indexOf("was submitted too quickly") != -1) {
-						writeln("Sleeping for an 61 minutes");
-						Thread.sleep(dur!"minutes"(61));
-						continue inner2;
-					}
-				}
-			}
-			writefln("Failed two of two tries of bug %s new API", b.id);
-			Thread.sleep(dur!"msecs"(5000));
+			rslt ~= newApiRunner(b, labelsAA, toIncludeKeys, aph);
 		} else {
 			Markdowned m = toMarkdown(b, aph);
 
@@ -841,32 +797,80 @@ void main(string[] args) {
 	Thread.sleep( dur!("seconds")(30) );
 	if(theArgs().newMigrationApi) {
 		foreach(it; rslt) {
-			writeln(it);
-			MigrationResult e = getImportStatus(it, theArgs().githubToken);
-			writeln(e);
-			if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
-				bzl4: foreach(bz; 0 .. 2) {
-					try {
-						postComment(it.bugzillaIssue.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
-								~ "%s\n\n"
-								~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
-								~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-								, e.issue_url)
-							, token.token);
-					} catch(Exception e) {
-						writefln("Failed to tell bugzilla that issue %s now is"
-								~ " a github issue\n%s", it.bugzillaIssue.id
-								, e.toString());
-						continue bzl4;
-					}
-				}
-			} else {
-				writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+			postToBugzillaWithNewApi(it, token);
+		}
+	}
+}
+
+string extractIssueId(string s) {
+	try {
+		string ret = s.byChar()
+			.map!(it => cast()it)
+			.array
+			.reverse
+			.until!(it => !isDigit(it))
+			.array
+			.reverse
+			.to!string();
+		return ret;
+	} catch(Exception e) {
+		writeln(e.toString());
+	}
+	return "";
+}
+
+void postToBugzillaWithNewApi(BugIssue it, Token token) {
+	MigrationResult e = getImportStatus(it, theArgs().githubToken);
+	string url = format("https://github.com/%s/%s/issues/%s"
+			, theArgs().githubOrganization
+			, theArgs().githubProject
+			, extractIssueId(e.issue_url)
+		);
+	if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
+		foreach(bz; 0 .. 2) {
+			try {
+				postComment(it.bugzillaIssue.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
 						~ "%s\n\n"
-						~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT "
+						~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT, "
 						~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
-						, e.issue_url);
+						, url)
+					, token.token);
+				return;
+			} catch(Exception e) {
+				writefln("Failed to tell bugzilla that issue %s now is"
+						~ " a github issue\n%s", it.bugzillaIssue.id
+						, e.toString());
+			}
+		}
+	} else {
+		writefln("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"
+				~ "%s\n\n"
+				~ "DO NOT COMMENT HERE ANYMORE, NOBODY WILL SEE IT, "
+				~ "THIS ISSUE HAS BEEN MOVED TO GITHUB"
+				, url);
+	}
+	
+}
+
+BugIssue newApiRunner(Bug b, Label[string] labelsAA
+		, const string[] toIncludeKeys, AllPeopleHandler aph)
+{
+	BugIssue tmp;
+	Migration mi = bugToMigration(b, aph, labelsAA,
+			toIncludeKeys);
+	Exception ret;
+	foreach(it; 0 .. 2) {
+		try {
+			return BugIssue(createMigrationissue(mi, theArgs().githubToken), b);
+		} catch(Exception e) {
+			ret = e;
+			if(e.msg.indexOf("was submitted too quickly") != -1) {
+				writeln("Sleeping for an 61 minutes");
+				Thread.sleep(dur!"minutes"(61));
 			}
 		}
 	}
+	writefln("Failed two of two tries of bug %s new API", b.id);
+	Thread.sleep(dur!"msecs"(5000));
+	throw ret;
 }
