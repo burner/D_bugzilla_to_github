@@ -167,7 +167,10 @@ CreateIssueResult createIssue(CreateIssueInput input, string bearer) {
 
 private T parseHelper(T)(JSONValue input, string accessPath) {
 	JSONValue toParse = getNested(input, accessPath);
-	enforce(toParse.type == JSONType.object, input.toPrettyString());
+	static if(!is(T : Nullable!F, F)) {
+		enforce(toParse.type == JSONType.object, accessPath ~ " "
+				~ toParse.toPrettyString() ~ " " ~ input.toPrettyString());
+	}
 	return jsonToForgiving!T(toParse);	
 }
 
