@@ -697,6 +697,8 @@ void main(string[] args) {
 		writefln("%s bugs", ob.length);
 	}
 
+	ob.sort!((a,b) => a.id < b.id).array;
+
 	AllPeopleHandler aph;
 	aph.load();
 
@@ -719,7 +721,17 @@ void main(string[] args) {
 
 	BugIssue[] rslt;
 	outer: foreach(idx, ref b; ob) {
-		writefln("%s of %s", idx, ob.length);
+		if(idx < theArgs().offset) {
+			continue outer;
+		}
+		if(idx - theArgs().offset > theArgs().limit) {
+			break outer;
+		}
+		if(theArgs().limit != 0) {
+			writefln("%s of %s", idx, theArgs().limit);
+		} else {
+			writefln("%s of %s", idx, ob.length);
+		}
 		if(theArgs().newMigrationApi) {
 			rslt ~= newApiRunner(b, labelsAA, toIncludeKeys, aph);
 		} else {
@@ -784,7 +796,8 @@ void main(string[] args) {
 					continue outer;
 				} catch(Exception e) {
 					if(e.msg.indexOf("was submitted too quickly") != -1) {
-						writeln("Sleeping for an 61 minutes");
+						writefln("Sleeping for an 61 minutes in %s",
+								__FUNCTION__);
 						Thread.sleep(dur!"minutes"(61));
 						continue inner;
 					}

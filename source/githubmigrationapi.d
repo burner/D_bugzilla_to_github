@@ -192,7 +192,8 @@ MigrationResult getImportStatus(BugIssue b, string githubToken) {
 			return tFromJson!MigrationResult(ret);	
 		} catch(Exception e) {
 			if(e.toString().indexOf("API rate limit exceeded")) {
-				writeln("Sleeping for an 61 minutes");
+				writefln("Sleeping for an 61 minutes hit rate limit in %s"
+						, __FUNCTION__);
 				Thread.sleep(dur!"minutes"(61));
 			}
 			exp = new Exception(format(

@@ -18,6 +18,8 @@ struct Args {
 	bool findGithubUserMatches;
 	bool mentionPeopleInGithubAndPostOnBugzilla;
 	bool newMigrationApi;
+	size_t limit;
+	size_t offset;
 }
 
 private Args __theArgs;
@@ -59,6 +61,10 @@ bool parseOptions(ref string[] args) {
 				&theArgsWriteable().mentionPeopleInGithubAndPostOnBugzilla
 			, "newMigrationApi", "Use the undocumented github issue migration api",
 				&theArgsWriteable().newMigrationApi
+			, "limit", "The amount of bugs to migrate"
+				, &theArgsWriteable().limit
+			, "offset", "The number of bugs skip before migrating"
+				, &theArgsWriteable().offset
 			);
 	if(helpWanted.helpWanted) {
 		defaultGetoptPrinter("A text explaining the program",
