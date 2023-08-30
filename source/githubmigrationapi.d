@@ -96,6 +96,10 @@ Migration bugToMigration(Bug b, ref AllPeopleHandler aph, Label[string] labelsAA
 	ret.assignee = "burner";
 	ret.closed = false;
 	ret.body_ = markdownBody(b, aph);
+	if(!b.attachments.isNull()) {
+		ret.body_ ~= "\n!!!There are attachements in the bugzilla issue"
+			~ " that have not been copied over!!!";
+	}
 	ret.updated_at = cast(DateTime)b.last_change_time;
 	static foreach(mem; __traits(allMembers, Bug)) {{
 		if(canFind(toIncludeKeys, mem)) {

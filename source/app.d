@@ -721,16 +721,17 @@ void main(string[] args) {
 
 	BugIssue[] rslt;
 	outer: foreach(idx, ref b; ob) {
-		if(idx < theArgs().offset) {
-			continue outer;
-		}
-		if(idx - theArgs().offset > theArgs().limit) {
-			break outer;
-		}
+		//if(idx < theArgs().offset) {
+		//	continue outer;
+		//}
+		//if(idx - theArgs().offset > theArgs().limit) {
+		//	break outer;
+		//}
+		const fstr = "%4s of %4s : BZ_ID %5s";
 		if(theArgs().limit != 0) {
-			writefln("%4s of %4s : BZ_ID %4s", idx, theArgs().limit, b.id);
+			writefln(fstr, idx, theArgs().limit, b.id);
 		} else {
-			writefln("%4s of %4s : BZ_ID %4s", idx, ob.length, b.id);
+			writefln(fstr, idx, ob.length, b.id);
 		}
 		if(theArgs().newMigrationApi) {
 			rslt ~= newApiRunner(b, labelsAA, toIncludeKeys, aph);
