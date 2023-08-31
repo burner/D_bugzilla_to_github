@@ -120,7 +120,7 @@ string markdownBody(Bug b, ref AllPeopleHandler aph) {
 	string ret = () @trusted { 
 		return format("## %s%s reported this on %s\n\n"
 				, b.creator
-				, ap is null 
+				, ap is null || (*ap).githubUser.empty
 					? "" 
 					: theArgs().mentionPeopleInGithubAndPostOnBugzilla
 						? " (@" ~ (*ap).githubUser ~ ")"
