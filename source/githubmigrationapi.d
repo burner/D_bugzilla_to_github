@@ -71,6 +71,7 @@ struct MigrationIssue {
 
 MigrationComments commentToMigration(Comment c, ref AllPeopleHandler aph) {
 	MigrationComments ret;
+	ret.created_at = cast(DateTime)c.creation_time;
 	AllPeople* ap = c.creator in aph.byEmail;
 	string header = format("#### %s%s commented on %s\n\n", c.creator
 				, ap is null 
@@ -90,15 +91,17 @@ Migration bugToMigration(Bug b, ref AllPeopleHandler aph, Label[string] labelsAA
 	MigrationIssue ret;
 	ret.title = b.summary;
 	ret.created_at = cast(DateTime)b.creation_time;
-	ret.assignee = ap !is null && !(*ap).githubUser.empty && theArgs().mentionPeopleInGithubAndPostOnBugzilla
+	ret.assignee = ap !is null 
+			&& !(*ap).githubUser.empty 
+			&& theArgs().mentionPeopleInGithubAndPostOnBugzilla
 		? (*ap).githubUser
 		: b.creator_detail.name;
 	ret.assignee = "burner";
 	ret.closed = false;
 	ret.body_ = markdownBody(b, aph);
-	if(!b.attachments.isNull()) {
-		ret.body_ ~= "\n!!!There are attachements in the bugzilla issue"
-			~ " that have not been copied over!!!";
+	if(!b.attachments.isNull() && !b.attachments.get().empty) {
+		ret.body_ ~= "\n\n\n**!!!There are attachements in the bugzilla issue"
+			~ " that have not been copied over!!!**";
 	}
 	ret.updated_at = cast(DateTime)b.last_change_time;
 	static foreach(mem; __traits(allMembers, Bug)) {{

@@ -729,9 +729,9 @@ void main(string[] args) {
 		//}
 		const fstr = "%4s of %4s : BZ_ID %5s";
 		if(theArgs().limit != 0) {
-			writefln(fstr, idx, theArgs().limit, b.id);
+			writefln(fstr, idx + 1, theArgs().limit, b.id);
 		} else {
-			writefln(fstr, idx, ob.length, b.id);
+			writefln(fstr, idx + 1, ob.length, b.id);
 		}
 		if(theArgs().newMigrationApi) {
 			rslt ~= newApiRunner(b, labelsAA, toIncludeKeys, aph);
