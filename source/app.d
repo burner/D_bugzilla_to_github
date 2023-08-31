@@ -810,7 +810,9 @@ void main(string[] args) {
 	}
 	Thread.sleep( dur!("seconds")(30) );
 	if(theArgs().newMigrationApi) {
-		foreach(it; rslt) {
+		foreach(idx, it; rslt) {
+			writefln("BZ comment %5s of %5s : BZ id %5s", idx + 1
+					, rslt.length, it.bugzillaIssue.id);
 			postToBugzillaWithNewApi(it, token);
 		}
 	}
@@ -857,6 +859,10 @@ void postToBugzillaWithNewApi(BugIssue it, Token token) {
 						, url)
 					, token.token);
 				return;
+			} catch(RateLimitException e) {
+				writefln("Hit bugzilla rate limit of issue %s. Sleeping for"
+					~ " one hour", url);
+				Thread.sleep(dur!"minutes"(61));
 			} catch(Exception e) {
 				writefln("Failed to tell bugzilla that issue %s now is"
 						~ " a github issue\n%s", it.bugzillaIssue.id

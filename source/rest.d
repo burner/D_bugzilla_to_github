@@ -239,15 +239,26 @@ JSONValue getBugs(long[] ids) {
 	throw f;
 }
 
+class RateLimitException : Exception {
+	this(string msg, string file = __FILE__, int line = __LINE__) {
+		super(msg, file, line);
+	}
+}
+
 JSONValue postComment(long issueId, string comment, string token) {
 	string url = "https://issues.dlang.org/rest/bug/%d/comment";
 	string withId = format(url, issueId);
-	string ret = postContent(withId
+	Request re = Request();
+	Response ret = re.post(withId
 		, queryParams("comment", comment
 			, "token", token)
-		).to!string();
+		);
+	if(ret.code == 429) {
+		throw new RateLimitException("Hit rate limit");
+	}
+	string s = ret.to!string();
 	try {
-		return ret.to!string().parseJSON();
+		return s.to!string().parseJSON();
 	} catch(Exception e) {
 		writeln(e.toString());
 	}
