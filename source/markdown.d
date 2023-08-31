@@ -135,7 +135,7 @@ string markdownBody(Bug b, ref AllPeopleHandler aph) {
 			: format("### CC List\n\n%--(* %s\n%)\n\n"
 					, b.cc_detail.map!((c) {
 						AllPeople* cc = c.email in aph.byEmail;
-						return cc is null || !(*cc).githubUser.empty
+						return cc is null || (*cc).githubUser.empty
 							? c.name
 							: theArgs().mentionPeopleInGithubAndPostOnBugzilla
 								? format("%s (@%s)", c.name, (*cc).githubUser)

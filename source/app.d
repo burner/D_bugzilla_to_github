@@ -724,9 +724,9 @@ void main(string[] args) {
 		//if(idx < theArgs().offset) {
 		//	continue outer;
 		//}
-		//if(idx - theArgs().offset > theArgs().limit) {
-		//	break outer;
-		//}
+		if(idx - theArgs().offset > theArgs().limit) {
+			break outer;
+		}
 		const fstr = "%4s of %4s : BZ_ID %5s";
 		if(theArgs().limit != 0) {
 			writefln(fstr, idx + 1, theArgs().limit, b.id);
