@@ -258,9 +258,9 @@ JSONValue postComment(long issueId, string comment, string token) {
 	}
 	string s = ret.to!string();
 	try {
-		return s.to!string().parseJSON();
+		return s.parseJSON();
 	} catch(Exception e) {
-		writeln(e.toString());
+		writefln("%s %s", s, e.toString());
 	}
 	return JSONValue.init;
 }

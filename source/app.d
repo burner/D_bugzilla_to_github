@@ -704,6 +704,7 @@ void main(string[] args) {
 
 	Repository target = getRepository(theArgs().githubOrganization
 			, theArgs().githubProject, theArgs().githubToken);
+	writeln(target);
 
 	Label[string] labelsAA = generateLabels(theArgs().githubOrganization
 			, theArgs().githubProject, ob, toInclude, target);
@@ -724,7 +725,10 @@ void main(string[] args) {
 		//if(idx < theArgs().offset) {
 		//	continue outer;
 		//}
-		if(idx - theArgs().offset > theArgs().limit) {
+		if(theArgs().offset != 0 && theArgs().limit != 0 
+				&& idx - theArgs().offset > theArgs().limit) 
+		{
+			writeln("Break main loop due to args.offset and args.limit");
 			break outer;
 		}
 		const fstr = "%4s of %4s : BZ_ID %5s";
@@ -849,7 +853,9 @@ void postToBugzillaWithNewApi(BugIssue it, Token token) {
 				~ " %s", it.bugzillaIssue.id, e.toString());
 		return;
 	}
-	if(theArgs().mentionPeopleInGithubAndPostOnBugzilla) {
+	if(theArgs().mentionPeopleInGithubAndPostOnBugzilla 
+			|| it.bugzillaIssue.id == 23609) 
+	{
 		foreach(bz; 0 .. 2) {
 			try {
 				postComment(it.bugzillaIssue.id, format("THIS ISSUE HAS BEEN MOVED TO GITHUB\n\n"

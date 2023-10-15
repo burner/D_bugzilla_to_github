@@ -91,12 +91,14 @@ Migration bugToMigration(Bug b, ref AllPeopleHandler aph, Label[string] labelsAA
 	MigrationIssue ret;
 	ret.title = b.summary;
 	ret.created_at = cast(DateTime)b.creation_time;
+	/*
 	ret.assignee = ap !is null 
 			&& !(*ap).githubUser.empty 
 			&& theArgs().mentionPeopleInGithubAndPostOnBugzilla
 		? (*ap).githubUser
 		: b.creator_detail.name;
-	ret.assignee = "burner";
+	*/
+	//ret.assignee = "burner";
 	ret.closed = false;
 	ret.body_ = markdownBody(b, aph);
 	if(!b.attachments.isNull() && !b.attachments.get().empty) {
@@ -138,6 +140,7 @@ CreateIssueResult createMigrationissue(Migration mi, string githubToken) {
 	string uri = "https://api.github.com/repos/%s/%s/import/issues"
 				.format(theArgs().githubOrganization
 					, theArgs().githubProject);
+	writeln(uri);
 	rq.addHeaders(["Accept": "application/vnd.github.golden-comet-preview+json"
 			, "Authorization" : "token " ~ githubToken
 	]);
@@ -148,6 +151,7 @@ CreateIssueResult createMigrationissue(Migration mi, string githubToken) {
 		re = rq.post(uri, jv.toPrettyString());
 		t = re.responseBody.to!string();
 		ret = parseJSON(t);
+		writefln("c %s", ret);
 		//writefln("\n\n%s\n\n", ret.toPrettyString());
 	} catch(Exception e) {
 		throw new Exception(format(
@@ -196,6 +200,7 @@ MigrationResult getImportStatus(BugIssue b, string githubToken) {
 			re = rq.get(uri);
 			t = re.responseBody.to!string();
 			ret = parseJSON(t);
+			writefln("g %s", t);
 			return tFromJson!MigrationResult(ret);	
 		} catch(Exception e) {
 			if(e.toString().indexOf("API rate limit exceeded")) {

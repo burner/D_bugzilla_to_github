@@ -111,6 +111,9 @@ Label createLabel(string org, string repoName, LabelInput input, string bearer) 
 
 struct Repository {
 	string id;
+	Nullable!string name;
+	Nullable!string owner;
+	Nullable!string resourcePath;
 }
 
 Repository getRepository(string owner, string projectName, string bearer) {
@@ -118,6 +121,8 @@ Repository getRepository(string owner, string projectName, string bearer) {
 	query repo($name: String!, $owner: String!) {
 		repository(owner: $owner, name: $name) {
 			id
+			name
+			resourcePath
 		}
 	}
 	`;
